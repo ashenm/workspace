@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 # Run a workspace in a new container
 
+set -e
+
 #######################################
 # Print usage instructions to STDIN
 # Arguments:
