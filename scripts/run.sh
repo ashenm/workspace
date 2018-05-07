@@ -27,6 +27,7 @@ Options:
   -n, --name                Assign a name to the container
       --shell               Specify login shell (default 'bash')
       --ssh                 Bind mount ~/.ssh directory read-only to container
+  -v, --volume              Bind mount additional volumes
   -w, --workdir             Working directory inside the container
 
 USAGE
@@ -98,6 +99,11 @@ do
 
     -w|--workdir)
       ARGUMENTS="$ARGUMENTS --workdir ${2:?Invalid WORKDIR}"
+      shift 2
+      ;;
+
+    -v|--volume)
+      ARGUMENTS="$ARGUMENTS --volume ${2:?Invalid BIND}"
       shift 2
       ;;
 
