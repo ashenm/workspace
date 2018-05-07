@@ -59,6 +59,10 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     /tmp/hub-linux-amd64/install && \
   rm -rf /tmp/hub-linux-amd64 && \
 
+  # ruby packages
+  gem install \
+    bundler && \
+
   # clear state information
   rm -rf /var/lib/apt/lists/*
 
