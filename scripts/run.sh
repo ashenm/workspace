@@ -25,6 +25,7 @@ Options:
       --git                 Bind mount ~/.gitconfig read-only to container
   -m, --mount path          Bind mount specified directory to workspace
   -n, --name                Assign a name to the container
+      --shell               Specify login shell (default 'bash')
       --ssh                 Bind mount ~/.ssh directory read-only to container
   -w, --workdir             Working directory inside the container
 
@@ -55,6 +56,10 @@ SELF="$(basename "$0")"
 
 # docker options
 ARGUMENTS="--interactive --tty"
+
+# command to run
+CONTAINER_CMD="bash"
+CONTAINER_CMD_OPTIONS="-l"
 
 # docker command supplementaries
 COMMAND_PREFIX=""
@@ -106,6 +111,11 @@ do
       shift 2
       ;;
 
+    --shell)
+      CONTAINER_CMD="${2:?Invalid SHELL}"
+      shift 2
+      ;;
+
     --dev)
       CONTAINER_IMAGE_TAG="dev"
       shift
@@ -140,4 +150,4 @@ test "$OS" = "Windows_NT" && \
 ARGUMENTS="$ARGUMENTS ${CONTAINER_IMAGE_NAME:-ashenm/workspace}:${CONTAINER_IMAGE_TAG}"
 
 # spin docker container
-$COMMAND_PREFIX docker run $ARGUMENTS
+$COMMAND_PREFIX docker run $ARGUMENTS $CONTAINER_CMD $CONTAINER_CMD_OPTIONS
