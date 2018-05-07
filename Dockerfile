@@ -59,6 +59,11 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     /tmp/hub-linux-amd64/install && \
   rm -rf /tmp/hub-linux-amd64 && \
 
+  # python packages
+  pip3 install \
+    awscli \
+    Flask && \
+
   # ruby packages
   gem install \
     bundler && \
