@@ -66,8 +66,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 
   # python packages
   pip3 install \
-    awscli \
-    Flask && \
+    awscli && \
 
   # ruby packages
   gem install \
