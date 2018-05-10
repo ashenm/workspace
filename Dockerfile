@@ -7,7 +7,7 @@ EXPOSE 8080 8081 8082
 # allow sudo group to su without password
 # create workspace
 RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu && \
-  sed -i 's/^# auth\( \{1,\}\)sufficient pam_wheel.so trust$/auth\1sufficient pam_wheel.so trust group=sudo/' /etc/pam.d/su && \
+  sed -i $(grep -n '^auth' /etc/pam.d/su | tail -1 | sed 's/:.*$//')'a\\n# This allows sudo group to su without passwords\nauth sufficient pam_wheel.so trust group=sudo' /etc/pam.d/su && \
   mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # install packages
