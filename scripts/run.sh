@@ -151,6 +151,12 @@ test "$CONTAINER_MOUNT" && \
 test "$OS" = "Windows_NT" && \
   COMMAND_PREFIX="$COMMAND_PREFIX winpty"
 
+# build :dev image
+# if not exists locally
+test "$CONTAINER_IMAGE_TAG" = "dev" -a \
+  "$(docker images ashenm/workspace:dev | tail -n +2 | wc -c)" -eq 0 && \
+    "$(dirname "$(readlink -f "$BASH_SOURCE")")"/build.sh
+
 # override default image
 # if explicitly specified
 ARGUMENTS="$ARGUMENTS ${CONTAINER_IMAGE_NAME:-ashenm/workspace}:${CONTAINER_IMAGE_TAG}"
