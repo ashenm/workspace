@@ -1,5 +1,5 @@
 # Workspace #
-[![Build Status](https://travis-ci.org/ashenm/workspace.svg?branch=master)](https://travis-ci.org/ashenm/workspace)
+[![Build Status](https://travis-ci.org/ashenm/workspace.svg?branch=master)](https://travis-ci.org/ashenm/workspace) [![Image Overview](https://images.microbadger.com/badges/image/ashenm/workspace.svg)](https://hub.docker.com/r/ashenm/workspace/)
 
 ## USAGE ##
 
