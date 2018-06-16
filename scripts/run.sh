@@ -25,6 +25,7 @@ Options:
       --git                 Bind mount ~/.gitconfig read-only to container
   -m, --mount path          Bind mount specified directory to workspace
   -n, --name                Assign a name to the container
+  -p, --publish             Publish container's 8080, 8081 and 8082 ports to the host
       --shell               Specify login shell (default 'bash')
       --ssh                 Bind mount ~/.ssh directory read-only to container
   -v, --volume              Bind mount additional volumes
@@ -89,6 +90,11 @@ do
 
     --git)
       ARGUMENTS="$ARGUMENTS --volume $(readlink -m ~/.gitconfig):/home/ubuntu/.gitconfig"
+      shift
+      ;;
+
+    -p|--publish)
+      ARGUMENTS="$ARGUMENTS --publish 8080:8080 --publish 8081:8081 --publish 8082:8082"
       shift
       ;;
 
