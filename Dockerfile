@@ -18,12 +18,12 @@ RUN DEBIAN_FRONTEND=noninteractive && \
   echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ xenial main" >> /etc/apt/sources.list.d/github_git-lfs.list && \
   curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
 
-  # node 8.x
-  curl --silent https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
-  echo "deb https://deb.nodesource.com/node_8.x xenial main" | \
-  tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src https://deb.nodesource.com/node_8.x xenial main" | \
-  tee -a /etc/apt/sources.list.d/nodesource.list && \
+  # node 10.x
+  curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
+  echo "deb https://deb.nodesource.com/node_10.x bionic main" | \
+    tee /etc/apt/sources.list.d/nodesource.list && \
+  echo "deb-src https://deb.nodesource.com/node_10.x bionic main" | \
+    tee -a /etc/apt/sources.list.d/nodesource.list && \
 
   apt-get update && \
   apt-get install -y \
