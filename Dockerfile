@@ -14,9 +14,11 @@ RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu 
 RUN DEBIAN_FRONTEND=noninteractive && \
 
   # git-lfs
-  echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ xenial main" > /etc/apt/sources.list.d/github_git-lfs.list && \
-  echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ xenial main" >> /etc/apt/sources.list.d/github_git-lfs.list && \
-  curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
+  curl -sSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
+  echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ bionic main" | \
+    tee /etc/apt/sources.list.d/github_git-lfs.list && \
+  echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ bionic main" | \
+    tee -a /etc/apt/sources.list.d/github_git-lfs.list && \
 
   # node 10.x
   curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
