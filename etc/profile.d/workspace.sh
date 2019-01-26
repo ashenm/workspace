@@ -1,5 +1,5 @@
 # if not root
-if [ "$UID" -ne 0 ]
+if [ `id -u` -ne 0 ]
 then
 
   # hub
