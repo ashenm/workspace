@@ -3,6 +3,11 @@ FROM ashenm/baseimage
 # expose tcp ports
 EXPOSE 8080 8081 8082
 
+# revert exclusion of man pages
+RUN echo -e '# override man page exclusion\npath-include=/usr/share/doc/*\n' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  echo -e '# override documentation exclusion\npath-include=/usr/share/man/*\n' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  apt-get update && dpkg -l | grep ^ii | cut -d' ' -f3 | xargs apt-get install -y --reinstall
+
 # add local user
 # allow sudo group to su without password
 # create workspace
@@ -15,16 +20,16 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 
   # git-lfs
   curl -sSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
-  echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ bionic main" | \
+  echo 'deb https://packagecloud.io/github/git-lfs/ubuntu/ bionic main' | \
     tee /etc/apt/sources.list.d/github_git-lfs.list && \
-  echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ bionic main" | \
+  echo 'deb-src https://packagecloud.io/github/git-lfs/ubuntu/ bionic main' | \
     tee -a /etc/apt/sources.list.d/github_git-lfs.list && \
 
   # node 10.x
   curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
-  echo "deb https://deb.nodesource.com/node_10.x bionic main" | \
+  echo 'deb https://deb.nodesource.com/node_10.x bionic main' | \
     tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src https://deb.nodesource.com/node_10.x bionic main" | \
+  echo 'deb-src https://deb.nodesource.com/node_10.x bionic main' | \
     tee -a /etc/apt/sources.list.d/nodesource.list && \
 
   apt-get update && \
