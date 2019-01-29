@@ -4,8 +4,9 @@ FROM ashenm/baseimage
 EXPOSE 8080 8081 8082
 
 # revert exclusion of man pages
-RUN echo -e '# override man page exclusion\npath-include=/usr/share/doc/*\n' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  echo -e '# override documentation exclusion\npath-include=/usr/share/man/*\n' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+RUN echo '# override man page and documentation page exclusion' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  echo 'path-include=/usr/share/doc/*' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  echo 'path-include=/usr/share/man/*' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
   apt-get update && dpkg -l | grep ^ii | cut -d' ' -f3 | xargs apt-get install -y --reinstall
 
 # add local user
