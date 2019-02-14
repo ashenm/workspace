@@ -4,17 +4,16 @@ FROM ashenm/baseimage
 EXPOSE 8080 8081 8082
 
 # revert exclusion of man pages
-RUN echo '# override man page and documentation page exclusion' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  echo 'path-include=/usr/share/doc/*' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  echo 'path-include=/usr/share/man/*' | tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  apt-get update && dpkg -l | grep ^ii | cut -d' ' -f3 | xargs apt-get install -y --reinstall
-
-# add local user
-# allow sudo group to su without password
-# create workspace
-RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu && \
-  sed -i $(grep -n '^auth' /etc/pam.d/su | tail -1 | sed 's/:.*$//')'a\\n# This allows sudo group to su without passwords\nauth sufficient pam_wheel.so trust group=sudo' /etc/pam.d/su && \
-  mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
+RUN DEBIAN_FRONTEND=noninteractive && \
+  echo '# override man page and documentation page exclusion' | \
+    tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  echo 'path-include=/usr/share/doc/*' | \
+    tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  echo 'path-include=/usr/share/man/*' | \
+    tee -a /etc/dpkg/dpkg.cfg.d/includes && \
+  apt-get update && dpkg -l | grep ^ii | cut -d' ' -f3 | \
+    xargs apt-get install --yes --no-install-recommends --reinstall && \
+  rm -rf /var/lib/apt/lists/*
 
 # install packages
 RUN DEBIAN_FRONTEND=noninteractive && \
@@ -52,6 +51,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     python3-pip \
     ruby-full \
     sqlite3 \
+    sudo \
     telnet \
     tree \
     wget && \
@@ -60,10 +60,10 @@ RUN DEBIAN_FRONTEND=noninteractive && \
   # hub
   # http://stackoverflow.com/a/27869453
   mkdir /tmp/hub-linux-amd64 && \
-  curl -s -L https://github.com/github/hub/releases/latest | \
+  curl -sSL https://github.com/github/hub/releases/latest | \
     egrep -o '/github/hub/releases/download/.*/hub-linux-amd64-.*.tgz' | \
-    wget --base=http://github.com/ -i - -O - | \
-    tar xvz -C /tmp/hub-linux-amd64 --strip-components 1 && \
+    wget --base=http://github.com/ -q -i - -O - | \
+    tar xz -C /tmp/hub-linux-amd64 --strip-components 1 && \
     /tmp/hub-linux-amd64/install && \
   rm -rf /tmp/hub-linux-amd64 && \
 
@@ -82,6 +82,14 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 
   # clear state information
   rm -rf /var/lib/apt/lists/*
+
+# add local user
+# allow sudo group to sudo without password
+# create workspace
+RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu && \
+  echo '# Allow members of group sudo sudo access without password' | tee /etc/sudoers.d/workspace && \
+  echo '%sudo ALL=(ALL) NOPASSWD:ALL' | tee -a /etc/sudoers.d/workspace && \
+  mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # configure system
 COPY etc /etc/
