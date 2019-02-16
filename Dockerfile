@@ -1,11 +1,12 @@
 FROM ashenm/baseimage
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 # expose tcp ports
 EXPOSE 8080 8081 8082
 
 # revert exclusion of man pages
-RUN DEBIAN_FRONTEND=noninteractive && \
-  echo '# override man page and documentation page exclusion' | \
+RUN echo '# override man page and documentation page exclusion' | \
     tee -a /etc/dpkg/dpkg.cfg.d/includes && \
   echo 'path-include=/usr/share/doc/*' | \
     tee -a /etc/dpkg/dpkg.cfg.d/includes && \
@@ -15,24 +16,24 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     xargs apt-get install --yes --no-install-recommends --reinstall && \
   rm -rf /var/lib/apt/lists/*
 
-# install packages
-RUN DEBIAN_FRONTEND=noninteractive && \
-
-  # git-lfs
-  curl -sSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
+# set up git-lfs repo
+# https://packagecloud.io/github/git-lfs/install#manual
+RUN curl -sSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
   echo 'deb https://packagecloud.io/github/git-lfs/ubuntu/ bionic main' | \
     tee /etc/apt/sources.list.d/github_git-lfs.list && \
   echo 'deb-src https://packagecloud.io/github/git-lfs/ubuntu/ bionic main' | \
-    tee -a /etc/apt/sources.list.d/github_git-lfs.list && \
+    tee -a /etc/apt/sources.list.d/github_git-lfs.list
 
-  # node 10.x
-  curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
+# set up node 10.x repo
+# https://github.com/nodesource/distributions#debmanual
+RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
   echo 'deb https://deb.nodesource.com/node_10.x bionic main' | \
     tee /etc/apt/sources.list.d/nodesource.list && \
   echo 'deb-src https://deb.nodesource.com/node_10.x bionic main' | \
-    tee -a /etc/apt/sources.list.d/nodesource.list && \
+    tee -a /etc/apt/sources.list.d/nodesource.list
 
-  apt-get update && \
+# install packages
+RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
     bash-completion \
     bc \
