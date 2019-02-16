@@ -84,11 +84,8 @@ RUN DEBIAN_FRONTEND=noninteractive && \
   rm -rf /var/lib/apt/lists/*
 
 # add local user
-# allow sudo group to sudo without password
 # create workspace
 RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu && \
-  echo '# Allow members of group sudo sudo access without password' | tee /etc/sudoers.d/workspace && \
-  echo '%sudo ALL=(ALL) NOPASSWD:ALL' | tee -a /etc/sudoers.d/workspace && \
   mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # configure system
@@ -102,3 +99,4 @@ WORKDIR /home/ubuntu/workspace
 
 # default execute login shell
 CMD ["bash", "--login"]
+

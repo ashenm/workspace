@@ -1,6 +1,8 @@
 *.md
 .git
+.travis
 .travis.yml
 .dockerignore
 scripts
 tests
+

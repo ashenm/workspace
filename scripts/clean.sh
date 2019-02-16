@@ -12,4 +12,5 @@ test ! "$1" = "-a" \
     && BUILD_TARGET="$BUILD_TARGET:dev"
 
 # remove all `BUILD_TARGET` images
-docker images --all "$BUILD_TARGET" | awk 'NR>1 { print $1":"$2 }' | xargs -r docker rmi
+docker images --all "$BUILD_TARGET" | awk 'NR>1 { print $3 }' | xargs -r docker rmi
+
