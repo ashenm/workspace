@@ -11,6 +11,9 @@ run:
 purge:
 	./scripts/clean.sh --all
 
+assess:
+	./scripts/assess.sh
+
 clean:
 	./scripts/clean.sh
 
