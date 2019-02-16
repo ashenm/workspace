@@ -67,18 +67,18 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     /tmp/hub-linux-amd64/install && \
   rm -rf /tmp/hub-linux-amd64 && \
 
+  # python packages
+  pip3 install --no-cache-dir \
+    awscli && \
+
+  # ruby packages
+  gem install --no-update-sources \
+    bundler && \
+
   # node packages
   npm install -g \
     grunt-cli \
     standard && \
-
-  # python packages
-  pip3 install \
-    awscli && \
-
-  # ruby packages
-  gem install \
-    bundler && \
 
   # clear state information
   rm -rf /var/lib/apt/lists/*
