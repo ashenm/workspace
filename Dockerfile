@@ -33,7 +33,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     tee -a /etc/apt/sources.list.d/nodesource.list && \
 
   apt-get update && \
-  apt-get install -y \
+  apt-get install --yes --no-install-recommends \
     bash-completion \
     bc \
     bsdtar \
@@ -49,6 +49,8 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     perl \
     python3 \
     python3-pip \
+    python3-setuptools \
+    python3-wheel \
     ruby-full \
     sqlite3 \
     sudo \
