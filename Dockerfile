@@ -79,6 +79,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
   npm install -g \
     grunt-cli \
     standard && \
+  npm cache clean --force && \
 
   # clear state information
   rm -rf /var/lib/apt/lists/*
