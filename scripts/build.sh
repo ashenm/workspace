@@ -16,3 +16,4 @@ test "$1" = "-t" \
 
 # build image
 docker build --no-cache --tag "$BUILD_IMAGE:$BUILD_TAG" "$(dirname "$SCRIPT_DIRECTORY")"
+
