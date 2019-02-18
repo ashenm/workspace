@@ -59,33 +59,33 @@ RUN apt-get update && \
     tree \
     wget && \
   git lfs install && \
+  rm -rf /var/lib/apt/lists/*
 
-  # hub
-  # http://stackoverflow.com/a/27869453
-  mkdir /tmp/hub-linux-amd64 && \
+# install hub
+# http://stackoverflow.com/a/27869453
+RUN mkdir /tmp/hub-linux-amd64 && \
   curl -sSL https://github.com/github/hub/releases/latest | \
     egrep -o '/github/hub/releases/download/.*/hub-linux-amd64-.*.tgz' | \
     wget --base=http://github.com/ -q -i - -O - | \
     tar xz -C /tmp/hub-linux-amd64 --strip-components 1 && \
     /tmp/hub-linux-amd64/install && \
-  rm -rf /tmp/hub-linux-amd64 && \
+  rm -rf /tmp/hub-linux-amd64
 
-  # python packages
-  pip3 install --no-cache-dir \
-    awscli && \
+# install python packages
+RUN pip3 install --no-cache-dir \
+    awscli
 
-  # ruby packages
-  gem install --no-update-sources \
-    bundler && \
+# install ruby packages
+RUN gem install --no-update-sources --no-rdoc --no-ri \
+    bundler \
+    jekyll \
+    travis
 
-  # node packages
-  npm install -g \
+# install node packages
+RUN npm install -g \
     grunt-cli \
     standard && \
-  npm cache clean --force && \
-
-  # clear state information
-  rm -rf /var/lib/apt/lists/*
+  npm cache clean --force
 
 # add local user
 # create workspace
