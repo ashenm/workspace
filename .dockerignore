@@ -3,6 +3,7 @@
 .travis
 .travis.yml
 .dockerignore
+workspace
 scripts
 tests
 
