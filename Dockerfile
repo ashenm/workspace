@@ -94,6 +94,10 @@ RUN npm install -g \
 RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu && \
   mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
 
+# configure ssh client
+RUN echo '' | tee -a /etc/ssh/ssh_config && \
+  echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config
+
 # configure system
 COPY etc /etc/
 
