@@ -44,6 +44,8 @@ RUN apt-get update && \
     exiftool \
     gdb \
     git-lfs \
+    iputils-ping \
+    iputils-tracepath \
     man \
     mysql-client \
     nodejs \
