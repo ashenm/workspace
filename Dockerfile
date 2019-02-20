@@ -74,7 +74,8 @@ RUN mkdir /tmp/hub-linux-amd64 && \
 
 # install python packages
 RUN pip3 install --no-cache-dir \
-    awscli
+    awscli \
+    icdiff
 
 # install ruby packages
 RUN gem install --no-update-sources --no-rdoc --no-ri \
