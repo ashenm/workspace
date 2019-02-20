@@ -7,7 +7,7 @@ Host bitbucket.org
     IdentityFile "~/.ssh/bitbucket"
 
 # GitHub
-Host github.com
+Host github.com gist.github.com
     Port 22
     User git
     Hostname github.com
