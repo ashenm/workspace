@@ -47,6 +47,7 @@ RUN apt-get update && \
     man \
     mysql-client \
     nodejs \
+    openssh-client \
     perl \
     python3 \
     python3-pip \
