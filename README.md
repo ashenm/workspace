@@ -93,7 +93,7 @@ Clones current working directory into the Docker Volume _workspace_.
 
 ###### `workspace delete` ######
 
-Remove Docker Volume _workspace_.
+Removes Docker Volume _workspace_.
 
 ### `scripts` ###
 
