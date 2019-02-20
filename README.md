@@ -1,6 +1,22 @@
 # Workspace #
 [![Build Status](https://travis-ci.org/ashenm/workspace.svg?branch=master)](https://travis-ci.org/ashenm/workspace) [![Image Overview](https://images.microbadger.com/badges/image/ashenm/workspace.svg)](https://hub.docker.com/r/ashenm/workspace/)
 
+## INDEX ##
+
+* [Usage](#usage)
+  * [Using `scripts/run.sh`](#using-scriptsrunsh)
+    * [Directory Mounts](#directory-mounts)
+    * [Git Configuration](#git-configuration)
+    * [SSH Configuration](#ssh-configuration)
+    * [Working Directory](#working-directory)
+    * [Custom Shell](#custom-shell)
+    * [Custom Image](#custom-image)
+  * [Using `docker run`](#using-docker-run)
+* [Compatibility](#compatibility)
+  * [Windows](#windows)
+    * [UNIX Permissions](#unix-permissions)
+  * [`scripts`](#scripts)
+
 ## USAGE ##
 
 ### Using `scripts/run.sh` ###
@@ -37,6 +53,7 @@ For instance, to set `/usr/share/workspace` as the container working directory r
 
 #### Custom Shell ####
 ###### `--shell` ######
+
 By default `run.sh` will attempt to spawn a `bash` login shell. If a custom installed shell is desired add `--shell` followed by the shell executable.
 
 For instance, to use _KornShell_ instead run `./run.sh --shell ksh`.
@@ -50,9 +67,35 @@ The default image can be overridden by simply specifying the desired image name.
 For instance, to bind current directory within `alpine:latest` run `./run.sh -m . alpine:latest`.
 
 ### Using `docker run` ###
+
 Please refer [Official Docker Documentation](https://docs.docker.com/engine/reference/commandline/run)
 
 ## COMPATIBILITY ##
+
+### Windows ###
+#### UNIX Permissions ####
+
+The Docker Desktop currently uses SMB/CIFS for host volumes and therefore does not support multiple users nor different file permissions on host mounts.
+
+A mundane solution would be to use _[Docker Volumes](https://docs.docker.com/storage/volumes/)_ which are independent of the directory structure of the host machine. The `workspace/workspace.cmd` facilitate ease administration of Docker Volumes allowing [creation](#workspace-create), [backup](#workspace-backup), [upload](#workspace-push), and [deletion](#workspace-delete).
+
+###### `workspace create`  ######
+
+Creates a new Docker Volume named _workspace_ that containers can consume and store data in.
+
+###### `workspace backup` ######
+
+Creates a gzip tarball in the current working directory from the files stored in Docker Volume _workspace_.
+
+###### `workspace push` ######
+
+Clones current working directory into the Docker Volume _workspace_.
+
+###### `workspace delete` ######
+
+Remove Docker Volume _workspace_.
+
+### `scripts` ###
 
 Given that _[Docker](https://www.docker.com/)_ is installed, the facilitator scripts provided can be used with any shell that is is *Bourne SHell* compatible.
 
