@@ -1,0 +1,18 @@
+# Bitbucket
+Host bitbucket.org
+    Hostname bitbucket.org
+    IdentitiesOnly yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile "~/.ssh/bitbucket"
+
+# GitHub
+Host github.com gist.github.com
+    Port 22
+    User git
+    Hostname github.com
+    TCPKeepAlive yes
+    IdentitiesOnly yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile "~/.ssh/github"
