@@ -35,6 +35,13 @@ IF /I "%1"=="delete" (
   EXIT /B %ERRORLEVEL%
 )
 
+:: update scripts
+:: retrieve latest script files
+IF /I "%1"=="update" (
+  START /MIN /D %~dp0 PowerShell -ExecutionPolicy Unrestricted -File "%~dp0Update-Workspace.ps1"
+  EXIT /B %ERRORLEVEL%
+)
+
 ECHO:
 ECHO Usage: %0 COMMAND
 ECHO Administer Workspace Docker Volume
@@ -42,5 +49,6 @@ ECHO:
 ECHO Command:
 ECHO   create                    Create a local docker volume
 ECHO   backup                    Archive docker volume to a tarball
-ECHO   push                      Copy current folder to docker volume
 ECHO   delete                    Delete docker volume
+ECHO   push                      Copy current folder to docker volume
+ECHO   update                    Update Facilitator Scripts
