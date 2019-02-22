@@ -95,6 +95,10 @@ Clones current working directory into the Docker Volume _workspace_.
 
 Removes Docker Volume _workspace_.
 
+###### `workspace update` ######
+
+Updates facilitator scripts to the latest
+
 ### `scripts` ###
 
 Given that _[Docker](https://www.docker.com/)_ is installed, the facilitator scripts provided can be used with any shell that is is *Bourne SHell* compatible.
