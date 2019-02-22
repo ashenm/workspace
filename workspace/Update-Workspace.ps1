@@ -8,9 +8,15 @@
 
 #>
 
-Invoke-WebRequest -UseBasicParsing -OutFile workspace.cmd `
-  -Uri https://raw.githubusercontent.com/ashenm/workspace/master/workspace/workspace.cmd
-Invoke-WebRequest -UseBasicParsing -OutFile backup.sh `
-  -Uri https://raw.githubusercontent.com/ashenm/workspace/master/workspace/backup.sh
-Invoke-WebRequest -UseBasicParsing -OutFile push.sh `
-  -Uri https://raw.githubusercontent.com/ashenm/workspace/master/workspace/push.sh
+# exit on first error
+$ErrorActionPreference = "Stop"
+
+# POSIX time
+# ignore cached versions of updater script
+$STAMP = Get-Date -UFormat %s
+
+# fetch latest updater script
+Invoke-WebRequest -UseBasicParsing -OutFile $env:TEMP\Update-Workspace-$STAMP.ps1 -Uri https://raw.githubusercontent.com/ashenm/workspace/master/workspace/Update-Workspace
+
+# update system
+Start-Process -WindowStyle Normal -WorkingDirectory $PSScriptRoot -FilePath PowerShell -ArgumentList "-File", "$env:TEMP\Update-Workspace-$STAMP.ps1", "-ExecutionPolicy", "Unrestricted"
