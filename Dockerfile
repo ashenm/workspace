@@ -46,6 +46,7 @@ RUN apt-get update && \
     git-lfs \
     iputils-ping \
     iputils-tracepath \
+    jq \
     man \
     mysql-client \
     nodejs \
