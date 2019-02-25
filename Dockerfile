@@ -35,6 +35,7 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
 # install packages
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
+    apt-file \
     bash-completion \
     bc \
     bsdtar \
