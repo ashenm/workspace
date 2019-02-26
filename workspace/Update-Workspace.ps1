@@ -11,6 +11,9 @@
 # exit on first error
 $ErrorActionPreference = "Stop"
 
+# use TLS 1.2
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::TLS12
+
 # POSIX time
 # ignore cached versions of updater script
 $STAMP = Get-Date -UFormat %s
