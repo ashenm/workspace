@@ -19,12 +19,12 @@ IF /I "%1"=="backup" (
 )
 
 :: update workspace
-:: copy current folder
+:: copy objects to docker volume
 IF /I "%1"=="push" (
   START /B /WAIT docker run --rm --interactive --tty ^
     --volume %CD%:/mnt/push --volume workspace:/mnt/workspace ^
-    --volume %~dp0:/opt/workspace:ro --env WORKSPACE=%CD% ^
-    --workdir /mnt/push ubuntu bash /opt/workspace/push.sh
+    --volume %~dp0:/opt/workspace:ro --workdir /mnt/push ^
+    --env CMD="%*" --env WORKSPACE="%CD%" ubuntu bash /opt/workspace/push.sh
   EXIT /B %ERRORLEVEL%
 )
 
