@@ -62,7 +62,8 @@ RUN apt-get update && \
     sudo \
     telnet \
     tree \
-    wget && \
+    wget \
+    whois && \ 
   git lfs install && \
   rm -rf /var/lib/apt/lists/*
 
