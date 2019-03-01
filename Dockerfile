@@ -2,6 +2,8 @@ FROM ashenm/baseimage
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ENV PYTHONDONTWRITEBYTECODE=1
+
 # expose tcp ports
 EXPOSE 8080 8081 8082
 
