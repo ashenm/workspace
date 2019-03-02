@@ -1,22 +1,10 @@
-FROM ashenm/baseimage
+FROM ashenm/baseimage:dev
 
+# avoid prompts
 ARG DEBIAN_FRONTEND=noninteractive
-
-ENV PYTHONDONTWRITEBYTECODE=1
 
 # expose tcp ports
 EXPOSE 8080 8081 8082
-
-# revert exclusion of man pages
-RUN echo '# override man page and documentation page exclusion' | \
-    tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  echo 'path-include=/usr/share/doc/*' | \
-    tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  echo 'path-include=/usr/share/man/*' | \
-    tee -a /etc/dpkg/dpkg.cfg.d/includes && \
-  apt-get update && dpkg -l | grep ^ii | cut -d' ' -f3 | \
-    xargs apt-get install --yes --no-install-recommends --reinstall && \
-  rm -rf /var/lib/apt/lists/*
 
 # set up git-lfs repo
 # https://packagecloud.io/github/git-lfs/install#manual
@@ -50,7 +38,6 @@ RUN apt-get update && \
     iputils-ping \
     iputils-tracepath \
     jq \
-    man \
     mysql-client \
     nodejs \
     openssh-client \
