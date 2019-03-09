@@ -85,8 +85,10 @@ RUN npm install -g \
 
 # add local user
 # create workspace
-RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu && \
-  mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
+RUN groupadd --gid 1000 ubuntu && \
+  useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \
+  mkdir /home/ubuntu/workspace && \
+  chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # configure ssh client
 RUN echo '' | tee -a /etc/ssh/ssh_config && \
