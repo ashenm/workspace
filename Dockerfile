@@ -1,4 +1,4 @@
-FROM ashenm/baseimage:dev
+FROM ashenm/baseimage:developer
 
 # avoid prompts
 ARG DEBIAN_FRONTEND=noninteractive
@@ -105,4 +105,3 @@ WORKDIR /home/ubuntu/workspace
 
 # default execute login shell
 CMD ["bash", "--login"]
-
