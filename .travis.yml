@@ -16,6 +16,9 @@ after_script:
 deploy:
   provider: script
   script: make deploy
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH != *-alpha
 
 after_deploy:
   make culminate
