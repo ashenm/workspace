@@ -18,7 +18,7 @@ Usage: $SELF [OPTIONS] [IMAGE]
 Run a workspace in a new container
 
 Options:
-      --dev                 Use "dev" tag instead of "latest"
+      --alpha               Use "latest-alpha" tag instead of "latest"
       --dry                 Automatically remove the container when it exits
       --help                Print usage
   -h, --hostname string     Container hostname
@@ -128,8 +128,8 @@ do
       shift 2
       ;;
 
-    --dev)
-      CONTAINER_IMAGE_TAG="dev"
+    --alpha)
+      CONTAINER_IMAGE_TAG="latest-alpha"
       shift
       ;;
 

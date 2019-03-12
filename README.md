@@ -1,5 +1,5 @@
 # Workspace #
-[![Build Status](https://travis-ci.org/ashenm/workspace.svg?branch=master)](https://travis-ci.org/ashenm/workspace) [![Image Overview](https://images.microbadger.com/badges/image/ashenm/workspace.svg)](https://hub.docker.com/r/ashenm/workspace/)
+[![Build Status](https://travis-ci.org/ashenm/workspace.svg?branch=latest)](https://travis-ci.org/ashenm/workspace) [![Image Tag](https://img.shields.io/badge/tag-latest-blue.svg)](https://github.com/ashenm/workspace/tree/latest) [![Image Overview](https://images.microbadger.com/badges/image/ashenm/workspace.svg)](https://hub.docker.com/r/ashenm/workspace/)
 
 ## INDEX ##
 

@@ -5,19 +5,21 @@ services:
   docker
 
 install:
-  ./.travis/install.sh
+  make install
 
 script:
-  ./.travis/build.sh
+  make build
 
 after_script:
-  ./.travis/assess.sh
+  make assess
 
 deploy:
   provider: script
-  script: ./.travis/deploy.sh
+  script: make deploy
+
+after_deploy:
+  make culminate
 
 notifications:
   slack:
     secure: cbozGeQvWv9LJkN88YeAuxQBuHDHI4MaSvJz4imdvnTLiXb8DX7KCqGu9Yyyv4Cw02QiHEkOu5gzhvV5+f4PWv2zBUaEmKScnsrbxvnCdOqOFGKURgbfQjRgwVXGoRbZ6JghN8+MKEBCzroIFc8d+89EohKPhTcJuGA9BhaidfEGblFGCI+ipTlfFK7/7/+8cFR1kBn7j+CYHg6w1irnb5dVkVOrVHw4ew+NlbaIflMPNdHccUeoyLq4gHjJtJub57bRREcgIhM9N2136HaRB/O9tNCe8G4FEP3hciJofnVF/QbRqNr8vREWVPoWaFqasntF42eeHmz5OH5nl4EsU8RyViwnvAGoHNPQvuI1JuKxQcEZr48ag6NBIo250JOVtl5PVJj/u0Sb9bMG6WW36Q9jMlcPnLfGVXQ45bDtfQCU8tGZB/5gd/XHFkbNCktKeyzytfcr3F5DRzff64DzAA80Fsxx0/Aowq/Np7ZK33pLg+XpX5a7GLuMxFQJuj0kCPiXDs0QX3Juu7o09/uc2o1TqXPFcyuJ7NrhDA3Jbky6DZLNLFyz7OfNTW38mBZjm7YtjfLwc0dAkCsPqc+y0horRWHj+wIBbkD6Xt74K3/xQLvKIgvN9zSC0ILMksDu1tp9O2IcRh4Z2CQNP5Lua601brT17GcJ7XqSmQutVp4=
-
