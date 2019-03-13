@@ -20,4 +20,4 @@ purge:
 	./scripts/clean.sh --all
 
 run:
-	./scripts/run.sh --dev --dry
+	./scripts/run.sh --alpha --dry
