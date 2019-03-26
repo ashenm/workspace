@@ -50,6 +50,7 @@ RUN apt-get update && \
     sqlite3 \
     sudo \
     telnet \
+    time \
     tree \
     wget \
     whois && \ 
