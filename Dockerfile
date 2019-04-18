@@ -80,8 +80,8 @@ RUN gem install --no-update-sources --no-rdoc --no-ri \
 
 # install node packages
 RUN npm install -g \
-    grunt-cli \
-    standard && \
+    eslint  \
+    grunt-cli && \
   npm cache clean --force
 
 # add local user
@@ -94,6 +94,10 @@ RUN groupadd --gid 1000 ubuntu && \
 # configure ssh client
 RUN echo '' | tee -a /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config
+
+# configure user utilities
+RUN curl -sSLo /home/ubuntu/.eslintrc.json \
+  https://gist.githubusercontent.com/ashenm/537a91f9c864d6ef6180790d9076047d/raw/eslintrc.json
 
 # configure system
 COPY etc /etc/
