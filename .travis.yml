@@ -10,7 +10,7 @@ install:
 script:
   make build
 
-after_script:
+before_deploy:
   make assess
 
 deploy:
