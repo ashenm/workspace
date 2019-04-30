@@ -9,6 +9,4 @@ test "$1" = "-a" \
     && TRAVIS_BRANCH="*"
 
 # remove all `BUILD_TARGET` images
-docker images --all --filter reference="${TRAVIS_REPO_SLUG:-ashenm/workspace}:${TRAVIS_BRANCH:-latest-alpha}" \
-  | awk 'NR>1 { print $3 }' \
-  | xargs -r docker rmi
+docker images --all --filter reference="${TRAVIS_REPO_SLUG:-ashenm/workspace}:${TRAVIS_BRANCH:-latest-alpha}" --format {{.ID}} | xargs -r docker rmi
