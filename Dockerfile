@@ -96,8 +96,7 @@ RUN echo '' | tee -a /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config
 
 # configure user utilities
-RUN curl -sSLo /home/ubuntu/.eslintrc.json \
-  https://gist.githubusercontent.com/ashenm/537a91f9c864d6ef6180790d9076047d/raw/eslintrc.json
+ADD --chown=1000:1000 https://gist.githubusercontent.com/ashenm/537a91f9c864d6ef6180790d9076047d/raw/eslintrc.json /home/ubuntu/.eslintrc.json
 
 # configure system
 COPY etc /etc/
