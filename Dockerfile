@@ -99,7 +99,7 @@ RUN echo '' | tee -a /etc/ssh/ssh_config && \
 ADD --chown=1000:1000 https://gist.githubusercontent.com/ashenm/537a91f9c864d6ef6180790d9076047d/raw/eslintrc.json /home/ubuntu/.eslintrc.json
 
 # configure system
-COPY etc /etc/
+COPY filesystem /
 
 # change to non-root user
 USER ubuntu
