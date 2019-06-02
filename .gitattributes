@@ -1,2 +1,2 @@
-scripts linguist-vendored=true
+scripts/* linguist-vendored=true
 workspace/Update-Workspace linguist-language=PowerShell
