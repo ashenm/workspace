@@ -1,3 +1,4 @@
-tests/* linguist-vendored=true
-scripts/* linguist-vendored=true
+tests/* linguist-detectable=false
+scripts/* linguist-detectable=false
+filesystem/** linguist-detectable=false
 workspace/Update-Workspace linguist-language=PowerShell
