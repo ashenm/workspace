@@ -3,6 +3,11 @@
 
 set -e
 
+# fetch shims
+mkdir --parent filesystem/usr/local/bin && \
+curl --silent --show-error --location --output filesystem/usr/local/bin/tree \
+  --url https://raw.githubusercontent.com/ashenm/environment/master/linux/bin/tree
+
 # clinch permissions
 find filesystem -type d -exec chmod 755 {} \;
 find filesystem/etc -type f -exec chmod 644 {} \;
