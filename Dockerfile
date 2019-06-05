@@ -33,6 +33,7 @@ RUN apt-get update && \
     dnsutils \
     dos2unix \
     exiftool \
+    file \
     gdb \
     git-lfs \
     iputils-ping \
