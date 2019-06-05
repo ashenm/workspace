@@ -1,3 +1,7 @@
+default:
+	$(MAKE) install
+	$(MAKE) build
+
 build:
 	./scripts/build.sh
 
