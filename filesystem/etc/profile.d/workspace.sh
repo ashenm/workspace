@@ -12,4 +12,7 @@ then
   alias pip='pip3'
   alias python='python3'
 
+  # terminal colors
+  export TERM="xterm-256color"
+
 fi
