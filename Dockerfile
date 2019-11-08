@@ -85,12 +85,11 @@ RUN npm install -g \
     grunt-cli && \
   npm cache clean --force
 
-# add local user
-# create workspace
-RUN groupadd --gid 1000 ubuntu && \
-  useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \
-  mkdir /home/ubuntu/workspace && \
-  chown ubuntu:ubuntu /home/ubuntu/workspace
+# configure workspace
+RUN echo '' | tee -a /etc/skel/.profile && \
+  echo '. /etc/profile.d/git.sh' | tee -a /etc/skel/.profile && \
+  groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \
+  mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # configure ssh client
 RUN echo '' | tee -a /etc/ssh/ssh_config && \
