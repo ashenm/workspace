@@ -107,4 +107,4 @@ USER ubuntu
 WORKDIR /home/ubuntu/workspace
 
 # default execute login shell
-CMD ["bash", "--login"]
+CMD ["/usr/local/sbin/workspace"]

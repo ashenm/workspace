@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+#
+# Spawn Docker Workspace session
+# https://github.com/ashenm/workspace
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+
+# errexit
+set -e
+
+# spawn ssh-agent
+eval `ssh-agent`
+
+# ensure authentication agent spawn successful
+test -n "${SSH_AGENT_PID}"
+
+# invoke login shell
+exec bash --login
+
+# vim: set expandtab shiftwidth=2 syntax=sh:
