@@ -81,8 +81,7 @@ RUN gem install --no-update-sources --no-rdoc --no-ri \
 
 # install node packages
 RUN npm install -g \
-    eslint  \
-    grunt-cli && \
+    eslint && \
   npm cache clean --force
 
 # configure workspace
