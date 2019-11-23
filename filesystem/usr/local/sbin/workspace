@@ -16,6 +16,10 @@ eval `ssh-agent`
 # ensure authentication agent spawn successful
 test -n "${SSH_AGENT_PID}"
 
+# use shared agent socket if exists
+test -S "/run/keyring/ssh" && \
+  export SSH_AUTH_SOCK=/run/keyring/ssh
+
 # invoke login shell
 exec bash --login
 
