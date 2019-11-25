@@ -11,7 +11,7 @@
 set -e
 
 # spawn ssh-agent
-eval `ssh-agent`
+eval `ssh-agent` 1>/dev/null
 
 # ensure authentication agent spawn successful
 test -n "${SSH_AGENT_PID}"
