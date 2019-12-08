@@ -5,4 +5,8 @@ if [ $(id -u) -ne 0 ]; then
   export PS1="\$(__git_ps1 \"(%s) \")$PS1"
 fi
 
+if [ -f /home/ubuntu/.travis/travis.sh ]; then
+  . $(dirname $(dirname $(gem which travis)))/assets/travis.sh
+fi
+
 # vim: set expandtab shiftwidth=2 syntax=sh:
