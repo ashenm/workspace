@@ -84,21 +84,16 @@ RUN npm install -g \
     eslint && \
   npm cache clean --force
 
-# configure workspace
-RUN echo '' | tee -a /etc/skel/.profile && \
-  echo '. /etc/profile.d/git.sh' | tee -a /etc/skel/.profile && \
-  groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \
-  mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
-
 # configure ssh client
 RUN echo '' | tee -a /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config
 
-# configure user utilities
-ADD --chown=1000:1000 https://gist.githubusercontent.com/ashenm/537a91f9c864d6ef6180790d9076047d/raw/eslintrc.json /home/ubuntu/.eslintrc.json
-
 # configure system
 COPY filesystem /
+
+# configure workspace
+RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \
+  mkdir /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # change to non-root user
 USER ubuntu
