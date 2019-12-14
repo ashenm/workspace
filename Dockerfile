@@ -22,8 +22,9 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
   echo 'deb-src https://deb.nodesource.com/node_10.x bionic main' | \
     tee -a /etc/apt/sources.list.d/nodesource.list
 
-# install packages\
-# deliberately avoiding apt cache cleanup
+# install packages
+# deliberately updating apt cache at the end
+# facilitating apt-file usage out-of-the-box
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
     apt-file \
@@ -55,8 +56,9 @@ RUN apt-get update && \
     time \
     tree \
     wget \
-    whois && \ 
-  git lfs install
+    whois && \
+  git lfs install && \
+  apt update
 
 # install hub
 # http://stackoverflow.com/a/27869453
