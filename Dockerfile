@@ -57,7 +57,7 @@ RUN apt-get update && \
     tree \
     wget \
     whois && \
-  git lfs install && \
+  git lfs install --system --skip-repo && \
   apt update
 
 # install hub
