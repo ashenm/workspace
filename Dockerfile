@@ -88,7 +88,11 @@ RUN npm install -g \
 
 # configure ssh client
 RUN echo '' | tee -a /etc/ssh/ssh_config && \
-  echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config
+  echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config && \
+  mkdir --parent --mode 770 /opt/ssh && \
+  touch /opt/ssh/known_hosts && \
+  chown --recursive 0:1000 /opt/ssh && \
+  chmod 660 /opt/ssh/known_hosts
 
 # configure system
 COPY filesystem /

@@ -21,3 +21,12 @@ find filesystem/etc/skel -mindepth 1 -type d -exec chmod 700 {} \;
 find filesystem/etc/skel -mindepth 1 -type f -exec chmod 600 {} \;
 find filesystem/usr/local/sbin -type f -exec chmod 755 {} \;
 find filesystem/usr/local/bin -type f -exec chmod 755 {} \;
+
+# extend ssh_config
+tee --append filesystem/etc/ssh/workspace <<EOF
+
+# Avoid read-only user host
+# key database write failure
+Host *
+    UserKnownHostsFile /opt/ssh/known_hosts
+EOF
