@@ -77,6 +77,7 @@ RUN pip3 install --no-cache-dir \
 
 # install ruby packages
 RUN gem install --no-update-sources --no-rdoc --no-ri \
+    asciidoctor \
     bundler \
     jekyll \
     travis
