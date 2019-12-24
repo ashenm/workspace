@@ -77,12 +77,12 @@ RUN pip3 install --no-cache-dir \
 
 # install ruby packages
 RUN gem install --no-update-sources --no-rdoc --no-ri \
-      asciidoctor \
-      bundler \
-      jekyll \
-      travis && \
-    gem install --pre --no-update-sources --no-rdoc --no-ri \
-      asciidoctor-pdf
+    asciidoctor \
+    bundler \
+    jekyll \
+    travis && \
+  gem install --pre --no-update-sources --no-rdoc --no-ri \
+    asciidoctor-pdf
 
 # install node packages
 RUN npm install -g \
