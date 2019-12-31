@@ -28,8 +28,8 @@ install: ## install build requisites
 	./scripts/install.sh
 
 .PHONY: purge
-purge:
-	./scripts/clean.sh --all
+purge: ## remove dangling deployed images
+	./scripts/purge.sh
 
 .PHONY: run
 run: ## spawn container from locally built image
