@@ -14,6 +14,7 @@ RUN sudo apt update && \
 RUN sudo mkdir --parents --mode 755 /opt/stanford/cs143 && \
   sudo wget --recursive --no-parent --no-host-directories --cut-dirs 3 --directory-prefix /opt/stanford/cs143 \
     --reject "index.html*" 'https://theory.stanford.edu/~aiken/software/cooldist/' && \
+  sudo find /opt/stanford/cs143/bin -type f -exec chmod 755 {} \; && \
   sudo sed --in-place --regexp-extended 's/^PATH="?([^\"]+)"?$/PATH="\/opt\/stanford\/cs143\/bin\:\1"/' /etc/environment
 
 ENV PATH /opt/stanford/cs143/bin:$PATH
