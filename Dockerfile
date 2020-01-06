@@ -13,7 +13,7 @@ RUN sudo apt update && \
 
 # inject distribution files
 RUN sudo mkdir --parents --mode 755 /opt/stanford/cs143 && \
-  sudo wget --recursive --no-parent --no-host-directories --cut-dirs 3 --directory-prefix /opt/stanford/cs143 \
+  sudo wget --quiet --recursive --show-progress --no-parent --no-host-directories --cut-dirs 3 --directory-prefix /opt/stanford/cs143 \
     --reject "index.html*,spim" 'https://theory.stanford.edu/~aiken/software/cooldist/' 'https://theory.stanford.edu/~aiken/software/cooldist/bin/.i686/' && \
   sudo make --directory /opt/stanford/cs143 install COOL_DIR="/opt/stanford/cs143" BINARIES="aps2c++ coolc xspim" ARCH="echo i686" && \
   sudo find /opt/stanford/cs143/bin -type f -exec chmod 755 {} \; && \
