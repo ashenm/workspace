@@ -3,6 +3,9 @@ FROM ashenm/baseimage:developer
 # avoid prompts
 ARG DEBIAN_FRONTEND=noninteractive
 
+# clinch compiler optimisations
+ARG CFLAGS="-march=x86-64 -mtune=x86-64"
+
 # expose tcp ports
 EXPOSE 8080 8081 8082
 
