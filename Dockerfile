@@ -87,8 +87,9 @@ RUN pip3 install --no-cache-dir \
     icdiff
 
 # install ruby packages
-RUN gem install --no-document --no-update-sources \
+RUN gem install --force --no-document --no-update-sources \
     asciidoctor \
+    bundler \
     jekyll \
     travis && \
   gem install --pre --no-document --no-update-sources \
