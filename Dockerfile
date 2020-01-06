@@ -22,6 +22,15 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
   echo 'deb-src https://deb.nodesource.com/node_12.x bionic main' | \
     tee -a /etc/apt/sources.list.d/nodesource.list
 
+# set up ruby 2.6.x
+# http://rubies.travis-ci.org/
+RUN apt-get update && \
+  apt-get install --yes --no-install-recommends \
+    libyaml-0-2 && \
+  curl -sSL https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/18.04/x86_64/ruby-2.6.5.tar.bz2 | \
+    tar --bzip --extract --file - --strip-components 1 --directory /usr/local && \
+  rm -rf /var/lib/apt/lists/*
+
 # install packages
 # deliberately updating apt cache at the end
 # facilitating apt-file usage out-of-the-box
@@ -49,7 +58,6 @@ RUN apt-get update && \
     python3-pip \
     python3-setuptools \
     python3-wheel \
-    ruby-full \
     sqlite3 \
     sudo \
     telnet \
@@ -76,12 +84,11 @@ RUN pip3 install --no-cache-dir \
     icdiff
 
 # install ruby packages
-RUN gem install --no-update-sources --no-rdoc --no-ri \
+RUN gem install --no-document --no-update-sources \
     asciidoctor \
-    bundler \
     jekyll \
     travis && \
-  gem install --pre --no-update-sources --no-rdoc --no-ri \
+  gem install --pre --no-document --no-update-sources \
     asciidoctor-pdf
 
 # install node packages
