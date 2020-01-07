@@ -25,12 +25,12 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
   echo 'deb-src https://deb.nodesource.com/node_12.x bionic main' | \
     tee -a /etc/apt/sources.list.d/nodesource.list
 
-# set up ruby 2.6.x
+# set up ruby 2.7.x
 # http://rubies.travis-ci.org/
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
     libyaml-0-2 && \
-  curl -sSL https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/18.04/x86_64/ruby-2.6.5.tar.bz2 | \
+  curl -sSL https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/18.04/x86_64/ruby-2.7.0.tar.bz2 | \
     tar --bzip --extract --file - --strip-components 1 --directory /usr/local && \
   rm -rf /var/lib/apt/lists/*
 
