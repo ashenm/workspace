@@ -57,6 +57,10 @@ RUN apt-get update && \
     nodejs \
     openssh-client \
     perl \
+    python \
+    python-pip \
+    python-setuptools \
+    python-wheel \
     python3 \
     python3-pip \
     python3-setuptools \
