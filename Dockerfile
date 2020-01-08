@@ -95,6 +95,7 @@ RUN gem install --force --no-document --no-update-sources \
     asciidoctor \
     bundler \
     jekyll \
+    pygments.rb \
     travis && \
   gem install --pre --no-document --no-update-sources \
     asciidoctor-pdf
