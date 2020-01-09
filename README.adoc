@@ -70,7 +70,7 @@ Please refer link:https://docs.docker.com/engine/reference/commandline/run[offic
 
 The Docker Desktop currently uses SMB/CIFS for host volumes and therefore does not support multiple users nor different file permissions on host mounts.
 
-A mundane solution would be to use link:https://docs.docker.com/storage/volumes/[_Docker Volumes_] which are independent of the directory structure of the host machine. The `workspace/workspace.cmd` facilitate ease administration of Docker Volumes allowing <<_workspace_create, creation>>, <<_workspace_backup, backup>>, <<_workspace_push, upload>>, and <<_workspace_delete, deletion>>.
+A mundane solution would be to use link:https://docs.docker.com/storage/volumes/[_Docker Volumes_] which are independent of the directory structure of the host machine. The `volume/workspace.cmd` facilitate ease administration of Docker Volumes allowing <<_workspace_create, creation>>, <<_workspace_backup, backup>>, <<_workspace_push, upload>>, and <<_workspace_delete, deletion>>.
 
 ====== `workspace create`
 
