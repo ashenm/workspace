@@ -30,3 +30,5 @@ $tree.Path | ForEach-Object {
 
 # suspend
 Pause
+
+# vim: set expandtab shiftwidth=2 syntax=powershell:

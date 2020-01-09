@@ -37,3 +37,5 @@ else
     --strip-components 1 --file /tmp/workspace.tar --directory $VOLUME
 
 fi
+
+# vim: set expandtab shiftwidth=2 syntax=sh:

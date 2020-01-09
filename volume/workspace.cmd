@@ -52,3 +52,5 @@ ECHO   backup                    Archive docker volume to a tarball
 ECHO   delete                    Delete docker volume
 ECHO   push                      Copy current folder to docker volume
 ECHO   update                    Update Facilitator Scripts
+
+REM vim: set expandtab shiftwidth=2 syntax=dosbatch:

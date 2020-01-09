@@ -23,3 +23,5 @@ Invoke-WebRequest -UseBasicParsing -OutFile $env:TEMP\Update-Workspace-$STAMP.ps
 
 # update system
 Start-Process -WindowStyle Normal -WorkingDirectory $PSScriptRoot -FilePath PowerShell -ArgumentList "-File", "$env:TEMP\Update-Workspace-$STAMP.ps1", "-ExecutionPolicy", "Unrestricted"
+
+# vim: set expandtab shiftwidth=2 syntax=powershell:
