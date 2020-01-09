@@ -4,5 +4,5 @@
 set -e
 
 # create gzip tarball
-tar --create --gzip --preserve-permissions --verbose \
+tar --create --bzip2 --preserve-permissions --verbose \
   --file workspace.tgz --directory /mnt workspace
