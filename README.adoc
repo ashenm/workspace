@@ -17,6 +17,29 @@ toc::[title="", levels=4]
 === USAGE
 
 ==== Using `script/workspace`
+[source, console]
+----
+./script/workspace [OPTION...] [ARG...]
+----
+
+|===
+| Option | Description
+
+| --help | Print usage instructions
+| <<custom-container-hostname,--hostname>> | Assign custom container hostname
+| <<custom-container-image,--image>> | Override container images (default 'ashenm/workspace:latest')
+| <<custom-container-name,-n, --name>> | Assign custom container name
+| --blank | Avoid all extended customisations
+| <<ssh-agent-sharing,--no-agent>> | Avoid all extended customisations
+| <<git-configuration,--no-git>> | Avoid ~/.gitconfig read-only bind mount
+| <<openpgp-keyring,--no-gpg>> | Avoid ~/.gnupg bind mount
+| <<host-ip-mapping,--no-host>> | Avoid population of host IP mapping
+| <<directory-mounts,--no-mount>> | Avoid directory mount
+| <<container-port-publishing,--no-publish>> | Avoid punishment of container's 8080, 8081 and 8082 ports to the host
+| <<ssh-configuration,--no-ssh>> | Avoid ~/.ssh read-only bind mount
+| <<automatic-container-removal,--no-rm>> | Avoid automatic removal of container on exit
+|===
+
 ===== Directory Mounts
 ====== `workspace [DIRECTORY]`
 The arguments to `workspace` can be used to bind mount a host directory, current
