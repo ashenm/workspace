@@ -71,8 +71,8 @@ The `workspace` can be used to run any docker image that is not intended to be
 run as an executable. By default, it will attempt to use link:https://hub.docker.com/r/ashenm/workspace[_ashenm/workspace:latest_]
 as the image unless specified.
 
-The default image can be overridden by simply specifying the desired image name.
-If multiple images are specified the last most image name will be used.
+The default image can be overridden by simply specifying the desired image name
+via option `--image`. If multiple images are specified the last most image name will be used.
 
 For instance, to bind current directory within link:https://hub.docker.com/_/alpine[__alpine:latest__] run `./workspace --image alpine:latest`.
 
