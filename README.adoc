@@ -51,7 +51,7 @@ For instance, to bind current directory run `./workspace .` or simply `./workspa
 Similarly, to bind a directory like `C:\foo\bar` using an absolute path on a
 Windows<<COMPATIBILITY, *>> system to container's `~/workspace` run `./workspace C:\foo\bar`.
 
-====== `workspace [DIRECTORY ...]`
+====== `workspace [DIRECTORY...]`
 The provision of multiple directory paths, absolute or relative, will bind all
 specified directories onto the container's `~/workspace` bearing respective sub-directory names.
 

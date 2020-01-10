@@ -20,7 +20,7 @@ usage() {
 
 cat <<USAGE
 
-Usage: $SELF [OPTIONS] [DIRECTORY]
+Usage: $SELF [OPTION...] [DIRECTORY...]
 Mount a directory within a Workspace container
 
 Options:
