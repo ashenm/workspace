@@ -100,8 +100,8 @@ not support multiple users nor different file permissions on host mounts.
 A mundane solution would be to use link:https://docs.docker.com/storage/volumes/[_Docker Volumes_]
 which are independent of the directory structure of the host machine.
 The `volume/workspace.cmd` facilitate ease administration of Docker Volumes
-allowing <<_workspace_create, creation>>, <<_workspace_backup, backup>>,
-<<_workspace_push, upload>>, and <<_workspace_delete, deletion>>.
+allowing <<workspace-create, creation>>, <<workspace-backup, backup>>,
+<<workspace-push, upload>>, and <<workspace-delete, deletion>>.
 
 ====== `workspace create`
 Creates a new Docker Volume named _workspace_ that containers can consume and store data in.
