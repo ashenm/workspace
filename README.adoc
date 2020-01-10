@@ -82,8 +82,8 @@ The default container hostname, reflecting container's ID, can be overridden usi
 
 For instance, to override container hostname to `workspace.ashenm.ml`, run `./workspace --hostanme 'workspace.ashenm.ml' [DIRECTORY]`.
 
-==== Custom Container Name
-===== `workspace [--name=NAME] [DIRECTORY]`
+===== Custom Container Name
+====== `workspace [--name=NAME] [DIRECTORY]`
 The default generated container name can be overridden using the option `--name`
 (short option `-n`). For instance, to assign name `example` as the container name, run `./workspace --name 'example' [DIRECTORY]`.
 
