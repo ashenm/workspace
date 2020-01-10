@@ -35,7 +35,7 @@ toc::[title="", levels=4]
 | <<openpgp-keyring,--no-gpg>> | Avoid ~/.gnupg bind mount
 | <<host-ip-mapping,--no-host>> | Avoid population of host IP mapping
 | <<directory-mounts,--no-mount>> | Avoid directory mount
-| <<container-port-publishing,--no-publish>> | Avoid punishment of container's 8080, 8081 and 8082 ports to the host
+| <<container-port-publishing,--no-publish>> | Avoid container's 8080, 8081 and 8082 ports exposition to the host
 | <<ssh-configuration,--no-ssh>> | Avoid ~/.ssh read-only bind mount
 | <<automatic-container-removal,--no-rm>> | Avoid automatic removal of container on exit
 |===
