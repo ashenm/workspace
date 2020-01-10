@@ -13,7 +13,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/purge.sh
+        run: ./scripts/purge
     runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:

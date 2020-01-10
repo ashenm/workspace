@@ -2,23 +2,23 @@
 
 .PHONY: assess
 assess: ## test docker image
-	./scripts/assess.sh
+	./scripts/assess
 
 .PHONY: build
 build: install ## build docker image
-	./scripts/build.sh
+	./scripts/build
 
 .PHONY: clean
 clean: ## remove locally built images
-	./scripts/clean.sh
+	./scripts/clean
 
 .PHONY: culminate
 culminate: build ## trigger reverse dependency builds
-	./scripts/culminate.sh
+	./scripts/culminate
 
 .PHONY: deploy
 deploy: ## deploy image to docker hub
-	./scripts/deploy.sh
+	./scripts/deploy
 
 .PHONY: help
 .SILENT: help
@@ -27,11 +27,11 @@ help: ## show make targets
 
 .PHONY: install
 install: ## install build requisites
-	./scripts/install.sh
+	./scripts/install
 
 .PHONY: purge
 purge: ## remove dangling deployed images
-	./scripts/purge.sh
+	./scripts/purge
 
 .PHONY: run
 run: ## spawn container from locally built image
