@@ -6,7 +6,9 @@
 
 [discrete]
 ====== The Personal Docker Workspace
-image:https://travis-ci.org/ashenm/workspace.svg?branch=latest["Build Status", link="https://travis-ci.org/ashenm/workspace"] image:https://img.shields.io/badge/tag-latest-blue.svg["Image Tag", link="https://github.com/ashenm/workspace/tree/latest"] image:https://images.microbadger.com/badges/image/ashenm/workspace.svg["Image Overview", link="https://hub.docker.com/r/ashenm/workspace/"]
+image:https://travis-ci.org/ashenm/workspace.svg?branch=latest["Build Status", link="https://travis-ci.org/ashenm/workspace"]
+image:https://img.shields.io/badge/tag-latest-blue.svg["Image Tag", link="https://github.com/ashenm/workspace/tree/latest"]
+image:https://images.microbadger.com/badges/image/ashenm/workspace.svg["Image Overview", link="https://hub.docker.com/r/ashenm/workspace/"]
 
 [discrete]
 === Table of Contents
@@ -17,26 +19,33 @@ toc::[title="", levels=4]
 ==== Using `script/workspace`
 ===== Directory Mounts
 ====== `workspace [DIRECTORY]`
-The arguments to `workspace` can be used to bind mount a host directory, current directory will be assumed unless specified, to a new container either using a relative or an absolute path. It will be binded at `~/workspace` on the created container.
+The arguments to `workspace` can be used to bind mount a host directory, current
+directory will be assumed unless specified, to a new container either using a
+relative or an absolute path. It will be binded at `~/workspace` on the created container.
 
 For instance, to bind current directory run `./workspace .` or simply `./workspace`.
 
-Similarly, to bind a directory like `C:\foo\bar` using an absolute path on a Windows<<COMPATIBILITY, *>> system to container's `~/workspace` run `./workspace C:\foo\bar`.
+Similarly, to bind a directory like `C:\foo\bar` using an absolute path on a
+Windows<<COMPATIBILITY, *>> system to container's `~/workspace` run `./workspace C:\foo\bar`.
 
 ====== `workspace --no-mount`
-The present of flag `--no-mount` will preclude the attempt to bind any directories onto container's `~/workspace` directory.
+The present of flag `--no-mount` will preclude the attempt to bind any directories
+onto container's `~/workspace` directory.
 
 ===== SSH Agent Sharing
 ====== `workspace [--no-agent] [DIRECTORY]`
-The present of flag `--no-agent` will preclude the attempt to bind ssh-agent socket onto container with read-only access.
+The present of flag `--no-agent` will preclude the attempt to bind ssh-agent
+socket onto container with read-only access.
 
 ===== Git Configuration
 ====== `workspace [--no-git] [DIRECTORY]`
-The present of flag `--no-git` will preclude the attempt to bind `~/.gitconfig` on host to `~/.gitconfig` on the container with read-only access.
+The present of flag `--no-git` will preclude the attempt to bind `~/.gitconfig`
+on host to `~/.gitconfig` on the container with read-only access.
 
 ===== OpenPGP Keyring
 ====== `workspace [--no-gpg] [DIRECTORY]`
-The present of flag `--no-gpg` will preclude the attempt to bind `~/.gnupg` on host to `~/.gnupg` on the container with read-write access.
+The present of flag `--no-gpg` will preclude the attempt to bind `~/.gnupg` on
+host to `~/.gnupg` on the container with read-write access.
 
 ===== Host IP Mapping
 ====== `workspace [--no-host] [DIRECTORY]`
@@ -44,11 +53,13 @@ The present of flag `--no-host` will preclude the attempt to populate the `docke
 
 ===== Container Port Publishing
 ====== `workspace [--no-publish] [DIRECTORY]`
-The present of flag `--no-publish` will preclude the attempt to expose container's ports _8080_, _8081_, and _8082_ to host.
+The present of flag `--no-publish` will preclude the attempt to expose
+container's ports _8080_, _8081_, and _8082_ to host.
 
 ===== SSH Configuration
 ====== `workspace [--no-ssh] [DIRECTORY]`
-The present of flag `--no-ssh` will preclude the attempt to bind `~/.ssh` on host to `~/.ssh` on the container with read-only access.
+The present of flag `--no-ssh` will preclude the attempt to bind `~/.ssh` on
+host to `~/.ssh` on the container with read-only access.
 
 ===== Automatic Container Removal
 ====== `workspace [--no-rm] [DIRECTORY]`
@@ -56,9 +67,12 @@ The present of flag `--no-rm` will preclude the attempt to automatically remove 
 
 ===== Custom Container Image
 ====== `workspace [--image=IMAGE] [DIRECTORY]`
-The `workspace` can be used to run any docker image that is not intended to be run as an executable. By default, it will attempt to use link:https://hub.docker.com/r/ashenm/workspace[_ashenm/workspace:latest_] as the image unless specified.
+The `workspace` can be used to run any docker image that is not intended to be
+run as an executable. By default, it will attempt to use link:https://hub.docker.com/r/ashenm/workspace[_ashenm/workspace:latest_]
+as the image unless specified.
 
-The default image can be overridden by simply specifying the desired image name. If multiple images are specified the last most image name will be used.
+The default image can be overridden by simply specifying the desired image name.
+If multiple images are specified the last most image name will be used.
 
 For instance, to bind current directory within link:https://hub.docker.com/_/alpine[__alpine:latest__] run `./workspace --image alpine:latest`.
 
@@ -70,7 +84,8 @@ For instance, to override container hostname to `workspace.ashenm.ml`, run `./wo
 
 ==== Custom Container Name
 ===== `workspace [--name=NAME] [DIRECTORY]`
-The default generated container name can be overridden using the option `--name` (short option `-n`). For instance, to assign name `example` as the container name, run `./workspace --name 'example' [DIRECTORY]`.
+The default generated container name can be overridden using the option `--name`
+(short option `-n`). For instance, to assign name `example` as the container name, run `./workspace --name 'example' [DIRECTORY]`.
 
 ==== Using `docker run`
 Please refer link:https://docs.docker.com/engine/reference/commandline/run[official Docker documentation]
@@ -79,9 +94,14 @@ Please refer link:https://docs.docker.com/engine/reference/commandline/run[offic
 
 ==== Windows
 ===== UNIX Permissions
-The Docker Desktop currently uses SMB/CIFS for host volumes and therefore does not support multiple users nor different file permissions on host mounts.
+The Docker Desktop currently uses SMB/CIFS for host volumes and therefore does
+not support multiple users nor different file permissions on host mounts.
 
-A mundane solution would be to use link:https://docs.docker.com/storage/volumes/[_Docker Volumes_] which are independent of the directory structure of the host machine. The `volume/workspace.cmd` facilitate ease administration of Docker Volumes allowing <<_workspace_create, creation>>, <<_workspace_backup, backup>>, <<_workspace_push, upload>>, and <<_workspace_delete, deletion>>.
+A mundane solution would be to use link:https://docs.docker.com/storage/volumes/[_Docker Volumes_]
+which are independent of the directory structure of the host machine.
+The `volume/workspace.cmd` facilitate ease administration of Docker Volumes
+allowing <<_workspace_create, creation>>, <<_workspace_backup, backup>>,
+<<_workspace_push, upload>>, and <<_workspace_delete, deletion>>.
 
 ====== `workspace create`
 Creates a new Docker Volume named _workspace_ that containers can consume and store data in.
@@ -99,6 +119,11 @@ Removes Docker Volume _workspace_.
 Updates facilitator scripts to the latest
 
 ==== `scripts`
-Given that link:https://www.docker.com/[Docker] is installed, the facilitator scripts provided can be used with any shell that is is _Bourne SHell_ compatible.
+Given that link:https://www.docker.com/[Docker] is installed, the facilitator
+scripts provided can be used with any shell that is is _Bourne SHell_ compatible.
 
-For _Microsoft Windows_ use a POSIX-compliant run-time environment such as _MSYS_ or _Cygwin_ with link:https://github.com/rprichard/winpty[_WinPTY_] or Microsoft's own link:https://docs.microsoft.com/en-us/windows/wsl/about[_Windows Subsystem for Linux_].
+For _Microsoft Windows_ use a POSIX-compliant run-time environment such as _MSYS_
+or _Cygwin_ with link:https://github.com/rprichard/winpty[_WinPTY_] or Microsoft's
+own link:https://docs.microsoft.com/en-us/windows/wsl/about[_Windows Subsystem for Linux_].
+
+// vim: set expandtab spell shiftwidth=2 colorcolumn=80 syntax=asciidoc:
