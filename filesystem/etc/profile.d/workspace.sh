@@ -12,6 +12,9 @@ then
   alias pip='pip3'
   alias python='python3'
 
+  # asciidoctor
+  alias asciidoctor-pdf='asciidoctor-pdf --require asciidoctor-mathematical --attribute mathematical-format=svg'
+
   # terminal colors
   export TERM="xterm-256color"
 

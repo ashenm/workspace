@@ -42,12 +42,14 @@ RUN apt-get update && \
     apt-file \
     bash-completion \
     bc \
+    bison \
     bsdtar \
     cmake \
     dnsutils \
     dos2unix \
     exiftool \
     file \
+    flex \
     gdb \
     git-lfs \
     iputils-ping \
@@ -91,8 +93,16 @@ RUN pip3 install --no-cache-dir \
     icdiff
 
 # install ruby packages
-RUN gem install --force --no-document --no-update-sources \
+RUN sudo apt-get install --yes --no-install-recommends \
+    fonts-lyx \
+    libcairo2-dev \
+    libffi-dev \
+    libgdk-pixbuf2.0-dev \
+    libpango1.0-dev \
+    libxml2-dev && \
+  gem install --force --no-document --no-update-sources \
     asciidoctor \
+    asciidoctor-mathematical \
     bundler \
     jekyll \
     pygments.rb \
