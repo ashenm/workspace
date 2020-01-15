@@ -16,6 +16,6 @@ then
   alias asciidoctor-pdf='asciidoctor-pdf --require asciidoctor-mathematical --attribute mathematical-format=svg'
 
   # terminal colors
-  export TERM="xterm-256color"
+  export TERM='xterm-256color'
 
 fi
