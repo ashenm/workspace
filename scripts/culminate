@@ -12,7 +12,7 @@ test "$TRAVIS_EVENT_TYPE" = "cron" && \
 TRAVIS_COMMIT=`expr substr "$TRAVIS_COMMIT" 1 7`
 
 # ashenm/environment
-if [ -n "$(git diff --name-only HEAD~1 HEAD | egrep '^scripts/workspace$')" ]; then
+if [ -n "$(git diff --name-only HEAD~1 HEAD | egrep '^(:?scripts/workspace|filesystem/etc/.*)$')" ]; then
 
   curl --fail --silent --show-error --request POST --output /dev/null \
     --header "Content-Type: application/json" --header "Accept: application/json" \
