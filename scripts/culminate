@@ -3,11 +3,6 @@
 
 set -e
 
-# avoid reverse dependecy
-# triggers on CI/CD cron jobs
-test "$TRAVIS_EVENT_TYPE" = "cron" && \
-  exit
-
 # truncate commit hash
 TRAVIS_COMMIT=`expr substr "$TRAVIS_COMMIT" 1 7`
 

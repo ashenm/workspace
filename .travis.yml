@@ -21,7 +21,7 @@ deploy:
     condition: $TRAVIS_BRANCH != *-alpha
 
 after_deploy:
-  '[ "$TRAVIS_BRANCH" != "latest" ] || make culminate'
+  '[ "$TRAVIS_BRANCH" != "latest" -o "$TRAVIS_EVENT_TYPE" != "push" ] || make culminate'
 
 notifications:
   slack:
