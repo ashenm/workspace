@@ -16,7 +16,7 @@ then
   alias git='hub'
 
   # asciidoctor
-  alias asciidoctor-pdf='asciidoctor-pdf --require asciidoctor-mathematical --attribute mathematical-format=svg'
+  alias asciidoctor-pdf='asciidoctor-pdf --require asciidoctor-mathematical --attribute mathematical-format=svg --attribute pdf-theme=workspace'
 
   # terminal colors
   export TERM='xterm-256color'
