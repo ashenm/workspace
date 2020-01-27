@@ -93,7 +93,7 @@ RUN pip3 install --no-cache-dir \
     awscli \
     icdiff
 
-# install/configure ruby packages
+# install ruby packages
 RUN sudo apt-get install --yes --no-install-recommends \
     fonts-lyx \
     libcairo2-dev \
@@ -109,8 +109,7 @@ RUN sudo apt-get install --yes --no-install-recommends \
     pygments.rb \
     travis && \
   gem install --pre --no-document --no-update-sources \
-    asciidoctor-pdf && \
-  ln --symbolic $(gem contents asciidoctor-pdf --show-install-dir) /usr/local/share/asciidoctor-pdf
+    asciidoctor-pdf
 
 # install node packages
 RUN npm install -g \
