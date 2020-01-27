@@ -1,4 +1,4 @@
-iextends:
+extends:
   default
 
 footer:
