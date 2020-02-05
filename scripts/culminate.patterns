@@ -1,0 +1,4 @@
+^scripts/workspace$
+^filesystem/etc/gitconfig$
+^filesystem/etc/gitattributes$
+^filesystem/etc/ssh/workspace$
