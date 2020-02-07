@@ -8,6 +8,9 @@
 #
 ##################################################
 
+# trailing pwd components
+export PROMPT_DIRTRIM=2
+
 # if not root
 if [ `id -u` -ne 0 ]
 then
