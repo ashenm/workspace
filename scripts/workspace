@@ -212,5 +212,9 @@ test "$SSHCONFIG" != "false" && test -n "$SSH_AUTH_SOCK" && \
 test "$GNUPGDIR" != "false" && test -d "$HOME/.gnupg" && \
   ARGUMENTS="$ARGUMENTS --volume $HOME/.gnupg:/home/ubuntu/.gnupg"
 
+# docker deamon ipc socket
+test -S "/var/run/docker.sock" && \
+  ARGUMENTS="$ARGUMENTS --volume /var/run/docker.sock:/run/docker.sock:ro"
+
 # spawn new container
 exec docker run $ARGUMENTS $IMAGE

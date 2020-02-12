@@ -25,4 +25,15 @@ then
   # terminal colors
   export TERM='xterm-256color'
 
+  # motd
+  echo "                                                                   "
+  echo "                                                                   "
+  echo "                 W   O   R   K   S   P   A   C   E                 "
+  echo "             https://hub.docker.com/r/ashenm/workspace             "
+  echo "                                                                   "
+  echo "                                                                   "
+  echo " PortMapping                                                       "
+  ports | sed 's/^/     /'
+  echo "                                                                   "
+
 fi
