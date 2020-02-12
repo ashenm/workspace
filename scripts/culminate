@@ -7,7 +7,7 @@ set -e
 TRAVIS_COMMIT=`expr substr "$TRAVIS_COMMIT" 1 7`
 
 # ashenm/environment
-if [ -n "$(git diff --name-only HEAD~1 HEAD | egrep --file culminate.patterns)" ]; then
+if [ -n "$(git diff --name-only HEAD~1 HEAD | egrep --file $(dirname $0)/culminate.patterns)" ]; then
 
   curl --fail --silent --show-error --request POST --output /dev/null \
     --header "Content-Type: application/json" --header "Accept: application/json" \
