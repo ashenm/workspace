@@ -25,13 +25,22 @@ then
   # terminal colors
   export TERM='xterm-256color'
 
-  # motd
+fi
+
+# motd
+if [ "$$" -eq 1 ]
+then
+
   echo "                                                                   "
   echo "                                                                   "
   echo "                 W   O   R   K   S   P   A   C   E                 "
   echo "             https://hub.docker.com/r/ashenm/workspace             "
   echo "                                                                   "
   echo "                                                                   "
+
+  test ! -S /run/docker.sock && \
+    return
+
   echo " PortMapping                                                       "
   ports | sed 's/^/     /'
   echo "                                                                   "
