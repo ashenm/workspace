@@ -24,7 +24,7 @@ try:
   ports = resultset['NetworkSettings']['Ports']
 
   for port in ports:
-    print(port, ', '.join(map(lambda o: f'''{o['HostIp']}:{o['HostPort']}''', ports.get(port, []))), sep=' -> ')
+    print(port, ', '.join(map(lambda o: f'''{o['HostIp']}:{o['HostPort']}''', ports[port] or [])), sep=' -> ')
 
 except (FileNotFoundError, AssertionError):
   print('No Docker Deamon IPC socket: /run/docker.sock', file=stdout)
