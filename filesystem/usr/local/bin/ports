@@ -7,10 +7,10 @@
 # mail@ashenm.ml
 #
 
-from os import environ, stat
 from json import loads
-from subprocess import PIPE, CalledProcessError, run
+from os import environ, stat
 from stat import S_ISSOCK
+from subprocess import PIPE, CalledProcessError, run
 from sys import exit, stdout
 
 try:
