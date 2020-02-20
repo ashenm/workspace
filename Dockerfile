@@ -78,6 +78,13 @@ RUN apt-get update && \
   git lfs install --system --skip-repo && \
   apt update
 
+# install openjdk
+# https://openjdk.java.net/install/
+RUN mkdir --parent /opt/openjdk && \
+  curl --silent --fail --output - https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz | \
+    tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
+ENV PATH /opt/openjdk/bin:$PATH
+
 # install hub
 # http://stackoverflow.com/a/27869453
 RUN mkdir /tmp/hub-linux-amd64 && \
