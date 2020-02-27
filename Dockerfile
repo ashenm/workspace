@@ -52,6 +52,7 @@ RUN apt-get update && \
     flex \
     gdb \
     git-lfs \
+    graphviz \
     iputils-ping \
     iputils-tracepath \
     jq \
