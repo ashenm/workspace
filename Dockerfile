@@ -95,6 +95,11 @@ RUN mkdir /tmp/hub-linux-amd64 && \
     /tmp/hub-linux-amd64/install && \
   rm -rf /tmp/hub-linux-amd64
 
+# install java packages
+RUN curl --fail --location --output /usr/local/lib/plantuml.jar \
+  http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
+ENV CLASSPATH /usr/local/lib/plantuml.jar:$CLASSPATH
+
 # install python packages
 RUN pip3 install --no-cache-dir \
     awscli \
@@ -110,6 +115,7 @@ RUN sudo apt-get install --yes --no-install-recommends \
     libxml2-dev && \
   gem install --force --no-document --no-update-sources \
     asciidoctor \
+    asciidoctor-diagram \
     asciidoctor-mathematical \
     bundler \
     jekyll \
