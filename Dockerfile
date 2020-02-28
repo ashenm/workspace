@@ -97,9 +97,9 @@ RUN mkdir /tmp/hub-linux-amd64 && \
   rm -rf /tmp/hub-linux-amd64
 
 # install java packages
-RUN curl --fail --location --output /usr/local/lib/plantuml.jar \
-  http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
-ENV CLASSPATH /usr/local/lib/plantuml.jar:$CLASSPATH
+RUN mkdir --parents /usr/local/share/java && \
+  curl --fail --location --output /usr/local/share/java/plantuml.jar http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
+ENV CLASSPATH /usr/local/share/java/plantuml.jar
 
 # install python packages
 RUN pip3 install --no-cache-dir \
