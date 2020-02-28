@@ -126,7 +126,7 @@ RUN sudo apt-get install --yes --no-install-recommends \
     asciidoctor-pdf
 
 # install node packages
-RUN npm install -g \
+RUN npm install --global \
     eslint \
     nodemon && \
   npm cache clean --force
