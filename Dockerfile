@@ -127,7 +127,8 @@ RUN sudo apt-get install --yes --no-install-recommends \
 
 # install node packages
 RUN npm install -g \
-    eslint && \
+    eslint \
+    nodemon && \
   npm cache clean --force
 
 # configure ssh client
