@@ -16,9 +16,6 @@ before_deploy:
 deploy:
   provider: script
   script: make deploy
-  on:
-    all_branches: true
-    condition: $TRAVIS_BRANCH != *-alpha
 
 after_deploy:
   '[ "$TRAVIS_BRANCH" != "latest" ] || [ "$TRAVIS_EVENT_TYPE" != "push" -a "$TRAVIS_EVENT_TYPE" != "api" ] || make culminate'
