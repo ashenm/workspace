@@ -10,6 +10,9 @@ image:https://travis-ci.org/ashenm/workspace.svg?branch=latest["Build Status", l
 image:https://img.shields.io/badge/tag-latest-blue.svg["Image Tag", link="https://github.com/ashenm/workspace/tree/latest"]
 image:https://images.microbadger.com/badges/image/ashenm/workspace.svg["Image Overview", link="https://hub.docker.com/r/ashenm/workspace/"]
 
+image:https://github.com/ashenm/workspace/workflows/Build%20Image/badge.svg["GitHub Build Status", link="https://github.com/ashenm/workspace/actions?query=workflow%3A%22Build+Image%22"]
+image:https://github.com/ashenm/workspace/workflows/Deployment%20Cleanup/badge.svg["Deployment Cleanup", link="https://github.com/ashenm/workspace/actions?query=workflow%3A%22Deployment+Cleanup%22"]
+
 [discrete]
 === Table of Contents
 toc::[title="", levels=4]
