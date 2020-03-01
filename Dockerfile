@@ -98,10 +98,8 @@ RUN mkdir /tmp/hub-linux-amd64 && \
 
 # install java packages
 RUN mkdir --parents /usr/local/share/java && \
-  curl --fail --location --output /tmp/ditaa.zip https://sourceforge.net/projects/ditaa/files/latest/download && \
-    unzip -d /usr/local/share/java /tmp/ditaa.zip '*.jar' && \
-    ln --symbolic /usr/local/share/java/ditaa???.jar /usr/local/share/java/ditaa.jar && \
-  rm --force /tmp/ditaa.zip && \
+  curl --fail --location https://sourceforge.net/projects/ditaa/files/latest/download | \
+    bsdtar -xf - -s '/ditaa.*\.jar/ditaa.jar/' -C /usr/local/share/java '*.jar' && \
   curl --fail --location --output /usr/local/share/java/plantuml.jar http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
 ENV CLASSPATH /usr/local/share/java/plantuml.jar
 
