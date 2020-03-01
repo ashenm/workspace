@@ -1,0 +1,22 @@
+name: Build Image
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build:
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - run: make install
+      - run: make build
+      - run: make assess
+      - run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
+          docker tag ashenm/workspace:latest-alpha docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_SHA:0:7}
+          docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_SHA:0:7}
+    runs-on: ubuntu-latest
+
+# vim: set expandtab shiftwidth=2 syntax=yaml:
