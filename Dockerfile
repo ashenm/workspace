@@ -100,10 +100,10 @@ RUN mkdir /tmp/hub-linux-amd64 && \
 RUN mkdir --parents /usr/local/share/java && \
   curl --fail --location --output /tmp/ditaa.zip https://sourceforge.net/projects/ditaa/files/latest/download && \
     unzip -d /usr/local/share/java /tmp/ditaa.zip '*.jar' && \
-    ln --symbolic /usr/local/share/java/ditaa???.jar /usr/local/share/java/ditaa.zip && \
+    ln --symbolic /usr/local/share/java/ditaa???.jar /usr/local/share/java/ditaa.jar && \
   rm --force /tmp/ditaa.zip && \
   curl --fail --location --output /usr/local/share/java/plantuml.jar http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
-ENV CLASSPATH /usr/local/share/java/ditaa.zip:/usr/local/share/java/plantuml.jar
+ENV CLASSPATH /usr/local/share/java/plantuml.jar
 
 # install python packages
 RUN pip3 install --no-cache-dir \
