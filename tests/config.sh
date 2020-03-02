@@ -7,6 +7,7 @@ imageTests+=(
     node-hello-world
     perl-hello-world
     plantuml
+    plantuml-dot
     ruby-hello-world
   '
 )
