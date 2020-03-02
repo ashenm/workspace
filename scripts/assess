@@ -3,8 +3,14 @@
 
 set -e
 
+# clinch permissions
+umask 002
+
 # docker image test suite
 git clone --depth 1 https://github.com/docker-library/official-images.git /tmp/official-images
+
+# copy local test cases
+rsync --archive --verbose --chmod=ug=rwX,o=rX tests/checks/ /tmp/official-images/test/tests
 
 # test image
 /tmp/official-images/test/run.sh -c /tmp/official-images/test/config.sh -c tests/config.sh "${TRAVIS_REPO_SLUG:-ashenm/workspace}:${TRAVIS_BRANCH:-latest-alpha}"
