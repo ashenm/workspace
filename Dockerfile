@@ -106,6 +106,7 @@ ENV CLASSPATH /usr/local/share/java/plantuml.jar
 # install python packages
 RUN pip3 install --no-cache-dir \
     awscli \
+    blockdiag \
     icdiff
 
 # install ruby packages
