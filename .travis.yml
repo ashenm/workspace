@@ -16,9 +16,11 @@ before_deploy:
 deploy:
   provider: script
   script: make deploy
+  on:
+    branch: latest
 
 after_deploy:
-  '[ "$TRAVIS_BRANCH" != "latest" ] || [ "$TRAVIS_EVENT_TYPE" != "push" -a "$TRAVIS_EVENT_TYPE" != "api" ] || make culminate'
+  '[ "$TRAVIS_EVENT_TYPE" != "push" -a "$TRAVIS_EVENT_TYPE" != "api" ] || make culminate'
 
 notifications:
   slack:
