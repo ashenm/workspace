@@ -100,8 +100,10 @@ RUN mkdir /tmp/hub-linux-amd64 && \
 RUN mkdir --parents /usr/local/share/java && \
   curl --fail --location https://sourceforge.net/projects/ditaa/files/latest/download | \
     bsdtar -xf - -s '/ditaa.*\.jar/ditaa.jar/' -C /usr/local/share/java '*.jar' && \
-  curl --fail --location --output /usr/local/share/java/plantuml.jar http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
-ENV CLASSPATH /usr/local/share/java/plantuml.jar
+  curl --fail --location --output /usr/local/share/java/plantuml.jar http://sourceforge.net/projects/plantuml/files/plantuml.jar/download && \
+  curl --fail --location --output - https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-6J.zip | \
+    bsdtar -xf - -s '/saxon.*\.jar/saxon.jar/' -C /usr/local/share/java 'saxon9he.jar'
+ENV CLASSPATH /usr/local/share/java/plantuml.jar:/usr/local/share/java/saxon.jar
 
 # install python packages
 RUN pip3 install --no-cache-dir \
