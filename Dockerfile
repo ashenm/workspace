@@ -68,6 +68,7 @@ RUN apt-get update && \
     python3-pip \
     python3-setuptools \
     python3-wheel \
+    rename \
     rsync \
     sqlite3 \
     sudo \
