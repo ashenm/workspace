@@ -11,9 +11,27 @@
 # trailing pwd components
 export PROMPT_DIRTRIM=2
 
+# directory changer
+workspace () {
+
+  if [ $# -ne 0 ]
+  then
+    command cd $*
+  elif [ -d $HOME/workspace ]
+  then
+    command cd $HOME/workspace
+  else
+    command cd
+  fi
+
+}
+
 # if not root
 if [ `id -u` -ne 0 ]
 then
+
+  # directory changes
+  alias cd='workspace'
 
   # hub
   alias git='hub'
