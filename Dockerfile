@@ -52,6 +52,7 @@ RUN apt-get update && \
     flex \
     gdb \
     git-lfs \
+    golang-go \
     graphviz \
     iputils-ping \
     iputils-tracepath \
