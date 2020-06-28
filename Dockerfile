@@ -110,6 +110,7 @@ ENV CLASSPATH /usr/local/share/java/plantuml.jar:/usr/local/share/java/saxon.jar
 # install python packages
 RUN pip3 install --no-cache-dir \
     awscli \
+    cairosvg \
     blockdiag \
     icdiff
 
