@@ -9,6 +9,9 @@ ARG CFLAGS="-march=x86-64 -mtune=x86-64"
 # expose tcp ports
 EXPOSE 8080 8081 8082
 
+# configure environment
+ENV NODE_PATH /usr/lib/node_modules
+
 # set up git-lfs repo
 # https://packagecloud.io/github/git-lfs/install#manual
 RUN curl -sSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
@@ -136,6 +139,7 @@ RUN sudo apt-get install --yes --no-install-recommends \
 # install node packages
 RUN npm install --global \
     eslint \
+    eslint-plugin-html \
     nodemon && \
   npm cache clean --force
 
