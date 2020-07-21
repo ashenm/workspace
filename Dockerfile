@@ -79,6 +79,7 @@ RUN apt-get update && \
     telnet \
     time \
     tree \
+    valgrind \
     wget \
     whois && \
   git lfs install --system --skip-repo && \
