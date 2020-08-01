@@ -6,7 +6,7 @@
 
 [discrete]
 ====== The Personal Docker Workspace
-image:https://travis-ci.org/ashenm/workspace.svg?branch=latest["Build Status", link="https://travis-ci.org/ashenm/workspace"]
+image:https://travis-ci.com/ashenm/workspace.svg?branch=latest["Build Status", link="https://travis-ci.com/ashenm/workspace"]
 image:https://img.shields.io/badge/tag-latest-blue.svg["Image Tag", link="https://github.com/ashenm/workspace/tree/latest"]
 image:https://images.microbadger.com/badges/image/ashenm/workspace.svg["Image Overview", link="https://hub.docker.com/r/ashenm/workspace/"]
 
