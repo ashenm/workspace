@@ -11,6 +11,34 @@
 # trailing pwd components
 export PROMPT_DIRTRIM=2
 
+# tmux session spawner
+mux () {
+
+  if [ $# -ne 1 ]
+  then
+    echo "Usage: $FUNCNAME DIRECTORY" >&2
+    return 1
+  fi
+
+  MUX_SESSION_DIR="`readlink -f $1`"
+
+  if [ ! -d $MUX_SESSION_DIR ]
+  then
+    echo "Cannot access '$1': No such file or directory" >&2
+    return 2
+  fi
+
+  tmux new-session -d -c ${MUX_SESSION_DIR} -s ${MUX_SESSION_DIR##*/}
+
+  for _ in 1 2
+  do
+    tmux new-window -d -c ${MUX_SESSION_DIR} || true
+  done
+
+  tmux attach-session -t ${MUX_SESSION_DIR##*/}
+
+}
+
 # directory changer
 workspace () {
 
