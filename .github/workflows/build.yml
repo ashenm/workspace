@@ -23,5 +23,6 @@ jobs:
           docker tag ashenm/workspace:latest-alpha docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:latest
           docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:latest
     runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
