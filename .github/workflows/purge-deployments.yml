@@ -7,15 +7,13 @@ jobs:
   purge:
     name: Docker Hub
     steps:
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - if: github.ref != 'latest'
+      - uses: ashenm/docker-hub-cleanup@latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/purge
+        with:
+          repository: ashenm/workspace
+          github_token: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
