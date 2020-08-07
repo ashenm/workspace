@@ -119,7 +119,7 @@ RUN pip3 install --no-cache-dir \
     icdiff
 
 # install ruby packages
-RUN sudo apt-get install --yes --no-install-recommends \
+RUN apt-get install --yes --no-install-recommends \
     fonts-lyx \
     libcairo2-dev \
     libffi-dev \
