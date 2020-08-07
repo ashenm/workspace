@@ -112,7 +112,8 @@ RUN mkdir --parents /usr/local/share/java && \
 ENV CLASSPATH /usr/local/share/java/plantuml.jar:/usr/local/share/java/saxon.jar
 
 # install python packages
-RUN pip3 install --no-cache-dir \
+RUN python3 -m pip install --upgrade --no-cache-dir pip && \
+  python3 -m pip install --upgrade --no-cache-dir \
     awscli \
     cairosvg \
     blockdiag \
