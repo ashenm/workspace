@@ -88,7 +88,9 @@ RUN apt-get update && \
 # install openjdk
 # https://openjdk.java.net/install/
 RUN mkdir --parent /opt/openjdk && \
-  curl --silent --fail --output - https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz | \
+  curl --silent --show-error --location 'https://jdk.java.net/14/' | \
+    egrep --only-matching --max-count 1 '/java/GA/jdk14.*/.*/openjdk-14.*_linux-x64_bin.tar.gz' | \
+    wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
 ENV PATH /opt/openjdk/bin:$PATH
 
