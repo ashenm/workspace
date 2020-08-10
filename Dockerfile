@@ -115,11 +115,12 @@ ENV CLASSPATH /usr/local/share/java/plantuml.jar:/usr/local/share/java/saxon.jar
 
 # install python packages
 RUN python3 -m pip install --upgrade --no-cache-dir pip && \
-  python3 -m pip install --upgrade --no-cache-dir \
+  python3 -m pip install --upgrade --no-cache-dir --ignore-installed \
     awscli \
     cairosvg \
     blockdiag \
-    icdiff
+    icdiff \
+    PyYAML
 
 # install ruby packages
 RUN apt-get install --yes --no-install-recommends \
