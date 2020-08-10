@@ -33,7 +33,7 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
     libyaml-0-2 && \
-  curl -sSL https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/18.04/x86_64/ruby-2.7.1.tar.bz2 | \
+  curl -sSL "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/x86_64/ruby-2.7.1.tar.bz2" | \
     tar --bzip --extract --file - --strip-components 1 --directory /usr/local && \
   rm -rf /var/lib/apt/lists/*
 
