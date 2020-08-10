@@ -14,28 +14,28 @@ ENV NODE_PATH /usr/lib/node_modules
 
 # set up git-lfs repo
 # https://packagecloud.io/github/git-lfs/install#manual
-RUN curl -sSL https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
+RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github/git-lfs/gpgkey' | apt-key add - && \
   echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/github_git-lfs.list && \
   echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
-    tee -a /etc/apt/sources.list.d/github_git-lfs.list
+    tee --append /etc/apt/sources.list.d/github_git-lfs.list
 
 # set up node 12.x repo
 # https://github.com/nodesource/distributions#debmanual
-RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
+RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | apt-key add - && \
   echo "deb https://deb.nodesource.com/node_12.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
   echo "deb-src https://deb.nodesource.com/node_12.x $(lsb_release --short --codename) main" | \
-    tee -a /etc/apt/sources.list.d/nodesource.list
+    tee --append /etc/apt/sources.list.d/nodesource.list
 
 # set up ruby 2.7.x
 # http://rubies.travis-ci.org/
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
     libyaml-0-2 && \
-  curl -sSL "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/x86_64/ruby-2.7.1.tar.bz2" | \
+  curl --silent --fail --show-error --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/x86_64/ruby-2.7.1.tar.bz2" | \
     tar --bzip --extract --file - --strip-components 1 --directory /usr/local && \
-  rm -rf /var/lib/apt/lists/*
+  rm --recursive --force /var/lib/apt/lists/*
 
 # install packages
 # deliberately updating apt cache at the end
@@ -88,7 +88,7 @@ RUN apt-get update && \
 # install openjdk
 # https://openjdk.java.net/install/
 RUN mkdir --parent /opt/openjdk && \
-  curl --silent --show-error --location 'https://jdk.java.net/14/' | \
+  curl --silent --fail --show-error --location 'https://jdk.java.net/14/' | \
     egrep --only-matching --max-count 1 '/java/GA/jdk14.*/.*/openjdk-14.*_linux-x64_bin.tar.gz' | \
     wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
@@ -97,20 +97,20 @@ ENV PATH /opt/openjdk/bin:$PATH
 # install hub
 # http://stackoverflow.com/a/27869453
 RUN mkdir /tmp/hub-linux-amd64 && \
-  curl -sSL https://github.com/github/hub/releases/latest | \
-    egrep -o '/github/hub/releases/download/.*/hub-linux-amd64-.*.tgz' | \
-    wget --base=http://github.com/ -q -i - -O - | \
-    tar xz -C /tmp/hub-linux-amd64 --strip-components 1 && \
+  curl --silent --fail --show-error --location 'https://github.com/github/hub/releases/latest' | \
+    egrep --only-matching --max-count=1 '/github/hub/releases/download/.*/hub-linux-amd64-.*.tgz' | \
+    wget --quiet --base=https://github.com/ --input-file - --output-document - | \
+    tar --gzip --extract --strip-components 1 --file - --directory /tmp/hub-linux-amd64 && \
     /tmp/hub-linux-amd64/install && \
-  rm -rf /tmp/hub-linux-amd64
+  rm --recursive --force /tmp/hub-linux-amd64
 
 # install java packages
 RUN mkdir --parents /usr/local/share/java && \
-  curl --fail --location https://sourceforge.net/projects/ditaa/files/latest/download | \
-    bsdtar -xf - -s '/ditaa.*\.jar/ditaa.jar/' -C /usr/local/share/java '*.jar' && \
-  curl --fail --location --output /usr/local/share/java/plantuml.jar http://sourceforge.net/projects/plantuml/files/plantuml.jar/download && \
-  curl --fail --location --output - https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-6J.zip | \
-    bsdtar -xf - -s '/saxon.*\.jar/saxon.jar/' -C /usr/local/share/java 'saxon9he.jar'
+  curl --silent --fail --show-error --location 'https://sourceforge.net/projects/ditaa/files/latest/download' | \
+    bsdtar -xf - -s '/ditaa.*\.jar/ditaa.jar/' --directory /usr/local/share/java '*.jar' && \
+  curl --silent --fail --show-error --location --output /usr/local/share/java/plantuml.jar 'http://sourceforge.net/projects/plantuml/files/plantuml.jar/download' && \
+  curl --silent --fail --show-error --location --output - 'https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-6J.zip' | \
+    bsdtar -xf - -s '/saxon.*\.jar/saxon.jar/' --directory /usr/local/share/java 'saxon9he.jar'
 ENV CLASSPATH /usr/local/share/java/plantuml.jar:/usr/local/share/java/saxon.jar
 
 # install python packages
@@ -149,8 +149,8 @@ RUN npm install --global \
   npm cache clean --force
 
 # configure ssh client
-RUN echo '' | tee -a /etc/ssh/ssh_config && \
-  echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config && \
+RUN echo '' | tee --append /etc/ssh/ssh_config && \
+  echo 'Include /etc/ssh/workspace' | tee --append /etc/ssh/ssh_config && \
   mkdir --parent --mode 770 /opt/ssh && \
   touch /opt/ssh/known_hosts && \
   chown --recursive 0:1000 /opt/ssh && \
