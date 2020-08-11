@@ -28,15 +28,6 @@ RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpg
   echo "deb-src https://deb.nodesource.com/node_12.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
-# set up ruby 2.7.x
-# http://rubies.travis-ci.org/
-RUN apt-get update && \
-  apt-get install --yes --no-install-recommends \
-    libyaml-0-2 && \
-  curl --silent --fail --show-error --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/x86_64/ruby-2.7.1.tar.bz2" | \
-    tar --bzip --extract --file - --strip-components 1 --directory /usr/local && \
-  rm --recursive --force /var/lib/apt/lists/*
-
 # install packages
 # deliberately updating apt cache at the end
 # facilitating apt-file usage out-of-the-box
@@ -90,6 +81,12 @@ RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/x86_64/python-3.8.5.tar.bz2" | \
   bsdtar --extract --directory / --file - opt/
 ENV PATH /opt/python/3.8/bin:$PATH
+
+# set up ruby 2.7.x
+# http://rubies.travis-ci.org/
+RUN curl --silent --fail --show-error \
+    --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/x86_64/ruby-2.7.1.tar.bz2" | \
+  tar --bzip --extract --file - --strip-components 1 --directory /usr/local
 
 # install openjdk
 # https://openjdk.java.net/install/
