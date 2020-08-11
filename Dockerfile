@@ -46,7 +46,6 @@ RUN apt-get update && \
     bash-completion \
     bc \
     bison \
-    bsdtar \
     cmake \
     dnsutils \
     dos2unix \
@@ -60,6 +59,7 @@ RUN apt-get update && \
     iputils-ping \
     iputils-tracepath \
     jq \
+    libarchive-tools \
     mysql-client \
     nodejs \
     openssh-client \
