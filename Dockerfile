@@ -76,13 +76,13 @@ RUN apt-get update && \
   git lfs install --system --skip-repo && \
   apt update
 
-# install python 3.8
+# install python 3.8.x
 RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-3.8.5.tar.bz2" | \
   bsdtar --extract --directory / --file - opt/
 ENV PATH /opt/python/3.8/bin:$PATH
 
-# set up ruby 2.7.x
+# install ruby 2.7.x
 # http://rubies.travis-ci.org/
 RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-2.7.1.tar.bz2" | \
