@@ -85,6 +85,12 @@ RUN apt-get update && \
   git lfs install --system --skip-repo && \
   apt update
 
+# install python 3.8
+RUN curl --silent --fail --show-error \
+    --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/x86_64/python-3.8.5.tar.bz2" | \
+  bsdtar --extract --directory / --file - opt/
+ENV PATH /opt/python/3.8/bin:$PATH
+
 # install openjdk
 # https://openjdk.java.net/install/
 RUN mkdir --parent /opt/openjdk && \
