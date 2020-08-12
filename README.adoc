@@ -22,25 +22,25 @@ toc::[title="", levels=4]
 ==== Using `script/workspace`
 [source, console]
 ----
-./script/workspace [OPTION...] [ARG...]
+./script/workspace [OPTION...] [DIRECTORY...]
 ----
 
 |===
-| Option | Description
+2+| Option | Description
 
-| --help | Print usage instructions
-| <<custom-container-hostname,--hostname>> | Assign custom container hostname
-| <<custom-container-image,--image>> | Override container images (default 'ashenm/workspace:latest')
-| <<custom-container-name,-n, --name>> | Assign custom container name
-| --blank | Avoid all extended customisations
-| <<ssh-agent-sharing,--no-agent>> | Avoid all extended customisations
-| <<git-configuration,--no-git>> | Avoid ~/.gitconfig read-only bind mount
-| <<openpgp-keyring,--no-gpg>> | Avoid ~/.gnupg bind mount
-| <<host-ip-mapping,--no-host>> | Avoid population of host IP mapping
-| <<directory-mounts,--no-mount>> | Avoid directory mount
-| <<container-port-publishing,--no-publish>> | Avoid container's 8080, 8081 and 8082 ports exposition to the host
-| <<ssh-configuration,--no-ssh>> | Avoid ~/.ssh read-only bind mount
-| <<automatic-container-removal,--no-rm>> | Avoid automatic removal of container on exit
+| -h | --help | Print usage instructions
+| | <<custom-container-hostname,--hostname>> | Assign custom container hostname
+| | <<custom-container-image,--image>> | Override container images (default 'ashenm/workspace:latest')
+| <<custom-container-name, -n>> | <<custom-container-name, --name>> | Assign custom container name
+| | --blank | Avoid all extended customisations
+| | <<ssh-agent-sharing,--no-agent>> | Avoid all extended customisations
+| | <<git-configuration,--no-git>> | Avoid ~/.gitconfig read-only bind mount
+| | <<openpgp-keyring,--no-gpg>> | Avoid ~/.gnupg bind mount
+| | <<host-ip-mapping,--no-host>> | Avoid population of host IP mapping
+| | <<directory-mounts,--no-mount>> | Avoid directory mount
+| | <<container-port-publishing,--no-publish>> | Avoid container's 8080, 8081 and 8082 ports exposition to the host
+| | <<ssh-configuration,--no-ssh>> | Avoid ~/.ssh read-only bind mount
+| | <<automatic-container-removal,--no-rm>> | Avoid automatic removal of container on exit
 |===
 
 ===== Directory Mounts
