@@ -1,6 +1,6 @@
+# Avoid PATH sanitisation for group sudo members
+# Allow sudo access without password for group sudo members
+Defaults exempt_group += sudo
+
 # Snub umask union
 Defaults umask_override
-
-# Allow members of group sudo sudo access without password
-%sudo ALL=(ALL) NOPASSWD:ALL
-
