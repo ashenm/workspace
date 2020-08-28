@@ -126,6 +126,7 @@ RUN python3 -m pip install --upgrade --no-cache-dir pip && \
     PyYAML
 
 # install ruby packages
+# https://github.com/asciidoctor/asciidoctor-mathematical#ubuntu
 RUN apt-get install --yes --no-install-recommends \
     fonts-lyx \
     libcairo2-dev \
@@ -137,7 +138,6 @@ RUN apt-get install --yes --no-install-recommends \
     asciidoctor \
     asciidoctor-diagram \
     asciidoctor-mathematical \
-    bundler \
     jekyll \
     pygments.rb \
     travis && \
