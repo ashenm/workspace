@@ -55,14 +55,8 @@ RUN apt-get update && \
     nodejs \
     openssh-client \
     perl \
-    python \
-    python-pip \
-    python-setuptools \
-    python-wheel \
-    python3 \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
+    python2-minimal \
+    python3-minimal \
     rename \
     rsync \
     sqlite3 \
@@ -75,6 +69,12 @@ RUN apt-get update && \
     whois && \
   git lfs install --system --skip-repo && \
   apt update
+
+# install python 2.7.x
+RUN curl --silent --fail --show-error \
+    --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-2.7.18.tar.bz2" | \
+  bsdtar --extract --directory / --file - opt/
+ENV PATH /opt/python/2.7/bin:$PATH
 
 # install python 3.8.x
 RUN curl --silent --fail --show-error \
@@ -126,6 +126,7 @@ RUN python3 -m pip install --upgrade --no-cache-dir pip && \
     PyYAML
 
 # install ruby packages
+# https://github.com/asciidoctor/asciidoctor-mathematical#ubuntu
 RUN apt-get install --yes --no-install-recommends \
     fonts-lyx \
     libcairo2-dev \
@@ -137,7 +138,6 @@ RUN apt-get install --yes --no-install-recommends \
     asciidoctor \
     asciidoctor-diagram \
     asciidoctor-mathematical \
-    bundler \
     jekyll \
     pygments.rb \
     travis && \
