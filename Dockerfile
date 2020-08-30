@@ -117,7 +117,10 @@ RUN mkdir --parents /usr/local/share/java && \
 ENV CLASSPATH /usr/local/share/java/plantuml.jar:/usr/local/share/java/saxon.jar
 
 # install python packages
-RUN python3 -m pip install --upgrade --no-cache-dir pip && \
+RUN python3 -m pip install --upgrade --no-cache-dir \
+    pip \
+    setuptools \
+    wheel && \
   python3 -m pip install --upgrade --no-cache-dir --ignore-installed \
     awscli \
     cairosvg \
