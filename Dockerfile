@@ -151,6 +151,7 @@ RUN apt-get install --yes --no-install-recommends \
 RUN npm install --global \
     eslint \
     eslint-plugin-html \
+    heroku \
     nodemon && \
   npm cache clean --force
 
