@@ -91,8 +91,8 @@ RUN curl --silent --fail --show-error \
 # install openjdk
 # https://openjdk.java.net/install/
 RUN mkdir --parent /opt/openjdk && \
-  curl --silent --fail --show-error --location 'https://jdk.java.net/14/' | \
-    egrep --only-matching --max-count 1 '/java/GA/jdk14.*/.*/openjdk-14.*_linux-x64_bin.tar.gz' | \
+  curl --silent --fail --show-error --location 'https://jdk.java.net/15/' | \
+    egrep --only-matching --max-count 1 '/java/GA/.*/openjdk-.*_linux-x64_bin.tar.gz' | \
     wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
 ENV PATH /opt/openjdk/bin:$PATH
