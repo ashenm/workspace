@@ -126,7 +126,8 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     cairosvg \
     blockdiag \
     icdiff \
-    PyYAML
+    PyYAML \
+    termcolor
 
 # install ruby packages
 # https://github.com/asciidoctor/asciidoctor-mathematical#ubuntu
