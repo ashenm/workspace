@@ -127,6 +127,7 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     blockdiag \
     icdiff \
     PyYAML \
+    requests \
     termcolor
 
 # install ruby packages
