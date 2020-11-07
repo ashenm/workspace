@@ -28,12 +28,16 @@ mux () {
     return 2
   fi
 
+  export MUX_SESSION_DIR
+
   tmux new-session -d -c ${MUX_SESSION_DIR} -s ${MUX_SESSION_DIR##*/}
 
   for _ in 1 2
   do
-    tmux new-window -d -c ${MUX_SESSION_DIR} || true
+    tmux new-window -d -c ${MUX_SESSION_DIR} -t ${MUX_SESSION_DIR##*/} || true
   done
+
+  export -n MUX_SESSION_DIR
 
   tmux attach-session -t ${MUX_SESSION_DIR##*/}
 
@@ -45,7 +49,10 @@ workspace () {
   if [ $# -ne 0 ]
   then
     command cd $*
-  elif [ -d $HOME/workspace ]
+  elif [ -d "$MUX_SESSION_DIR" ]
+  then
+    command cd $MUX_SESSION_DIR
+  elif [ -d "$HOME/workspace" ]
   then
     command cd $HOME/workspace
   else
