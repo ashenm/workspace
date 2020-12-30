@@ -28,6 +28,8 @@ mux () {
     return 2
   fi
 
+  # TEMP remove once tmux upgraded to 3.1b
+  # tmux new-session -d -c ${MUX_SESSION_DIR} -e MUX_SESSION_DIR=$MUX_SESSION_DIR -s ${MUX_SESSION_DIR##*/}
   export MUX_SESSION_DIR
 
   tmux new-session -d -c ${MUX_SESSION_DIR} -s ${MUX_SESSION_DIR##*/}
@@ -37,9 +39,9 @@ mux () {
     tmux new-window -d -c ${MUX_SESSION_DIR} -t ${MUX_SESSION_DIR##*/} || true
   done
 
-  export -n MUX_SESSION_DIR
-
   tmux attach-session -t ${MUX_SESSION_DIR##*/}
+
+  export -n MUX_SESSION_DIR=
 
 }
 
