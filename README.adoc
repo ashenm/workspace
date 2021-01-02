@@ -1,0 +1,3 @@
+image:https://travis-ci.org/ashenm/workspace.svg?branch=railsbank["Build Status", link="https://travis-ci.org/ashenm/workspace"]
+image:https://img.shields.io/badge/tag-stanford--cs143-blue.svg["Image Tag", link="https://github.com/ashenm/workspace/tree/railsbank"]
+image:https://images.microbadger.com/badges/image/ashenm/workspace:railsbank.svg["Image Overview", link="https://hub.docker.com/r/ashenm/workspace/"]
