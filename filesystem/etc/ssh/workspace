@@ -16,3 +16,14 @@ Host github.com gist.github.com
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
     IdentityFile "~/.ssh/github"
+
+# GitLab
+Host gitlab.com
+    Port 22
+    User git
+    Hostname gitlab.com
+    TCPKeepAlive yes
+    IdentitiesOnly yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile "~/.ssh/gitlab"
