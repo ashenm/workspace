@@ -4,4 +4,5 @@ FROM ashenm/workspace:latest
 RUN sudo -H npm install --global \
   nx \
   typescript \
+  ts-node \
   @nestjs/cli
