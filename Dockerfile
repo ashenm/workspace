@@ -10,6 +10,7 @@ sudo tee --append /etc/npmrc 1> /dev/null
 RUN sudo -H npm install --global \
   jest \
   nx \
+  prettier \
   typescript \
   ts-node \
   @nestjs/cli
