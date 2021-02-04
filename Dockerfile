@@ -1,5 +1,8 @@
 FROM ashenm/workspace:latest
 
+# expose tcp ports
+EXPOSE 3333
+
 # extend system-wide npmrc
 RUN printf '\
 ; Railsbank NPM Package Registry\n\
