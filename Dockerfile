@@ -55,6 +55,8 @@ RUN apt-get update && \
     nodejs \
     openssh-client \
     perl \
+    php \
+    php-cli \
     python2-minimal \
     python3-minimal \
     rename \

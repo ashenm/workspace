@@ -8,6 +8,7 @@ imageTests+=(
     perl-hello-world
     plantuml
     plantuml-dot
+    php-hello-world
     ruby-hello-world
   '
 )
