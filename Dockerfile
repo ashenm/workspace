@@ -17,3 +17,12 @@ RUN sudo -H npm install --global \
   typescript \
   ts-node \
   @nestjs/cli
+
+# configure git hooks
+RUN printf '\
+[include]\n\
+    path = /etc/git/railsbank.gitconfig\n\n' | \
+sudo tee --append /etc/gitconfig
+
+# configure system
+COPY filesystem /

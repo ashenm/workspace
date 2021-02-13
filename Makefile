@@ -9,6 +9,9 @@ help: ## show make targets
 .PHONY: install
 install: ## install build requisits
 	docker pull ashenm/workspace:latest
+	find filesystem -type d -exec chmod 755 {} \;
+	find filesystem/etc -type f -exec chmod 644 {} \;
+	find filesystem/etc/git -path '*/hooks/*' -exec chmod 755 {} \;
 
 .PHONY: build
 build: install ## build docker image
