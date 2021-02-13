@@ -11,10 +11,8 @@ install:
   make install
 
 script:
-  make build
-
-before_deploy:
-  make assess
+  - make build
+  - make assess
 
 deploy:
   provider: script
