@@ -1,0 +1,4 @@
+[core]
+    hooksPath = /etc/git/railsbank/lambda-mono/hooks
+
+; vim: set expandtab syntax=gitconfig:
