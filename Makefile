@@ -35,4 +35,4 @@ purge: ## remove dangling deployed images
 
 .PHONY: run
 run: ## spawn container from locally built image
-	./scripts/workspace --blank --image ashenm/workspace:latest-alpha
+	./scripts/workspace --blank --image ashenm/workspace:alpha
