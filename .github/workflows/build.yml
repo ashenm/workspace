@@ -33,7 +33,27 @@ jobs:
       - run: gunzip --stdout /tmp/docker-image.tar.gz | docker load
       - run: make assess
     runs-on: ubuntu-latest
-  deploy:
+  dockerhub:
+    needs:
+      - build
+      - assess
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image.tar.gz
+          path: /tmp
+      - run: gunzip --stdout /tmp/docker-image.tar.gz | docker load
+      - run: docker tag ashenm/workspace:alpha ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
+      - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
+        run: |
+          echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+          docker push ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
+        env:
+          docker_username: $${ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+    runs-on: ubuntu-latest
+  github:
     needs:
       - build
       - assess
@@ -45,10 +65,10 @@ jobs:
           path: /tmp
       - run: gunzip --stdout /tmp/docker-image.tar.gz | docker load
       - run: docker tag ashenm/workspace:alpha docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
-      - run: |
+      - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
+        run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
           docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
-        if: $${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]')  }}
     runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
