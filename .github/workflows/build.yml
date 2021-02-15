@@ -13,11 +13,11 @@ jobs:
           persist-credentials: false
       - run: make install
       - run: make build
-      - run: docker save ashenm/workspace:alpha | gzip > /tmp/docker-image.tar.gz
-      - uses: actions/upload-artifact@v1
+      - run: docker save ashenm/workspace:alpha --output /tmp/docker-image.tar
+      - uses: actions/upload-artifact@v2
         with:
-          name: docker-image.tar.gz
-          path: /tmp/docker-image.tar.gz
+          name: docker-image.tar
+          path: /tmp/docker-image.tar
     runs-on: ubuntu-latest
   assess:
     needs:
@@ -28,10 +28,27 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@v2
         with:
-          name: docker-image.tar.gz
+          name: docker-image.tar
           path: /tmp
-      - run: gunzip --stdout /tmp/docker-image.tar.gz | docker load
+      - run: docker load --input /tmp/docker-image.tar
       - run: make assess
+    runs-on: ubuntu-latest
+  package:
+    needs:
+      - build
+      - assess
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image.tar
+          path: /tmp
+      - run: cat /tmp/docker-image.tar | gzip > /tmp/docker-image.tar.gz
+        continue-on-error: true
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docker-image.tar.gz
+          path: /tmp/docker-image.tar.gz
+          if-no-files-found: warn
     runs-on: ubuntu-latest
   dockerhub:
     needs:
@@ -41,9 +58,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: docker-image.tar.gz
+          name: docker-image.tar
           path: /tmp
-      - run: gunzip --stdout /tmp/docker-image.tar.gz | docker load
+      - run: docker load --input /tmp/docker-image.tar
       - run: docker tag ashenm/workspace:alpha ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
       - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
         run: |
@@ -61,9 +78,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: docker-image.tar.gz
+          name: docker-image.tar
           path: /tmp
-      - run: gunzip --stdout /tmp/docker-image.tar.gz | docker load
+      - run: docker load --input /tmp/docker-image.tar
       - run: docker tag ashenm/workspace:alpha docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
       - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
         run: |
