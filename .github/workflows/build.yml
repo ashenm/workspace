@@ -67,8 +67,8 @@ jobs:
           echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
           docker push ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
         env:
-          docker_username: $${ secrets.DOCKER_USERNAME }}
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-latest
   github:
     needs:
