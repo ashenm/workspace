@@ -1,10 +1,16 @@
 name: Deployment Cleanup
 
 on:
-  delete
+  delete:
+    branches:
+      - '**'
+  push:
+    branches:
+      - latest
 
 jobs:
-  purge:
+  dockerhub:
+    if: ${{ github.event_name == 'delete' }}
     name: Docker Hub
     steps:
       - uses: ashenm/docker-hub-cleanup@latest
@@ -14,6 +20,14 @@ jobs:
         with:
           repository: ashenm/workspace
           github_token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+  github:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    name: GitHub Packages
+    steps:
+      - uses: actions/delete-package-versions@v1
+        with:
+          package-name: 'workspace'
     runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
