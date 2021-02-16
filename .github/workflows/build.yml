@@ -1,0 +1,73 @@
+name: Build Image
+
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
+
+jobs:
+  build:
+    if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - run: make install
+      - run: make build
+      - run: docker save ${GITHUB_REPOSITORY}:alpha --output /tmp/docker-image.tar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docker-image.tar
+          path: /tmp/docker-image.tar
+    runs-on: ubuntu-latest
+  assess:
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image.tar
+          path: /tmp
+      - run: docker load --input /tmp/docker-image.tar
+      - run: make assess
+    runs-on: ubuntu-latest
+  package:
+    needs:
+      - assess
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image.tar
+          path: /tmp
+      - run: cat /tmp/docker-image.tar | gzip > /tmp/docker-image.tar.gz
+        continue-on-error: true
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docker-image.tar.gz
+          path: /tmp/docker-image.tar.gz
+          if-no-files-found: warn
+    runs-on: ubuntu-latest
+  dockerhub:
+    needs:
+      - assess
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image.tar
+          path: /tmp
+      - run: docker load --input /tmp/docker-image.tar
+      - run: docker tag ${GITHUB_REPOSITORY}:alpha ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
+      - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
+        run: |
+          echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+          docker push ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    runs-on: ubuntu-latest
+
+# vim: set expandtab shiftwidth=2 syntax=yaml:
