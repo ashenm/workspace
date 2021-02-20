@@ -72,6 +72,10 @@ RUN apt-get update && \
   git lfs install --system --skip-repo && \
   apt update
 
+# install composer
+RUN curl --silent --show-error https://getcomposer.org/installer | \
+  sudo -H php -- --install-dir=/usr/local/bin --filename=composer
+
 # install python 2.7.x
 RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-2.7.18.tar.bz2" | \
