@@ -88,5 +88,16 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
           docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
     runs-on: ubuntu-latest
+  culminate:
+    needs:
+      - dockerhub
+    if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
+    steps:
+      - run: |
+          # ashenm/workspace:railsbank
+          curl --fail --request POST --header "Accept: application/vnd.github.v3+json" --header "Authorization: token ${OCTOCAT_TOKEN}" --data "{ \"ref\": \"railsbank\" }" --url "https://api.github.com/repos/ashenm/workspace/actions/workflows/build.yml/dispatches"
+        env:
+          OCTOCAT_TOKEN: ${{ secrets.OCTOCAT_TOKEN }}
+    runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
