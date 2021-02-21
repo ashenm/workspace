@@ -96,6 +96,8 @@ jobs:
       - run: |
           # ashenm/workspace:railsbank
           curl --fail --request POST --header "Accept: application/vnd.github.v3+json" --header "Authorization: token ${OCTOCAT_TOKEN}" --data "{ \"ref\": \"railsbank\" }" --url "https://api.github.com/repos/ashenm/workspace/actions/workflows/build.yml/dispatches"
+          # ashenm/workspace:stanford-cs143
+          curl --fail --request POST --header "Accept: application/vnd.github.v3+json" --header "Authorization: token ${OCTOCAT_TOKEN}" --data "{ \"ref\": \"stanford-cs143\" }" --url "https://api.github.com/repos/ashenm/workspace/actions/workflows/build.yml/dispatches"
         env:
           OCTOCAT_TOKEN: ${{ secrets.OCTOCAT_TOKEN }}
     runs-on: ubuntu-latest

@@ -97,7 +97,7 @@ RUN curl --silent --fail --show-error \
 # install openjdk
 # https://openjdk.java.net/install/
 RUN mkdir --parent /opt/openjdk && \
-  curl --silent --fail --show-error --location 'https://jdk.java.net/15/' | \
+  curl --silent --show-error --location 'https://jdk.java.net/15/' | \
     egrep --only-matching --max-count 1 '/java/GA/.*/openjdk-.*_linux-x64_bin.tar.gz' | \
     wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
@@ -106,7 +106,7 @@ ENV PATH /opt/openjdk/bin:$PATH
 # install hub
 # http://stackoverflow.com/a/27869453
 RUN mkdir /tmp/hub-linux-amd64 && \
-  curl --silent --fail --show-error --location 'https://github.com/github/hub/releases/latest' | \
+  curl --silent --show-error --location 'https://github.com/github/hub/releases/latest' | \
     egrep --only-matching --max-count=1 '/github/hub/releases/download/.*/hub-linux-amd64-.*.tgz' | \
     wget --quiet --base=https://github.com/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /tmp/hub-linux-amd64 && \
