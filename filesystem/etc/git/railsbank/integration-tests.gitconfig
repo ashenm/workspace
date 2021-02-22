@@ -1,0 +1,4 @@
+[core]
+    hooksPath = /etc/git/railsbank/integration-tests/hooks
+
+; vim: set expandtab syntax=gitconfig:
