@@ -53,7 +53,7 @@ jobs:
   dockerhub:
     needs:
       - assess
-    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
     steps:
       - uses: actions/download-artifact@v2
         with:
@@ -61,8 +61,7 @@ jobs:
           path: /tmp
       - run: docker load --input /tmp/docker-image.tar
       - run: docker tag ${GITHUB_REPOSITORY}:alpha ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
-      - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
-        run: |
+      - run: |
           echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
           docker push ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
         env:
