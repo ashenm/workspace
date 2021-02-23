@@ -25,12 +25,13 @@ RUN sudo --set-home apt-get update && \
 
 # install node packages
 RUN sudo --set-home npm install --global \
-  jest \
-  nx \
-  prettier \
-  typescript \
-  ts-node \
-  @nestjs/cli
+    jest \
+    nx \
+    prettier \
+    typescript \
+    ts-node \
+    @nestjs/cli && \
+  sudo --set-home npm cache clean --force
 
 # configure git hooks
 RUN printf '\
