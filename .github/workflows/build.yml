@@ -36,7 +36,6 @@ jobs:
     runs-on: ubuntu-latest
   package:
     needs:
-      - build
       - assess
     steps:
       - uses: actions/download-artifact@v2
@@ -53,9 +52,8 @@ jobs:
     runs-on: ubuntu-latest
   dockerhub:
     needs:
-      - build
       - assess
-    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
     steps:
       - uses: actions/download-artifact@v2
         with:
@@ -73,9 +71,8 @@ jobs:
     runs-on: ubuntu-latest
   github:
     needs:
-      - build
       - assess
-    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
     steps:
       - uses: actions/download-artifact@v2
         with:
@@ -91,7 +88,6 @@ jobs:
   culminate:
     needs:
       - dockerhub
-    if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
     steps:
       - run: |
           # ashenm/workspace:railsbank
