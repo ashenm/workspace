@@ -14,7 +14,8 @@ jobs:
           persist-credentials: false
       - run: make install
       - run: make build
-      - run: docker save ashenm/workspace:alpha --output /tmp/docker-image.tar
+      - run: docker tag ${GITHUB_REPOSITORY}:alpha ${GITHUB_REPOSITORY}:rc
+      - run: docker save ${GITHUB_REPOSITORY}:rc --output /tmp/docker-image.tar
       - uses: actions/upload-artifact@v2
         with:
           name: docker-image.tar
@@ -32,6 +33,7 @@ jobs:
           name: docker-image.tar
           path: /tmp
       - run: docker load --input /tmp/docker-image.tar
+      - run: docker tag ${GITHUB_REPOSITORY}:rc ${GITHUB_REPOSITORY}:alpha
       - run: make assess
     runs-on: ubuntu-latest
   package:
@@ -60,7 +62,7 @@ jobs:
           name: docker-image.tar
           path: /tmp
       - run: docker load --input /tmp/docker-image.tar
-      - run: docker tag ashenm/workspace:alpha ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
+      - run: docker tag ashenm/workspace:rc ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
       - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
         run: |
           echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
@@ -79,7 +81,7 @@ jobs:
           name: docker-image.tar
           path: /tmp
       - run: docker load --input /tmp/docker-image.tar
-      - run: docker tag ashenm/workspace:alpha docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
+      - run: docker tag ashenm/workspace:rc docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
       - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
