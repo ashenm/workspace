@@ -1,5 +1,8 @@
 FROM ashenm/workspace:latest
 
+# avoid prompts
+ARG DEBIAN_FRONTEND=noninteractive
+
 # expose tcp ports
 EXPOSE 3333
 
