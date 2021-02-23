@@ -13,9 +13,8 @@ RUN curl --silent --fail --show-error --location 'https://apt.releases.hashicorp
     sudo --set-home tee /etc/apt/sources.list.d/terraform.list
 
 # extend system-wide npmrc
-RUN printf '\
-; Railsbank NPM Package Registry\n\
-@railsbank-tech:registry=https://gitlab.com/api/v4/packages/npm/\n' | \
+RUN printf '; Railsbank NPM Package Registry\n\
+@railsbank-tech:registry=https://gitlab.com/api/v4/packages/npm/\n\n' | \
 sudo tee --append /etc/npmrc 1> /dev/null
 
 # install packages
@@ -34,8 +33,7 @@ RUN sudo --set-home npm install --global \
   sudo --set-home npm cache clean --force
 
 # configure git hooks
-RUN printf '\
-[include]\n\
+RUN printf '[include]\n\
     path = /etc/git/railsbank.gitconfig\n\n' | \
 sudo tee --append /etc/gitconfig
 
