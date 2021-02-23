@@ -1,3 +1,4 @@
+.DEFAULT_GOAL=help
 TRAVIS_REPO_SLUG?=ashenm/workspace
 TRAVIS_BRANCH?=alpha
 
