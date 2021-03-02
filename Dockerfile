@@ -161,6 +161,9 @@ RUN npm install --global \
     eslint-plugin-html \
     heroku \
     nodemon && \
+  npm install --global --unsafe-perm \
+    ngrok && \
+  rm --recursive --force $HOME/.ngrok && \
   npm cache clean --force
 
 # configure ssh client
