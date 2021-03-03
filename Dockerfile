@@ -166,6 +166,19 @@ RUN npm install --global \
   rm --recursive --force $HOME/.ngrok && \
   npm cache clean --force
 
+# configure nvm
+RUN mkdir --parent --mode 0700 /etc/skel/.nvm && \
+  curl --silent --fail --show-error \
+    --output "/etc/skel/.nvm/nvm-exec" \
+    --location "https://raw.githubusercontent.com/nvm-sh/nvm/master/nvm-exec" && \
+  curl --silent --fail --show-error \
+    --output "/etc/skel/.nvm/nvm.sh" \
+    --location "https://raw.githubusercontent.com/nvm-sh/nvm/master/nvm.sh" && \
+  chmod 0700 /etc/skel/.nvm/nvm-exec /etc/skel/.nvm/nvm.sh && \
+  cp --recursive --force /etc/skel/.nvm /root && \
+  printf '\nsource $HOME/.nvm/nvm.sh\n' | \
+    tee --append /etc/skel/.bashrc /root/.bashrc
+
 # configure ssh client
 RUN echo '' | tee --append /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee --append /etc/ssh/ssh_config && \
