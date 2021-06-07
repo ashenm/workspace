@@ -38,6 +38,7 @@ RUN apt-get update && \
     bc \
     bison \
     cmake \
+    ctags \
     dnsutils \
     dos2unix \
     exiftool \
