@@ -53,6 +53,7 @@ RUN apt-get update && \
     jq \
     libarchive-tools \
     mysql-client \
+    netcat \
     nodejs \
     openssh-client \
     perl \
