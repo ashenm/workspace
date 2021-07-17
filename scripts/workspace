@@ -27,6 +27,7 @@ Options:
   -h, --help                Print usage instructions
       --hostname string     Container hostname
       --image               Custom container image (default 'ashenm/workspace')
+      --dotfile filepath    Bind mount dotfile in $HOME to container
   -n, --name                Assign a name to the container
       --blank               Avoid all extended customisations
       --no-agent            Avoid ssh-agent socket sharing
@@ -123,6 +124,11 @@ do
       shift 2
       ;;
 
+    --dotfile)
+      DOTFILES="$DOTFILES ${2:?Invalid FILEPATH}"
+      shift 2
+      ;;
+
     --hostname)
       DNSNAME="${2:?Invalid HOSTNAME}"
       shift 2
@@ -170,6 +176,18 @@ for REF in $DEAD; do
     continue
 
   exec docker start --attach --interactive $REF
+
+done
+
+# dotfiles
+for DOTFILE in $DOTFILES; do
+
+  DOTFILE=`realpath --relative-to=$HOME $DOTFILE`
+
+  test -n "${DOTFILE##.*}" && \
+    continue
+ 
+  ARGUMENTS="$ARGUMENTS --volume $HOME/$DOTFILE:/home/ubuntu/$DOTFILE:ro"
 
 done
 
