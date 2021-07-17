@@ -182,7 +182,7 @@ done
 # dotfiles
 for DOTFILE in $DOTFILES; do
 
-  DOTFILE=`realpath --relative-to=$HOME $DOTFILE`
+  DOTFILE=`realpath --canonicalize-existing --relative-to=$HOME $DOTFILE`
 
   test -n "${DOTFILE##.*}" && \
     continue
