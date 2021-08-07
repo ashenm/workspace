@@ -48,6 +48,7 @@ RUN apt-get update && \
     git-lfs \
     golang-go \
     graphviz \
+    httpie \
     iputils-ping \
     iputils-tracepath \
     jq \
