@@ -90,6 +90,7 @@ jobs:
   culminate:
     needs:
       - dockerhub
+    if: ${{ github.ref == 'refs/heads/latest' }}
     steps:
       - run: |
           # ashenm/workspace:railsbank
