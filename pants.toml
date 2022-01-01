@@ -1,0 +1,15 @@
+[GLOBAL]
+pants_version = "2.8.1rc1"
+backend_packages = [
+  "pants.backend.experimental.docker",
+  "pants.backend.experimental.docker.lint.hadolint",
+]
+
+[anonymous-telemetry]
+enabled = false
+
+[docker]
+default_repository = "ashenm/workspace"
+
+[docker.registries.hub]
+address = "registry.hub.docker.com"

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+# Initialize Container Filesystem
+
+set -e
+
+# resolve app root
+DIRECTORY_PREFIX=$(dirname $(readlink --canonicalize $(dirname $0)))
+
+# clinch permissions
+find $DIRECTORY_PREFIX/filesystem -type d -exec chmod 755 {} \;
+find $DIRECTORY_PREFIX/filesystem/etc -type f -exec chmod 644 {} \;
+find $DIRECTORY_PREFIX/filesystem/etc/git -path '*/hooks/*' -exec chmod 755 {} \;

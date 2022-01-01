@@ -2,23 +2,15 @@
 
 .PHONY: assess
 assess: ## test docker image
-	./scripts/assess
+	./pants test ::
 
 .PHONY: build
 build: install ## build docker image
-	./scripts/build
-
-.PHONY: clean
-clean: ## remove locally built images
-	./scripts/clean
-
-.PHONY: culminate
-culminate: build ## trigger reverse dependency builds
-	./scripts/culminate
+	./pants package ::
 
 .PHONY: deploy
 deploy: ## deploy image to docker hub
-	./scripts/deploy
+	./pants publish ::
 
 .PHONY: help
 .SILENT: help
@@ -27,12 +19,5 @@ help: ## show make targets
 
 .PHONY: install
 install: ## install build requisites
-	./scripts/install
-
-.PHONY: purge
-purge: ## remove dangling deployed images
-	./scripts/purge
-
-.PHONY: run
-run: ## spawn container from locally built image
-	./scripts/workspace --blank --image ashenm/workspace:alpha
+	./src/latest/scripts/init-filesystem
+	./src/railsbank/scripts/init-filesystem

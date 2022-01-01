@@ -9,113 +9,111 @@ jobs:
   build:
     if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
     steps:
+      - run: |
+          sudo apt-get update
+          sudo apt-get install --yes parallel
+      - run: docker --version
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
       - run: make install
       - run: make build
-      - run: docker tag ${GITHUB_REPOSITORY}:alpha ${GITHUB_REPOSITORY}:rc
-      - run: docker save ${GITHUB_REPOSITORY}:rc --output /tmp/docker-image.tar
+      - run: mkdir --parent /tmp/archive
+      - run: find src/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | parallel --progress docker save ${GITHUB_REPOSITORY}:{} --output /tmp/archive/{}.tar
       - uses: actions/upload-artifact@v2
         with:
-          name: docker-image.tar
-          path: /tmp/docker-image.tar
+          name: docker-images
+          path: /tmp/archive/
     runs-on: ubuntu-latest
   assess:
     needs:
       - build
     steps:
+      - run: |
+          sudo apt-get update
+          sudo apt-get install --yes parallel
+      - run: docker --version
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
       - uses: actions/download-artifact@v2
         with:
-          name: docker-image.tar
-          path: /tmp
-      - run: docker load --input /tmp/docker-image.tar
-      - run: docker tag ${GITHUB_REPOSITORY}:rc ${GITHUB_REPOSITORY}:alpha
-      - run: make assess
+          name: docker-images
+          path: /tmp/images
+      - run: ls -al /tmp/images
+      - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
+      - run: docker images --all
+      # - run: make assess
     runs-on: ubuntu-latest
-  package:
-    needs:
-      - assess
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: docker-image.tar
-          path: /tmp
-      - run: cat /tmp/docker-image.tar | gzip > /tmp/docker-image.tar.gz
-        continue-on-error: true
-      - uses: actions/upload-artifact@v2
-        with:
-          name: docker-image.tar.gz
-          path: /tmp/docker-image.tar.gz
-          if-no-files-found: warn
-    runs-on: ubuntu-latest
+  # package:
+  #   needs:
+  #     - assess
+  #   steps:
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: docker-image.tar
+  #         path: /tmp
+  #     - run: cat /tmp/docker-image.tar | gzip > /tmp/docker-image.tar.gz
+  #       continue-on-error: true
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: docker-image.tar.gz
+  #         path: /tmp/docker-image.tar.gz
+  #         if-no-files-found: warn
+  #   runs-on: ubuntu-latest
   dockerhub:
     needs:
       - assess
-    if: ${{ github.event_name != 'pull_request' && !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
+    if: ${{ github.ref_name == 'master' }}
+    concurrency:
+      group: ${{ github.sha }}
+      cancel-in-progress: true
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: docker-image.tar
-          path: /tmp
-      - run: docker load --input /tmp/docker-image.tar
-      - run: docker tag ashenm/workspace:rc ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
-      - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
-        run: |
-          echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
-          docker push ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}
+          name: docker-images
+          path: /tmp/images
+      - run: ls -al /tmp/images
+      - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
+      - run: echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -printf '%f\n' | parallel docker push ${GITHUB_REPOSITORY}:{}
     runs-on: ubuntu-latest
-  github:
-    needs:
-      - assess
-    if: ${{ github.event_name != 'pull_request' && !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: docker-image.tar
-          path: /tmp
-      - run: docker load --input /tmp/docker-image.tar
-      - run: docker tag ashenm/workspace:rc docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
-      - if: ${{ !startsWith(github.event.head_commit.message, '[Skip Deploy]') }}
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
-          docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
-    runs-on: ubuntu-latest
-  culminate:
-    needs:
-      - dockerhub
-    if: ${{ github.ref == 'refs/heads/latest' }}
-    steps:
-      - run: |
-          # ashenm/workspace:railsbank
-          curl --fail --request POST --header "Accept: application/vnd.github.v3+json" --header "Authorization: token ${OCTOCAT_TOKEN}" --data "{ \"ref\": \"railsbank\" }" --url "https://api.github.com/repos/ashenm/workspace/actions/workflows/build.yml/dispatches"
-          # ashenm/workspace:stanford-cs143
-          curl --fail --request POST --header "Accept: application/vnd.github.v3+json" --header "Authorization: token ${OCTOCAT_TOKEN}" --data "{ \"ref\": \"stanford-cs143\" }" --url "https://api.github.com/repos/ashenm/workspace/actions/workflows/build.yml/dispatches"
-        env:
-          OCTOCAT_TOKEN: ${{ secrets.OCTOCAT_TOKEN }}
-    runs-on: ubuntu-latest
-  slack:
-    needs:
-      - build
-      - assess
-      - package
-      - dockerhub
-      - github
-      - culminate
-    if: ${{ always() }}
-    steps:
-      - uses: Gamesight/slack-workflow-status@master
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          channel: '#github'
-          name: 'GitHub Workflow'
-    runs-on: ubuntu-latest
+  # github:
+  #   needs:
+  #     - assess
+  #   if: ${{ github.ref_name == 'master' }}
+  #   concurrency:
+  #     group: ${{ github.sha }}
+  #     cancel-in-progress: true
+  #   steps:
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: docker-images.tar
+  #         path: /tmp
+  #     - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
+  #     - run: docker tag ashenm/workspace:rc docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
+  #     - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
+  #     - run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
+  #   runs-on: ubuntu-latest
+  # slack:
+  #   needs:
+  #     - build
+  #     - assess
+  #     - package
+  #     - dockerhub
+  #     - github
+  #     - culminate
+  #   if: ${{ always() }}
+  #   steps:
+  #     - uses: Gamesight/slack-workflow-status@master
+  #       with:
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
+  #         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+  #         channel: '#github'
+  #         name: 'GitHub Workflow'
+  #   runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:

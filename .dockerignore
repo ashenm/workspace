@@ -1,9 +1,2 @@
-*.md
-.git
-.travis.yml
-.dockerignore
-.gitattributes
-Makefile
-workspace
-scripts
-tests
+**/*
+!/src/*/filesystem
