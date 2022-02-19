@@ -6,61 +6,42 @@ on:
   - workflow_dispatch
 
 jobs:
+
   build:
     if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
     steps:
-      - run: |
-          sudo apt-get update
-          sudo apt-get install --yes parallel
-      - run: docker --version
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
+      - run: $GITHUB_WORKSPACE/.github/scripts/install
+      - run: $GITHUB_WORKSPACE/.github/scripts/env
       - run: make install
       - run: make build
-      - run: mkdir --parent /tmp/archive
-      - run: find src/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | parallel --progress docker save ${GITHUB_REPOSITORY}:{} --output /tmp/archive/{}.tar
+      - run: mkdir --parent /tmp/archive &&
+          find src/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | parallel --progress docker save ${GITHUB_REPOSITORY}:{} --output /tmp/archive/{}.tar
       - uses: actions/upload-artifact@v2
         with:
           name: docker-images
           path: /tmp/archive/
     runs-on: ubuntu-latest
+
   assess:
     needs:
       - build
     steps:
-      - run: |
-          sudo apt-get update
-          sudo apt-get install --yes parallel
-      - run: docker --version
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
+      - run: $GITHUB_WORKSPACE/.github/scripts/install
+      - run: $GITHUB_WORKSPACE/.github/scripts/env
       - uses: actions/download-artifact@v2
         with:
           name: docker-images
           path: /tmp/images
-      - run: ls -al /tmp/images
-      - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
-      - run: docker images --all
-      # - run: make assess
+      - run: $GITHUB_WORKSPACE/.github/scripts/load
+      - run: make assess
     runs-on: ubuntu-latest
-  # package:
-  #   needs:
-  #     - assess
-  #   steps:
-  #     - uses: actions/download-artifact@v2
-  #       with:
-  #         name: docker-image.tar
-  #         path: /tmp
-  #     - run: cat /tmp/docker-image.tar | gzip > /tmp/docker-image.tar.gz
-  #       continue-on-error: true
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: docker-image.tar.gz
-  #         path: /tmp/docker-image.tar.gz
-  #         if-no-files-found: warn
-  #   runs-on: ubuntu-latest
+
   dockerhub:
     needs:
       - assess
@@ -81,6 +62,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -printf '%f\n' | parallel docker push ${GITHUB_REPOSITORY}:{}
     runs-on: ubuntu-latest
+
   # github:
   #   needs:
   #     - assess
@@ -98,6 +80,7 @@ jobs:
   #     - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
   #     - run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
   #   runs-on: ubuntu-latest
+
   # slack:
   #   needs:
   #     - build
