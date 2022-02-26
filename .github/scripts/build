@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+set -e
+
+if [ "$GITHUB_REF_NAME" = "master" ]; then
+  exec make build
+else
+  exec make build-affected
+fi

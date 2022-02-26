@@ -55,7 +55,6 @@ RUN apt-get update && \
     libarchive-tools \
     mysql-client \
     netcat \
-    nodejs \
     openssh-client \
     perl \
     php \
@@ -78,6 +77,16 @@ RUN apt-get update && \
 # install composer
 RUN curl --silent --show-error https://getcomposer.org/installer | \
   sudo -H php -- --install-dir=/usr/local/bin --filename=composer
+
+# install node 14.x
+RUN NODE_VERSION=14 && \
+  mkdir --parent /opt/nodejs && \
+  curl --silent --show-error \
+    --location "https://nodejs.org/download/release/latest-v${NODE_VERSION}.x/" | \
+  egrep --only-matching --max-count 1 "node-v${NODE_VERSION}\.[0-9]+\.[0-9]+-linux-x64.tar.xz" | \
+  wget --quiet --base=https://nodejs.org/download/release/latest-v${NODE_VERSION}.x/ --input-file - --output-document - | \
+  tar --xz --extract --no-same-owner --strip-components 1 --file - --directory /opt/nodejs
+ENV PATH /opt/nodejs/bin:$PATH
 
 # install python 2.7.x
 RUN curl --silent --fail --show-error \
@@ -159,13 +168,13 @@ RUN apt-get install --yes --no-install-recommends \
     asciidoctor-pdf
 
 # install node packages
-RUN npm install --global \
+RUN npm install --global npm && \
+  npm install --global \
     eslint \
     eslint-plugin-html \
     heroku \
+    ngrok \
     nodemon && \
-  npm install --global --unsafe-perm \
-    ngrok && \
   rm --recursive --force $HOME/.ngrok && \
   npm cache clean --force
 
@@ -191,7 +200,7 @@ RUN echo '' | tee --append /etc/ssh/ssh_config && \
   chmod 660 /opt/ssh/known_hosts
 
 # configure system
-COPY src/latest/filesystem /
+COPY filesystem /
 
 # configure workspace
 RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \

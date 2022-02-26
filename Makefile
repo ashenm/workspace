@@ -1,16 +1,29 @@
 .DEFAULT_GOAL=help
+DEFAULT_BRANCH=master
 
 .PHONY: assess
-assess: ## test docker image
+assess: ## test all images
 	./pants test ::
 
+.PHONY: assess-affected
+assess-affected:
+	./pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive test
+
 .PHONY: build
-build: install ## build docker image
+build: install ## build all images
 	./pants package ::
 
+.PHONY: build-affected
+build-affected:
+	./pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive package
+
 .PHONY: deploy
-deploy: ## deploy image to docker hub
+deploy: ## deploy all images to docker hub
 	./pants publish ::
+
+.PHONY: deploy-affected
+deploy-affected:
+	./pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive publish
 
 .PHONY: help
 .SILENT: help

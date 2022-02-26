@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+set -e
+
+# fetch all repo related image references
+DOCKER_FLAVORS=`docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}"`
+
+# push latests while on master
+if [ "$GITHUB_REF_NAME" = "master" ]; then
+  exec echo "${DOCKER_FLAVORS}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
+fi
+
+# abbreviated commit hash
+COMMIT_SHA=`expr substr ${GITHUB_SHA} 1 7`
+
+# use github ecr for dev images
+DOCKER_REPOSITORY="docker.pkg.github.com"
+
+# push commit hash tags while on non master
+echo "${DOCKER_FLAVORS}" | xargs -I"{}" docker tag ${GITHUB_REPOSITORY}:{} ${DOCKER_REPOSITORY}/${GITHUB_REPOSITORY}:{}-${COMMIT_SHA}
+echo "${DOCKER_FLAVORS}" | parallel --progress docker push ${DOCKER_REPOSITORY}/${GITHUB_REPOSITORY}:{}-${COMMIT_SHA}

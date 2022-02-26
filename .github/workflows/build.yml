@@ -12,11 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           persist-credentials: false
       - run: $GITHUB_WORKSPACE/.github/scripts/install
       - run: $GITHUB_WORKSPACE/.github/scripts/env
       - run: make install
-      - run: make build
+      - run: $GITHUB_WORKSPACE/.github/scripts/build
       - run: mkdir --parent /tmp/archive &&
           find src/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | parallel --progress docker save ${GITHUB_REPOSITORY}:{} --output /tmp/archive/{}.tar
       - uses: actions/upload-artifact@v2
@@ -31,6 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           persist-credentials: false
       - run: $GITHUB_WORKSPACE/.github/scripts/install
       - run: $GITHUB_WORKSPACE/.github/scripts/env
@@ -39,28 +41,30 @@ jobs:
           name: docker-images
           path: /tmp/images
       - run: $GITHUB_WORKSPACE/.github/scripts/load
-      - run: make assess
+      - run: $GITHUB_WORKSPACE/.github/scripts/assess
     runs-on: ubuntu-latest
 
-  dockerhub:
+  deploy:
     needs:
       - assess
-    if: ${{ github.ref_name == 'master' }}
     concurrency:
       group: ${{ github.sha }}
       cancel-in-progress: true
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/download-artifact@v2
         with:
           name: docker-images
           path: /tmp/images
-      - run: ls -al /tmp/images
-      - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
+      - run: $GITHUB_WORKSPACE/.github/scripts/load
       - run: echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -printf '%f\n' | parallel docker push ${GITHUB_REPOSITORY}:{}
+      - run: $GITHUB_WORKSPACE/.github/scripts/deploy
     runs-on: ubuntu-latest
 
   # github:
