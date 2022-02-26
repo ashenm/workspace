@@ -5,5 +5,5 @@ set -e
 if [ "$GITHUB_REF_NAME" = "master" ]; then
   exec make assess
 else
-  exec make assess-affected
+  exec make assess
 fi
