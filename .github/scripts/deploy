@@ -11,6 +11,8 @@ COMMIT_SHA=`expr substr ${GITHUB_SHA} 1 7`
 # use github image registry
 DOCKER_REPOSITORY="docker.pkg.github.com"
 
+echo "${DOCKER_FLAVORS}" | xargs -I"{}" echo "${DOCKER_REPOSITORY}/${GITHUB_REPOSITORY}:{}-${COMMIT_SHA}"
+
 # push commit hash tags
 echo "${DOCKER_FLAVORS}" | xargs -I"{}" docker tag ${GITHUB_REPOSITORY}:{} ${DOCKER_REPOSITORY}/${GITHUB_REPOSITORY}:{}-${COMMIT_SHA}
 echo "${DOCKER_FLAVORS}" | parallel --progress docker push ${DOCKER_REPOSITORY}/${GITHUB_REPOSITORY}:{}-${COMMIT_SHA}
