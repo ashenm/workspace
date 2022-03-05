@@ -44,9 +44,30 @@ jobs:
       - run: $GITHUB_WORKSPACE/.github/scripts/assess
     runs-on: ubuntu-latest
 
-  deploy:
+  github:
     needs:
       - assess
+    concurrency:
+      group: ${{ github.sha }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-images
+          path: /tmp/images
+      - run: $GITHUB_WORKSPACE/.github/scripts/load
+      - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
+      - run: $GITHUB_WORKSPACE/.github/scripts/deploy
+    runs-on: ubuntu-latest
+
+  dockerhub:
+    needs:
+      - assess
+    if: ${{ github.ref_name == 'master' }}
     concurrency:
       group: ${{ github.sha }}
       cancel-in-progress: true
@@ -64,26 +85,8 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: $GITHUB_WORKSPACE/.github/scripts/deploy
+      - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
     runs-on: ubuntu-latest
-
-  # github:
-  #   needs:
-  #     - assess
-  #   if: ${{ github.ref_name == 'master' }}
-  #   concurrency:
-  #     group: ${{ github.sha }}
-  #     cancel-in-progress: true
-  #   steps:
-  #     - uses: actions/download-artifact@v2
-  #       with:
-  #         name: docker-images.tar
-  #         path: /tmp
-  #     - run: find /tmp/images -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
-  #     - run: docker tag ashenm/workspace:rc docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
-  #     - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
-  #     - run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF##*/}
-  #   runs-on: ubuntu-latest
 
   # slack:
   #   needs:
