@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+#
+# Ports
+# List container port mappings
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+
+from json import loads
+from os import environ, stat
+from stat import S_ISSOCK
+from subprocess import PIPE, CalledProcessError, run
+from sys import exit, stdout
+
+try:
+
+  assert S_ISSOCK(stat('/run/docker.sock').st_mode)
+
+  proc = run([ 'sudo', 'curl', '--fail', '--silent', '--unix-socket', '/run/docker.sock',
+    f'''http://localhost/containers/{environ['HOSTNAME']}/json''' ], stdout=PIPE, check=True)
+
+  resultset = loads(proc.stdout)
+  ports = resultset['NetworkSettings']['Ports']
+
+  for port in ports:
+    print(port, ', '.join(map(lambda o: f'''{o['HostIp']}:{o['HostPort']}''', ports[port] or [])), sep=' -> ')
+
+except (FileNotFoundError, AssertionError):
+  print('No Docker Deamon IPC socket: /run/docker.sock', file=stdout)
+  exit(1)
+
+except (KeyError, CalledProcessError):
+  pass
+
+# vim: set expandtab shiftwidth=2 syntax=python:

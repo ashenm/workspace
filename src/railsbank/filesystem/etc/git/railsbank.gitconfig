@@ -1,0 +1,9 @@
+; git@gitlab.com:railsbank-tech/team-integrations/lambda-mono.git
+[includeIf "gitdir:lambda-mono/.git"]
+    path = /etc/git/railsbank/lambda-mono.gitconfig
+
+; git@gitlab.com:railsbank-tech/team-qa/integration-tests.git
+[includeIf "gitdir:integration-tests/.git"]
+    path = /etc/git/railsbank/integration-tests.gitconfig
+
+; vim: set expandtab syntax=gitconfig:

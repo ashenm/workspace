@@ -1,0 +1,163 @@
+= Workspace
+:toc:
+:toc-placement!:
+:warning-caption: :warning:
+:note-caption: :paperclip:
+
+[discrete]
+====== The Personal Docker Workspace
+image:https://travis-ci.com/ashenm/workspace.svg?branch=latest["Build Status", link="https://travis-ci.com/ashenm/workspace"]
+image:https://img.shields.io/badge/tag-latest-blue.svg["Image Tag", link="https://github.com/ashenm/workspace/tree/latest"]
+image:https://images.microbadger.com/badges/image/ashenm/workspace.svg["Image Overview", link="https://hub.docker.com/r/ashenm/workspace/"]
+
+image:https://github.com/ashenm/workspace/workflows/Build%20Image/badge.svg["GitHub Build Status", link="https://github.com/ashenm/workspace/actions?query=workflow%3A%22Build+Image%22"]
+image:https://github.com/ashenm/workspace/workflows/Deployment%20Cleanup/badge.svg["Deployment Cleanup", link="https://github.com/ashenm/workspace/actions?query=workflow%3A%22Deployment+Cleanup%22"]
+
+[discrete]
+=== Table of Contents
+toc::[title="", levels=4]
+
+=== USAGE
+
+==== Using `script/workspace`
+[source, console]
+----
+./script/workspace [OPTION...] [DIRECTORY...]
+----
+
+|===
+2+| Option | Description
+
+| -h | --help | Print usage instructions
+| | <<custom-container-hostname,--hostname>> | Assign custom container hostname
+| | <<custom-container-image,--image>> | Override container images (default 'ashenm/workspace:latest')
+| <<custom-container-name, -n>> | <<custom-container-name, --name>> | Assign custom container name
+| | --blank | Avoid all extended customisations
+| | <<ssh-agent-sharing,--no-agent>> | Avoid all extended customisations
+| | <<git-configuration,--no-git>> | Avoid ~/.gitconfig read-only bind mount
+| | <<openpgp-keyring,--no-gpg>> | Avoid ~/.gnupg bind mount
+| | <<host-ip-mapping,--no-host>> | Avoid population of host IP mapping
+| | <<directory-mounts,--no-mount>> | Avoid directory mount
+| | <<container-port-publishing,--no-publish>> | Avoid container's 8080, 8081 and 8082 ports exposition to the host
+| | <<ssh-configuration,--no-ssh>> | Avoid ~/.ssh read-only bind mount
+| | <<automatic-container-removal,--no-rm>> | Avoid automatic removal of container on exit
+|===
+
+===== Directory Mounts
+====== `workspace [DIRECTORY]`
+The arguments to `workspace` can be used to bind mount a host directory, current
+directory will be assumed unless specified, to a new container either using a
+relative or an absolute path. It will be binded at `~/workspace` on the created container.
+
+For instance, to bind current directory run `./workspace .` or simply `./workspace`.
+
+Similarly, to bind a directory like `C:\foo\bar` using an absolute path on a
+Windows<<COMPATIBILITY, *>> system to container's `~/workspace` run `./workspace C:\foo\bar`.
+
+====== `workspace [DIRECTORY...]`
+The provision of multiple directory paths, absolute or relative, will bind all
+specified directories onto the container's `~/workspace` bearing respective sub-directory names.
+
+For instance, the command `./workspace foo bar` will bind the directories `foo`
+and `bar` within current working directory onto container's `~/workspace/foo` and
+`~/workspace/bar` respectively.
+
+====== `workspace --no-mount`
+The present of flag `--no-mount` will preclude the attempt to bind any directories
+onto container's `~/workspace` directory.
+
+===== SSH Agent Sharing
+====== `workspace [--no-agent] [DIRECTORY]`
+The present of flag `--no-agent` will preclude the attempt to bind ssh-agent
+socket onto container with read-only access.
+
+===== Git Configuration
+====== `workspace [--no-git] [DIRECTORY]`
+The present of flag `--no-git` will preclude the attempt to bind `~/.gitconfig`
+on host to `~/.gitconfig` on the container with read-only access.
+
+===== OpenPGP Keyring
+====== `workspace [--no-gpg] [DIRECTORY]`
+The present of flag `--no-gpg` will preclude the attempt to bind `~/.gnupg` on
+host to `~/.gnupg` on the container with read-write access.
+
+===== Host IP Mapping
+====== `workspace [--no-host] [DIRECTORY]`
+The present of flag `--no-host` will preclude the attempt to populate the `docker0` gateway alias entry.
+
+===== Container Port Publishing
+====== `workspace [--no-publish] [DIRECTORY]`
+The present of flag `--no-publish` will preclude the attempt to expose
+container's ports _8080_, _8081_, and _8082_ to host.
+
+===== SSH Configuration
+====== `workspace [--no-ssh] [DIRECTORY]`
+The present of flag `--no-ssh` will preclude the attempt to bind `~/.ssh` on
+host to `~/.ssh` on the container with read-only access.
+
+===== Automatic Container Removal
+====== `workspace [--no-rm] [DIRECTORY]`
+The present of flag `--no-rm` will preclude the attempt to automatically remove container upon exit.
+
+===== Custom Container Image
+====== `workspace [--image=IMAGE] [DIRECTORY]`
+The `workspace` can be used to run any docker image that is not intended to be
+run as an executable. By default, it will attempt to use link:https://hub.docker.com/r/ashenm/workspace[_ashenm/workspace:latest_]
+as the image unless specified.
+
+The default image can be overridden by simply specifying the desired image name
+via option `--image`. If multiple images are specified the last most image name will be used.
+
+For instance, to bind current directory within link:https://hub.docker.com/_/alpine[__alpine:latest__] run `./workspace --image alpine:latest`.
+
+===== Custom Container Hostname
+====== `workspace [--hostname=HOSTNAME] [DIRECTORY]`
+The default container hostname, reflecting container's ID, can be overridden using the option `--hostname`.
+
+For instance, to override container hostname to `workspace.ashenm.ml`, run `./workspace --hostanme 'workspace.ashenm.ml' [DIRECTORY]`.
+
+===== Custom Container Name
+====== `workspace [--name=NAME] [DIRECTORY]`
+The default generated container name can be overridden using the option `--name`
+(short option `-n`). For instance, to assign name `example` as the container name, run `./workspace --name 'example' [DIRECTORY]`.
+
+==== Using `docker run`
+Please refer link:https://docs.docker.com/engine/reference/commandline/run[official Docker documentation]
+
+=== COMPATIBILITY
+
+==== Windows
+===== UNIX Permissions
+The Docker Desktop currently uses SMB/CIFS for host volumes and therefore does
+not support multiple users nor different file permissions on host mounts.
+
+A mundane solution would be to use link:https://docs.docker.com/storage/volumes/[_Docker Volumes_]
+which are independent of the directory structure of the host machine.
+The `volume/workspace.cmd` facilitate ease administration of Docker Volumes
+allowing <<workspace-create, creation>>, <<workspace-backup, backup>>,
+<<workspace-push, upload>>, and <<workspace-delete, deletion>>.
+
+====== `workspace create`
+Creates a new Docker Volume named _workspace_ that containers can consume and store data in.
+
+====== `workspace backup`
+Creates a gzip tarball in the current working directory from the files stored in Docker Volume _workspace_.
+
+====== `workspace push`
+Clones current working directory into the Docker Volume _workspace_.
+
+====== `workspace delete`
+Removes Docker Volume _workspace_.
+
+====== `workspace update`
+Updates facilitator scripts to the latest
+
+==== `scripts`
+Given that link:https://www.docker.com/[Docker] is installed, the facilitator
+scripts provided can be used with any shell that is is _Bourne SHell_ compatible.
+
+For _Microsoft Windows_ use a POSIX-compliant run-time environment such as _MSYS_
+or _Cygwin_ with link:https://github.com/rprichard/winpty[_WinPTY_] or Microsoft's
+own link:https://docs.microsoft.com/en-us/windows/wsl/about[_Windows Subsystem for Linux_].
+
+// vim: set expandtab spell shiftwidth=2 colorcolumn=80 syntax=asciidoc:

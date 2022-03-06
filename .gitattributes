@@ -1,0 +1,5 @@
+/pants linguist-detectable=false
+/src/**/tests/**/* linguist-detectable=false
+/src/**/scripts/**/* linguist-detectable=false
+/src/**/filesystem/**/* linguist-detectable=false
+/workspace/Update-Workspace linguist-language=PowerShell

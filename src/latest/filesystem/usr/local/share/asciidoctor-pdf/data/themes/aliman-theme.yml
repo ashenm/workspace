@@ -1,0 +1,14 @@
+extends:
+  workspace
+
+footer:
+  recto:
+    left:
+      content: "Al Iman Schools"
+    right:
+      content: "{page-number}"
+  verso:
+    left:
+      content: "Al Iman Schools"
+    right:
+      content: "{page-number}"

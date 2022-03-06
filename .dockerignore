@@ -1,5 +1,2 @@
-*.md
-.git
-.travis.yml
-.dockerignore
-tests
+**/*
+!/src/*/filesystem

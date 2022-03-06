@@ -1,0 +1,19 @@
+name: Deployment Cleanup
+
+on:
+  delete
+
+jobs:
+  purge:
+    name: Docker Hub
+    steps:
+      - uses: ashenm/docker-hub-cleanup@latest
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        with:
+          repository: ashenm/workspace
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+
+# vim: set expandtab shiftwidth=2 syntax=yaml:

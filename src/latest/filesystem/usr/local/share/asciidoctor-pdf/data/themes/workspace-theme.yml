@@ -1,0 +1,14 @@
+extends:
+  default
+
+footer:
+  recto:
+    left:
+      content: "Ashen Gunaratne <mail@ashenm.ml>"
+    right:
+      content: "{page-number}"
+  verso:
+    left:
+      content: "Ashen Gunaratne <mail@ashenm.ml>"
+    right:
+      content: "{page-number}"

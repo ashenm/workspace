@@ -1,0 +1,105 @@
+name: Build Image
+
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
+
+jobs:
+
+  build:
+    if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: $GITHUB_WORKSPACE/.github/scripts/install
+      - run: $GITHUB_WORKSPACE/.github/scripts/env
+      - run: make install
+      - run: $GITHUB_WORKSPACE/.github/scripts/build
+      - run: mkdir --parent /tmp/archive &&
+          find src/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | parallel --progress docker save ${GITHUB_REPOSITORY}:{} --output /tmp/archive/{}.tar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docker-images
+          path: /tmp/archive/
+    runs-on: ubuntu-latest
+
+  assess:
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: $GITHUB_WORKSPACE/.github/scripts/install
+      - run: $GITHUB_WORKSPACE/.github/scripts/env
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-images
+          path: /tmp/images
+      - run: $GITHUB_WORKSPACE/.github/scripts/load
+      - run: $GITHUB_WORKSPACE/.github/scripts/assess
+    runs-on: ubuntu-latest
+
+  github:
+    needs:
+      - assess
+    concurrency:
+      group: ${{ github.sha }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-images
+          path: /tmp/images
+      - run: $GITHUB_WORKSPACE/.github/scripts/load
+      - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
+      - run: $GITHUB_WORKSPACE/.github/scripts/deploy
+    runs-on: ubuntu-latest
+
+  dockerhub:
+    needs:
+      - assess
+    if: ${{ github.ref_name == 'master' }}
+    concurrency:
+      group: ${{ github.sha }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-images
+          path: /tmp/images
+      - run: $GITHUB_WORKSPACE/.github/scripts/load
+      - run: echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
+    runs-on: ubuntu-latest
+
+  slack:
+    needs:
+      - build
+      - assess
+      - github
+      - dockerhub
+    if: ${{ always() }}
+    steps:
+      - uses: Gamesight/slack-workflow-status@master
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          channel: '#github'
+          name: 'GitHub Workflow'
+    runs-on: ubuntu-latest
+
+# vim: set expandtab shiftwidth=2 syntax=yaml:

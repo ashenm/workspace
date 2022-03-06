@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+#
+# Spawn Docker Workspace session
+# https://github.com/ashenm/workspace
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+
+# errexit
+set -e
+
+# spawn ssh-agent
+eval `ssh-agent` 1>/dev/null
+
+# ensure authentication agent spawn successful
+test -n "${SSH_AGENT_PID}"
+
+# use shared agent socket if exists
+test -S "/run/keyring/ssh" && \
+  export SSH_AUTH_SOCK=/run/keyring/ssh
+
+# invoke login shell
+exec bash --login
+
+# vim: set expandtab shiftwidth=2 syntax=sh:

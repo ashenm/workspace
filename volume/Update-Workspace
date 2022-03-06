@@ -1,0 +1,34 @@
+<#
+
+  Update Workspace Facilitator Scripts
+  https://github.com/ashenm/workspace
+
+  Ashen Gunaratne
+  mail@ashenm.ml
+
+#>
+
+# use TLS 1.2
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::TLS12
+
+# fetch latest commits
+$commits = (Invoke-WebRequest -UseBasicParsing -Uri https://api.github.com/repos/ashenm/workspace/commits).Content
+
+# extract latest commit tree URI
+$tree = (Invoke-WebRequest -UseBasicParsing -Uri ((ConvertFrom-Json -InputObject $commits)[0].commit.tree.url)).Content
+
+# fetch latest tree
+$tree = ((Invoke-WebRequest -UseBasicParsing -Uri ((ConvertFrom-Json -InputObject $tree).Tree `
+  | Where-Object -EQ -Property Path -Value Workspace).Url).Content | ConvertFrom-JSON).Tree
+
+# update local objects
+$tree.Path | ForEach-Object {
+  Write-Host -ForegroundColor Yellow "[INFO] Updating $PWD\$_"
+  Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/ashenm/workspace/master/workspace/$_" -OutFile $PWD\$_
+  Write-Host -ForegroundColor Green "[INFO] Updated $PWD\$_"
+}
+
+# suspend
+Pause
+
+# vim: set expandtab shiftwidth=2 syntax=powershell:
