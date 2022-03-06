@@ -53,7 +53,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           persist-credentials: false
       - uses: actions/download-artifact@v2
         with:
@@ -74,7 +73,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           persist-credentials: false
       - uses: actions/download-artifact@v2
         with:
@@ -88,22 +86,20 @@ jobs:
       - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
     runs-on: ubuntu-latest
 
-  # slack:
-  #   needs:
-  #     - build
-  #     - assess
-  #     - package
-  #     - dockerhub
-  #     - github
-  #     - culminate
-  #   if: ${{ always() }}
-  #   steps:
-  #     - uses: Gamesight/slack-workflow-status@master
-  #       with:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-  #         channel: '#github'
-  #         name: 'GitHub Workflow'
-  #   runs-on: ubuntu-latest
+  slack:
+    needs:
+      - build
+      - assess
+      - github
+      - dockerhub
+    if: ${{ always() }}
+    steps:
+      - uses: Gamesight/slack-workflow-status@master
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          channel: '#github'
+          name: 'GitHub Workflow'
+    runs-on: ubuntu-latest
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
