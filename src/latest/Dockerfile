@@ -20,12 +20,12 @@ RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github
   echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/github_git-lfs.list
 
-# set up node 12.x repo
+# set up node 14.x repo
 # https://github.com/nodesource/distributions#debmanual
 RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | apt-key add - && \
-  echo "deb https://deb.nodesource.com/node_12.x $(lsb_release --short --codename) main" | \
+  echo "deb https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src https://deb.nodesource.com/node_12.x $(lsb_release --short --codename) main" | \
+  echo "deb-src https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
 # install packages
@@ -54,6 +54,7 @@ RUN apt-get update && \
     jq \
     libarchive-tools \
     mysql-client \
+    nodejs \
     netcat \
     openssh-client \
     perl \
@@ -77,16 +78,6 @@ RUN apt-get update && \
 # install composer
 RUN curl --silent --show-error https://getcomposer.org/installer | \
   sudo -H php -- --install-dir=/usr/local/bin --filename=composer
-
-# install node 14.x
-RUN NODE_VERSION=14 && \
-  mkdir --parent /opt/nodejs && \
-  curl --silent --show-error \
-    --location "https://nodejs.org/download/release/latest-v${NODE_VERSION}.x/" | \
-  egrep --only-matching --max-count 1 "node-v${NODE_VERSION}\.[0-9]+\.[0-9]+-linux-x64.tar.xz" | \
-  wget --quiet --base=https://nodejs.org/download/release/latest-v${NODE_VERSION}.x/ --input-file - --output-document - | \
-  tar --xz --extract --no-same-owner --strip-components 1 --file - --directory /opt/nodejs
-ENV PATH /opt/nodejs/bin:$PATH
 
 # install python 2.7.x
 RUN curl --silent --fail --show-error \
