@@ -159,13 +159,13 @@ RUN apt-get install --yes --no-install-recommends \
     asciidoctor-pdf
 
 # install node packages
-RUN npm install --global npm && \
-  npm install --global \
+RUN npm install --global \
     eslint \
     eslint-plugin-html \
     heroku \
-    ngrok \
     nodemon && \
+  npm install --global --unsafe-perm \
+    ngrok && \
   rm --recursive --force $HOME/.ngrok && \
   npm cache clean --force
 
