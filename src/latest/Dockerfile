@@ -73,7 +73,7 @@ RUN apt-get update && \
     wget \
     whois && \
   git lfs install --system --skip-repo && \
-  apt update
+  apt-get update
 
 # install composer
 RUN curl --silent --show-error https://getcomposer.org/installer | \
