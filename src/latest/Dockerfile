@@ -77,7 +77,7 @@ RUN apt-get update && \
 
 # install composer
 RUN curl --silent --show-error https://getcomposer.org/installer | \
-  sudo -H php -- --install-dir=/usr/local/bin --filename=composer
+  php -- --install-dir=/usr/local/bin --filename=composer
 
 # install python 2.7.x
 RUN curl --silent --fail --show-error \
