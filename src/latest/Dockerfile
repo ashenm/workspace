@@ -57,6 +57,7 @@ RUN apt-get update && \
     nodejs \
     netcat \
     openssh-client \
+    parallel \
     perl \
     php \
     php-cli \
