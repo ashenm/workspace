@@ -6,6 +6,14 @@ Host bitbucket.org
     UserKnownHostsFile /dev/null
     IdentityFile "~/.ssh/bitbucket"
 
+# CodeCommit
+Host git-codecommit.*.amazonaws.com
+    Hostname git-codecommit.*.amazonaws.com
+    IdentitiesOnly yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile "~/.ssh/codecommit"
+
 # GitHub
 Host github.com gist.github.com
     Port 22
