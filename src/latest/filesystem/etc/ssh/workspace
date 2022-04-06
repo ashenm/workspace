@@ -8,7 +8,6 @@ Host bitbucket.org
 
 # CodeCommit
 Host git-codecommit.*.amazonaws.com
-    Hostname git-codecommit.*.amazonaws.com
     IdentitiesOnly yes
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
