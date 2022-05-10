@@ -14,18 +14,20 @@ ENV NODE_PATH /usr/lib/node_modules
 
 # set up git-lfs repo
 # https://packagecloud.io/github/git-lfs/install#manual
-RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github/git-lfs/gpgkey' | apt-key add - && \
-  echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
+RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github/git-lfs/gpgkey' | \
+    apt-key --keyring /usr/share/keyrings/packagecloud.io.gpg add - && \
+  echo "deb [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/github_git-lfs.list && \
-  echo "deb-src https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
+  echo "deb-src [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/github_git-lfs.list
 
 # set up node 14.x repo
 # https://github.com/nodesource/distributions#debmanual
-RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | apt-key add - && \
-  echo "deb https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
+RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
+    apt-key --keyring /usr/share/keyrings/nodesource.com.gpg add  - && \
+  echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
+  echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
 # install packages
