@@ -21,6 +21,13 @@ RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github
   echo "deb-src [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/github_git-lfs.list
 
+# set up google cloud repo
+# https://cloud.google.com/sdk/docs/install#deb
+RUN curl --silent --fail --show-error --location 'https://packages.cloud.google.com/apt/doc/apt-key.gpg' | \
+    apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
+    tee /etc/apt/sources.list.d/google-cloud.list
+
 # set up node 14.x repo
 # https://github.com/nodesource/distributions#debmanual
 RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
@@ -49,6 +56,7 @@ RUN apt-get update && \
     gdb \
     git-lfs \
     golang-go \
+    google-cloud-cli \
     graphviz \
     httpie \
     iputils-ping \
