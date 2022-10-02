@@ -17,9 +17,9 @@ ENV NODE_PATH /usr/lib/node_modules
 RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github/git-lfs/gpgkey' | \
     apt-key --keyring /usr/share/keyrings/packagecloud.io.gpg add - && \
   echo "deb [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
-    tee /etc/apt/sources.list.d/github_git-lfs.list && \
+    tee /etc/apt/sources.list.d/github-git-lfs.list && \
   echo "deb-src [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
-    tee --append /etc/apt/sources.list.d/github_git-lfs.list
+    tee --append /etc/apt/sources.list.d/github-git-lfs.list
 
 # set up google cloud repo
 # https://cloud.google.com/sdk/docs/install#deb
@@ -59,6 +59,7 @@ RUN apt-get update && \
     google-cloud-cli \
     graphviz \
     httpie \
+    hub \
     iputils-ping \
     iputils-tracepath \
     jq \
@@ -116,16 +117,6 @@ RUN mkdir --parent /opt/openjdk && \
     wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
 ENV PATH /opt/openjdk/bin:$PATH
-
-# install hub
-# http://stackoverflow.com/a/27869453
-RUN mkdir /tmp/hub-linux-amd64 && \
-  curl --silent --show-error --location 'https://github.com/github/hub/releases/latest' | \
-    egrep --only-matching --max-count=1 '/github/hub/releases/download/.*/hub-linux-amd64-.*.tgz' | \
-    wget --quiet --base=https://github.com/ --input-file - --output-document - | \
-    tar --gzip --extract --strip-components 1 --file - --directory /tmp/hub-linux-amd64 && \
-    /tmp/hub-linux-amd64/install && \
-  rm --recursive --force /tmp/hub-linux-amd64
 
 # install java packages
 RUN mkdir --parents /usr/local/share/java && \
