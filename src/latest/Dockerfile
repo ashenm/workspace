@@ -162,6 +162,7 @@ RUN apt-get install --yes --no-install-recommends \
 
 # install node packages
 RUN npm install --global \
+    artillery \
     eslint \
     eslint-plugin-html \
     heroku \
