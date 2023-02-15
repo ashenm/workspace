@@ -30,7 +30,7 @@ jobs:
         with:
           name: docker-images
           path: /tmp/archive/
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
   assess:
     needs:
@@ -48,7 +48,7 @@ jobs:
           path: /tmp/images
       - run: $GITHUB_WORKSPACE/.github/scripts/load
       - run: $GITHUB_WORKSPACE/.github/scripts/assess
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
   github:
     needs:
@@ -67,7 +67,7 @@ jobs:
       - run: $GITHUB_WORKSPACE/.github/scripts/load
       - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
       - run: $GITHUB_WORKSPACE/.github/scripts/deploy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
   dockerhub:
     needs:
@@ -90,7 +90,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
   slack:
     needs:
@@ -106,6 +106,6 @@ jobs:
           slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           channel: '#github'
           name: 'GitHub Workflow'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
