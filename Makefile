@@ -3,27 +3,27 @@ DEFAULT_BRANCH=master
 
 .PHONY: assess
 assess: ## test all images
-	./pants test ::
+	pants test ::
 
 .PHONY: assess-affected
 assess-affected:
-	./pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive test
+	pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive test
 
 .PHONY: build
 build: install ## build all images
-	./pants package ::
+	pants package ::
 
 .PHONY: build-affected
 build-affected:
-	./pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive package
+	pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive package
 
 .PHONY: deploy
 deploy: ## deploy all images to docker hub
-	./pants publish ::
+	pants publish ::
 
 .PHONY: deploy-affected
 deploy-affected:
-	./pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive publish
+	pants --changed-since=$(DEFAULT_BRANCH) --changed-dependees=transitive publish
 
 .PHONY: help
 .SILENT: help
