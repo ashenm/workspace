@@ -9,6 +9,7 @@ ARTEFACTS_DIRECTORY=${ARTEFACTS_DIRECTORY:-/tmp/images}
 ls -al $ARTEFACTS_DIRECTORY
 
 # load images
+find $ARTEFACTS_DIRECTORY -mindepth 1 -maxdepth 1 -type f -iname '*.tar'
 find $ARTEFACTS_DIRECTORY -mindepth 1 -maxdepth 1 -type f -iname '*.tar' | parallel --progress docker load --input {}
 
 # list images
