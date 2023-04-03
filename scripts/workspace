@@ -186,7 +186,7 @@ for DOTFILE in $DOTFILES; do
 
   test -n "${DOTFILE##.*}" && \
     continue
- 
+
   ARGUMENTS="$ARGUMENTS --volume $HOME/$DOTFILE:/home/ubuntu/$DOTFILE:ro"
 
 done
