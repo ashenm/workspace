@@ -12,8 +12,17 @@ on:
       - master
 
 jobs:
+  metadata:
+    steps:
+      - id: git
+        run: echo "build_commit_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+    outputs:
+      build_commit_sha: ${{ steps.git.outputs.build_commit_sha }}
+    runs-on: ubuntu-latest
 
   latest:
+    needs:
+      - metadata
     if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
     steps:
       - uses: actions/checkout@v2
@@ -36,12 +45,13 @@ jobs:
           platforms: linux/amd64,linux/arm64
           pull: true
           push: true
-          tags: ghcr.io/${{ github.repository }}/latest:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
     runs-on: ubuntu-22.04
 
   railsbank:
     needs:
       - latest
+      - metadata
     steps:
       - uses: actions/checkout@v2
         with:
@@ -57,19 +67,20 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ github.sha }}
+      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
       - uses: docker/build-push-action@v4
         with:
           context: src/railsbank
           platforms: linux/amd64,linux/arm64
           pull: false
           push: true
-          tags: ghcr.io/${{ github.repository }}/railsbank:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/railsbank:${{ needs.metadata.outputs.build_commit_sha }}
     runs-on: ubuntu-22.04
 
   stanford-cs143:
     needs:
       - latest
+      - metadata
     steps:
       - uses: actions/checkout@v2
         with:
@@ -85,14 +96,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ github.sha }}
+      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
       - uses: docker/build-push-action@v4
         with:
           context: src/railsbank
           platforms: linux/amd64,linux/arm64
           pull: false
           push: true
-          tags: ghcr.io/${{ github.repository }}/stanford-cs143:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/stanford-cs143:${{ needs.metadata.outputs.build_commit_sha }}
     runs-on: ubuntu-22.04
 
   # dockerhub:
