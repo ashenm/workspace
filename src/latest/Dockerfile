@@ -194,7 +194,7 @@ RUN echo '' | tee --append /etc/ssh/ssh_config && \
   chmod 660 /opt/ssh/known_hosts
 
 # configure system
-COPY src/latest/filesystem /
+COPY filesystem /
 
 # configure workspace
 RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \

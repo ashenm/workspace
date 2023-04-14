@@ -38,4 +38,4 @@ RUN printf '[include]\n\
 sudo tee --append /etc/gitconfig
 
 # configure system
-COPY src/railsbank/filesystem /
+COPY filesystem /

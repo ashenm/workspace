@@ -13,103 +13,126 @@ on:
 
 jobs:
 
-  build:
+  latest:
     if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           persist-credentials: false
-      - uses: pantsbuild/actions/init-pants@v5-scie-pants
-      - run: $GITHUB_WORKSPACE/.github/scripts/install
-      - run: $GITHUB_WORKSPACE/.github/scripts/env
-      - run: make install
-      - run: $GITHUB_WORKSPACE/.github/scripts/build
-      - run: mkdir --parent ${RUNNER_TEMP}/archives &&
-          find src/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | parallel --progress docker save ${GITHUB_REPOSITORY}:{} --output ${RUNNER_TEMP}/archives/{}.tar
-      - uses: actions/upload-artifact@v2
+      - uses: docker/setup-qemu-action@v2
         with:
-          name: docker-images
-          path: ${{ runner.temp }}/archives/
+          platforms: all
+      - uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: src/latest
+          platforms: linux/amd64,linux/arm64
+          pull: true
+          push: true
+          tags: ghcr.io/${{ github.repository }}/latest:${{ github.sha }}
     runs-on: ubuntu-22.04
 
-  assess:
+  railsbank:
     needs:
-      - build
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: pantsbuild/actions/init-pants@v5-scie-pants
-      - run: $GITHUB_WORKSPACE/.github/scripts/install
-      - run: $GITHUB_WORKSPACE/.github/scripts/env
-      - uses: actions/download-artifact@v2
-        with:
-          name: docker-images
-          path: ${{ runner.temp }}/images
-      - run: $GITHUB_WORKSPACE/.github/scripts/load
-      - run: $GITHUB_WORKSPACE/.github/scripts/assess
-    runs-on: ubuntu-22.04
-
-  github:
-    needs:
-      - assess
-    concurrency:
-      group: ${{ github.sha }}
-      cancel-in-progress: true
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials:
-      - uses: pantsbuild/actions/init-pants@v5-scie-pants
-      - uses: actions/download-artifact@v2
-        with:
-          name: docker-images
-          path: ${{ runner.temp }}/images
-      - run: $GITHUB_WORKSPACE/.github/scripts/load
-      - run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin --username ashenm docker.pkg.github.com
-      - run: $GITHUB_WORKSPACE/.github/scripts/deploy
-    runs-on: ubuntu-22.04
-
-  dockerhub:
-    needs:
-      - assess
-    if: ${{ github.ref_name == 'master' }}
-    concurrency:
-      group: ${{ github.sha }}
-      cancel-in-progress: true
+      - latest
     steps:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
-      - uses: pantsbuild/actions/init-pants@v5-scie-pants
-      - uses: actions/download-artifact@v2
+      - uses: docker/setup-qemu-action@v2
         with:
-          name: docker-images
-          path: ${{ runner.temp }}/images
-      - run: $GITHUB_WORKSPACE/.github/scripts/load
-      - run: echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
+          platforms: all
+      - uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ github.sha }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: src/railsbank
+          platforms: linux/amd64,linux/arm64
+          pull: false
+          push: true
+          tags: ghcr.io/${{ github.repository }}/railsbank:${{ github.sha }}
     runs-on: ubuntu-22.04
 
-  slack:
+  stanford-cs143:
     needs:
-      - build
-      - assess
-      - github
-      - dockerhub
-    if: ${{ always() }}
+      - latest
     steps:
-      - uses: Gamesight/slack-workflow-status@master
+      - uses: actions/checkout@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          channel: '#github'
-          name: 'GitHub Workflow'
+          persist-credentials: false
+      - uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+      - uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ github.sha }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: src/railsbank
+          platforms: linux/amd64,linux/arm64
+          pull: false
+          push: true
+          tags: ghcr.io/${{ github.repository }}/stanford-cs143:${{ github.sha }}
     runs-on: ubuntu-22.04
+
+  # dockerhub:
+  #   needs:
+  #     - assess
+  #   if: ${{ github.ref_name == 'master' }}
+  #   concurrency:
+  #     group: ${{ github.sha }}
+  #     cancel-in-progress: true
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         persist-credentials: false
+  #     - uses: pantsbuild/actions/init-pants@v5-scie-pants
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: docker-images
+  #         path: ${{ runner.temp }}/images
+  #     - run: $GITHUB_WORKSPACE/.github/scripts/load
+  #     - run: echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+  #       env:
+  #         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  #         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  #     - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
+  #   runs-on: ubuntu-22.04
+
+  # slack:
+  #   needs:
+  #     - build
+  #     - assess
+  #     - github
+  #     - dockerhub
+  #   if: ${{ always() }}
+  #   steps:
+  #     - uses: Gamesight/slack-workflow-status@master
+  #       with:
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
+  #         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+  #         channel: '#github'
+  #         name: 'GitHub Workflow'
+  #   runs-on: ubuntu-22.04
 
 # vim: set expandtab shiftwidth=2 syntax=yaml:
