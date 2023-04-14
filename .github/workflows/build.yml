@@ -45,7 +45,15 @@ jobs:
           platforms: linux/amd64,linux/arm64
           pull: true
           push: true
-          tags: ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+          tags: ghcr.io/${{ github.repository }}/${{ github.job }}:${{ needs.metadata.outputs.build_commit_sha }}
+      - if: ${{ github.ref_name == 'master' }}
+        run: |
+          echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+          docker buildx imagetools create --tag ${{ github.repository }}:${{ github.job }} \
+            ghcr.io/${{ github.repository }}/${{ github.job }}/${{ needs.metadata.outputs.build_commit_sha }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-22.04
 
   railsbank:
@@ -67,14 +75,24 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+      - run: |
+        docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+        docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
       - uses: docker/build-push-action@v4
         with:
           context: src/railsbank
           platforms: linux/amd64,linux/arm64
           pull: false
           push: true
-          tags: ghcr.io/${{ github.repository }}/railsbank:${{ needs.metadata.outputs.build_commit_sha }}
+          tags: ghcr.io/${{ github.repository }}/${{ github.job }}:${{ needs.metadata.outputs.build_commit_sha }}
+      - if: ${{ github.ref_name == 'master' }}
+        run: |
+          echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+          docker buildx imagetools create --tag ${{ github.repository }}:${{ github.job }} \
+            ghcr.io/${{ github.repository }}/${{ github.job }}/${{ needs.metadata.outputs.build_commit_sha }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-22.04
 
   stanford-cs143:
@@ -96,39 +114,25 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+      - run:  |
+        docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+        docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
       - uses: docker/build-push-action@v4
         with:
           context: src/railsbank
           platforms: linux/amd64,linux/arm64
           pull: false
           push: true
-          tags: ghcr.io/${{ github.repository }}/stanford-cs143:${{ needs.metadata.outputs.build_commit_sha }}
+          tags: ghcr.io/${{ github.repository }}/${{ github.job }}-cs143:${{ needs.metadata.outputs.build_commit_sha }}
+      - if: ${{ github.ref_name == 'master' }}
+        run: |
+          echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
+          docker buildx imagetools create --tag ${{ github.repository }}:${{ github.job }} \
+            ghcr.io/${{ github.repository }}/${{ github.job }}/${{ needs.metadata.outputs.build_commit_sha }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-22.04
-
-  # dockerhub:
-  #   needs:
-  #     - assess
-  #   if: ${{ github.ref_name == 'master' }}
-  #   concurrency:
-  #     group: ${{ github.sha }}
-  #     cancel-in-progress: true
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         persist-credentials: false
-  #     - uses: pantsbuild/actions/init-pants@v5-scie-pants
-  #     - uses: actions/download-artifact@v2
-  #       with:
-  #         name: docker-images
-  #         path: ${{ runner.temp }}/images
-  #     - run: $GITHUB_WORKSPACE/.github/scripts/load
-  #     - run: echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
-  #       env:
-  #         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  #         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  #     - run: docker images --filter=reference="${GITHUB_REPOSITORY}" --format "{{.Tag}}" | parallel --progress docker push ${GITHUB_REPOSITORY}:{}
-  #   runs-on: ubuntu-22.04
 
   # slack:
   #   needs:
