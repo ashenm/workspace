@@ -1,4 +1,6 @@
-FROM ashenm/workspace:latest
+ARG BASEIMAGE=ashenm/workspace:latest
+
+FROM ${BASEIMAGE}
 
 # avoid prompts
 ARG DEBIAN_FRONTEND=noninteractive
