@@ -6,7 +6,7 @@ on:
       - master
   pull_request:
     branches:
-      - '**'
+      - "**"
   workflow_dispatch:
     branches:
       - master
@@ -76,8 +76,8 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-        docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
-        docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
+          docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+          docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
       - uses: docker/build-push-action@v4
         with:
           context: src/railsbank
@@ -114,9 +114,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run:  |
-        docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
-        docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
+      - run: |
+          docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+          docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
       - uses: docker/build-push-action@v4
         with:
           context: src/railsbank
@@ -149,5 +149,4 @@ jobs:
   #         channel: '#github'
   #         name: 'GitHub Workflow'
   #   runs-on: ubuntu-22.04
-
 # vim: set expandtab shiftwidth=2 syntax=yaml:
