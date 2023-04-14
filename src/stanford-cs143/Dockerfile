@@ -1,4 +1,6 @@
-FROM ashenm/workspace:latest
+ARG BASEIMAGE=ashenm/workspace:latest
+
+FROM ${BASEIMAGE}
 
 # install cs143 requisit packages
 RUN sudo apt update && \
