@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-
-set -e
-
-# list versions
-docker --version
-
-# show environment
-export

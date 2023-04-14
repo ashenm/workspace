@@ -39,6 +39,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: ./src/latest/scripts/init-filesystem
       - uses: docker/build-push-action@v4
         with:
           context: src/${{ github.job }}
@@ -81,6 +82,7 @@ jobs:
       - run: |
           docker pull ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
           docker tag ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }} ${{ github.repository }}:latest
+      - run: ./src/${{ matrix.source }}/scripts/init-filesystem
       - uses: docker/build-push-action@v4
         with:
           context: src/${{ matrix.source }}
