@@ -37,6 +37,12 @@ RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpg
   echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
+# set up terraform repo
+# https://www.terraform.io/docs/cli/install/apt.html
+RUN curl --silent --fail --show-error --location 'https://apt.releases.hashicorp.com/gpg' | apt-key add - && \
+  echo "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release --short --codename) main" | \
+    tee /etc/apt/sources.list.d/terraform.list
+
 # install packages
 # deliberately updating apt cache at the end
 # facilitating apt-file usage out-of-the-box
@@ -79,6 +85,7 @@ RUN apt-get update && \
     sqlite3 \
     sudo \
     telnet \
+    terraform \
     time \
     tree \
     valgrind \
@@ -166,7 +173,11 @@ RUN npm install --global \
     eslint \
     eslint-plugin-html \
     heroku \
-    nodemon && \
+    jest \
+    nodemon \
+    prettier \
+    ts-node \
+    typescript && \
   npm install --global --unsafe-perm \
     ngrok && \
   rm --recursive --force $HOME/.ngrok && \
