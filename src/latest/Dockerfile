@@ -110,10 +110,10 @@ RUN curl --silent --fail --show-error \
   bsdtar --extract --directory / --file - opt/
 ENV PATH /opt/python/3.8/bin:$PATH
 
-# install ruby 2.7.x
+# install ruby 3.2.x
 # http://rubies.travis-ci.org/
 RUN curl --silent --fail --show-error \
-    --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-2.7.1.tar.bz2" | \
+    --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-3.2.2.tar.bz2" | \
   tar --bzip --extract --file - --strip-components 1 --directory /usr/local
 
 # install openjdk
