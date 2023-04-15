@@ -59,7 +59,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-22.04
 
-  children:
+  forks:
     needs:
       - latest
       - metadata
@@ -96,7 +96,7 @@ jobs:
       - if: ${{ github.ref_name == 'master' }}
         run: |
           echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
-          docker buildx imagetools create --tag ${{ github.repository }}:${{ github.job }} \
+          docker buildx imagetools create --tag ${{ github.repository }}:${{ matrix.source }} \
             ghcr.io/${{ github.repository }}/${{ matrix.source }}:${{ needs.metadata.outputs.build_commit_sha }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -106,7 +106,7 @@ jobs:
   slack:
     needs:
       - latest
-      - children
+      - forks
     if: ${{ always() }}
     steps:
       - uses: Gamesight/slack-workflow-status@master
