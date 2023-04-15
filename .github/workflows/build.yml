@@ -97,7 +97,7 @@ jobs:
         run: |
           echo ${DOCKER_PASSWORD} | docker login --password-stdin --username ${DOCKER_USERNAME}
           docker buildx imagetools create --tag ${{ github.repository }}:${{ github.job }} \
-            ghcr.io/${{ github.repository }}/${{ github.job }}/${{ needs.metadata.outputs.build_commit_sha }}
+            ghcr.io/${{ github.repository }}/${{ matrix.source }}:${{ needs.metadata.outputs.build_commit_sha }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
