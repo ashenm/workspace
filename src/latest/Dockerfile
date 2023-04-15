@@ -28,13 +28,13 @@ RUN curl --silent --fail --show-error --location 'https://packages.cloud.google.
   echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
     tee /etc/apt/sources.list.d/google-cloud.list
 
-# set up node 14.x repo
+# set up node 16.x repo
 # https://github.com/nodesource/distributions#debmanual
 RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
     apt-key --keyring /usr/share/keyrings/nodesource.com.gpg add  - && \
-  echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
+  echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_16.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_14.x $(lsb_release --short --codename) main" | \
+  echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_16.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
 # set up terraform repo
