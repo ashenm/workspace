@@ -4,7 +4,7 @@ FROM ashenm/baseimage:developer
 ARG DEBIAN_FRONTEND=noninteractive
 
 # clinch compiler optimisations
-ARG CFLAGS="-march=x86-64 -mtune=x86-64"
+ARG CFLAGS="-march=native -mtune=generic"
 
 # expose tcp ports
 EXPOSE 8080 8081 8082
@@ -119,8 +119,8 @@ RUN curl --silent --fail --show-error \
 # install openjdk
 # https://openjdk.java.net/install/
 RUN mkdir --parent /opt/openjdk && \
-  curl --silent --show-error --location 'https://jdk.java.net/20/' | \
-    egrep --only-matching --max-count 1 '/java/GA/.*/openjdk-.*_linux-x64_bin.tar.gz' | \
+  curl --silent --show-error --location "https://jdk.java.net/20/" | \
+    egrep --only-matching --max-count 1 "/java/GA/.*/openjdk-.*_linux-$(uname --machine | sed 's/86_//')_bin.tar.gz" | \
     wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
     tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
 ENV PATH /opt/openjdk/bin:$PATH
