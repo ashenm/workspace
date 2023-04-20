@@ -141,6 +141,7 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     wheel && \
   python3 -m pip install --upgrade --no-cache-dir --ignore-installed \
     awscli \
+    black \
     cairosvg \
     blockdiag \
     icdiff \
