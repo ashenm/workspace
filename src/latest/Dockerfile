@@ -104,11 +104,11 @@ RUN curl --silent --fail --show-error \
   bsdtar --extract --directory / --file - opt/
 ENV PATH /opt/python/2.7/bin:$PATH
 
-# install python 3.8.x
+# install python 3.11.x
 RUN curl --silent --fail --show-error \
-    --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-3.8.5.tar.bz2" | \
+    --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-3.11.0.tar.bz2" | \
   bsdtar --extract --directory / --file - opt/
-ENV PATH /opt/python/3.8/bin:$PATH
+ENV PATH /opt/python/3.11/bin:$PATH
 
 # install ruby 3.1.x
 # http://rubies.travis-ci.org/
