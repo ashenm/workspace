@@ -167,6 +167,7 @@ RUN apt-get install --yes --no-install-recommends \
     libgdk-pixbuf2.0-dev \
     libpango1.0-dev \
     libxml2-dev && \
+  gem update --system --no-document --no-update-sources && \
   gem install --force --no-document --no-update-sources \
     asciidoctor \
     asciidoctor-diagram \
