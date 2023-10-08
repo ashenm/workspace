@@ -31,7 +31,7 @@ RUN curl --silent --fail --show-error --location 'https://packages.cloud.google.
 # set up node 16.x repo
 # https://github.com/nodesource/distributions#debmanual
 RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
-    apt-key --keyring /usr/share/keyrings/nodesource.com.gpg add  - && \
+    apt-key --keyring /usr/share/keyrings/nodesource.com.gpg add - && \
   echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_16.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
   echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_16.x $(lsb_release --short --codename) main" | \
@@ -43,12 +43,21 @@ RUN curl --silent --fail --show-error --location 'https://apt.releases.hashicorp
   echo "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/terraform.list
 
+# set up azure cli repo
+# https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
+RUN mkdir --parents --mode=755 /etc/apt/keyrings && \
+  curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
+    gpg --dearmor | apt-key --keyring /usr/share/keyrings/microsoft.gpg add - && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release --codename --short) main" | \
+    tee /etc/apt/sources.list.d/azure-cli.list
+
 # install packages
 # deliberately updating apt cache at the end
 # facilitating apt-file usage out-of-the-box
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
     apt-file \
+    azure-cli \
     bash-completion \
     bc \
     bison \
