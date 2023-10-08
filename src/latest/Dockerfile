@@ -32,9 +32,9 @@ RUN curl --silent --fail --show-error --location 'https://packages.cloud.google.
 # https://github.com/nodesource/distributions#debmanual
 RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
     apt-key --keyring /usr/share/keyrings/nodesource.com.gpg add - && \
-  echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_16.x $(lsb_release --short --codename) main" | \
+  echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_16.x $(lsb_release --short --codename) main" | \
+  echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
 # set up terraform repo
