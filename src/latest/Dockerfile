@@ -169,6 +169,8 @@ RUN apt-get install --yes --no-install-recommends \
     libxml2-dev && \
   gem update --system --no-document --no-update-sources && \
   gem install --force --no-document --no-update-sources \
+    mathematical:1.6.14 # https://github.com/asciidoctor/asciidoctor-mathematical/issues/122 && \
+  gem install --force --no-document --no-update-sources \
     asciidoctor \
     asciidoctor-diagram \
     asciidoctor-mathematical \
