@@ -45,11 +45,16 @@ RUN curl --silent --fail --show-error --location 'https://apt.releases.hashicorp
 
 # set up azure cli repo
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
-RUN mkdir --parents --mode=755 /etc/apt/keyrings && \
-  curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
+RUN curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
     gpg --dearmor | apt-key --keyring /usr/share/keyrings/microsoft.gpg add - && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release --codename --short) main" | \
     tee /etc/apt/sources.list.d/azure-cli.list
+
+# set up liquibase repo
+RUN curl --silent --fail --show-error --location 'https://repo.liquibase.com/liquibase.asc' | \
+    gpg --dearmor | apt-key --keyring /usr/share/keyrings/liquibase.gpg add - && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/liquibase.gpg] https://repo.liquibase.com stable main" | \
+    tee /etc/apt/sources.list.d/liquibase.list
 
 # install packages
 # deliberately updating apt cache at the end
@@ -79,6 +84,7 @@ RUN apt-get update && \
     iputils-tracepath \
     jq \
     libarchive-tools \
+    liquibase \
     mysql-client \
     nodejs \
     netcat \
