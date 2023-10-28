@@ -65,7 +65,7 @@ jobs:
       - metadata
     strategy:
       matrix:
-        source: [railsbank, singlife, stanford-cs143]
+        source: [railsbank, secure-agility, singlife, stanford-cs143]
     steps:
       - uses: actions/checkout@v2
         with:
