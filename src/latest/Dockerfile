@@ -1,6 +1,7 @@
 FROM ashenm/baseimage:developer
 
 # avoid prompts
+ARG ACCEPT_EULA=Y
 ARG DEBIAN_FRONTEND=noninteractive
 
 # clinch compiler optimisations
@@ -43,11 +44,12 @@ RUN curl --silent --fail --show-error --location 'https://apt.releases.hashicorp
   echo "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/terraform.list
 
-# set up azure cli repo
+# set up microsoft repos
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
-RUN mkdir --parents --mode=755 /etc/apt/keyrings && \
-  curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
+RUN curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
     gpg --dearmor | apt-key --keyring /usr/share/keyrings/microsoft.gpg add - && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/$(lsb_release --short --release)/prod $(lsb_release --short --codename) main" | \
+    tee /etc/apt/sources.list.d/microsoft.list && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release --codename --short) main" | \
     tee /etc/apt/sources.list.d/azure-cli.list
 
