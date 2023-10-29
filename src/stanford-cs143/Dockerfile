@@ -2,9 +2,11 @@ ARG BASEIMAGE=ashenm/workspace:latest
 
 FROM ${BASEIMAGE}
 
+# avoid prompts
+ARG DEBIAN_FRONTEND=noninteractive
+
 # install cs143 requisit packages
-RUN sudo apt update && \
-  sudo apt install --yes \
+RUN sudo --set-home --preserve-env=DEBIAN_FRONTEND apt-get install --yes \
     flex \
     bison \
     build-essential \
