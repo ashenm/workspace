@@ -211,6 +211,11 @@ RUN mkdir --parent --mode 0700 /etc/skel/.nvm && \
   printf '\nsource $HOME/.nvm/nvm.sh\n' | \
     tee --append /etc/skel/.bashrc /root/.bashrc
 
+# configure goenv
+RUN git clone --depth 1 https://github.com/go-nv/goenv.git /opt/goenv && \
+  chown --recursive 0:1000 /opt/goenv && \
+  chmod --recursive g=u /opt/goenv
+
 # configure ssh client
 RUN echo '' | tee --append /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee --append /etc/ssh/ssh_config && \
