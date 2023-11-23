@@ -56,7 +56,8 @@ RUN curl --silent --fail --show-error --location 'https://packages.microsoft.com
 # install packages
 # deliberately updating apt cache at the end
 # facilitating apt-file usage out-of-the-box
-RUN apt-get update && \
+RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
+  apt-get update && \
   apt-get install --yes --no-install-recommends \
     apt-file \
     azure-cli \
@@ -84,6 +85,8 @@ RUN apt-get update && \
     mysql-client \
     nodejs \
     netcat \
+    openjdk-21-jdk \
+    openjdk-21-jre \
     openssh-client \
     parallel \
     perl \
@@ -127,14 +130,6 @@ RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-3.1.2.tar.bz2" | \
   tar --bzip --extract --file - --strip-components 1 --directory /usr/local
 
-# install openjdk
-# https://openjdk.java.net/install/
-RUN mkdir --parent /opt/openjdk && \
-  curl --silent --show-error --location "https://jdk.java.net/21/" | \
-    egrep --only-matching --max-count 1 "/java/GA/.*/openjdk-.*_linux-$(uname --machine | sed 's/86_//')_bin.tar.gz" | \
-    wget --quiet --base=https://download.java.net/ --input-file - --output-document - | \
-    tar --gzip --extract --strip-components 1 --file - --directory /opt/openjdk
-ENV PATH /opt/openjdk/bin:$PATH
 
 # install java packages
 RUN mkdir --parents /usr/local/share/java && \
