@@ -1,5 +1,11 @@
 FROM ashenm/baseimage:developer
 
+ARG BUILD_COMMIT_SHA
+
+LABEL com.docker.image.source.entrypoint="src/latest/Dockerfile"
+LABEL org.opencontainers.image.revision=${BUILD_COMMIT_SHA}
+LABEL org.opencontainers.image.source="https://github.com/ashenm/workspace.git"
+
 # avoid prompts
 ARG ACCEPT_EULA=Y
 ARG DEBIAN_FRONTEND=noninteractive
