@@ -1,10 +1,8 @@
-ARG BUILD_COMMIT_SHA
 ARG BASEIMAGE=ashenm/workspace:latest
 
 FROM ${BASEIMAGE}
 
 LABEL com.docker.image.source.entrypoint="src/railsbank/Dockerfile"
-LABEL org.opencontainers.image.revision=${BUILD_COMMIT_SHA}
 LABEL org.opencontainers.image.source="https://github.com/ashenm/workspace.git"
 
 # avoid prompts
