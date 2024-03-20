@@ -128,7 +128,7 @@ ENV PATH /opt/python/3.11.2/bin:$PATH
 # http://rubies.travis-ci.org/
 RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-3.1.2.tar.bz2" | \
-  tar --bzip --extract --file - --strip-components 1 --directory /usr/local
+  tar --extract --bzip2 --verbose --directory /usr/local --file - --strip-components 1
 
 # install java packages
 RUN mkdir --parents /usr/local/share/java && \
@@ -157,6 +157,9 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
 # install ruby packages
 # https://github.com/asciidoctor/asciidoctor-mathematical#ubuntu
 RUN apt-get install --yes --no-install-recommends \
+    bison \
+    cmake \
+    flex \
     fonts-lyx \
     libcairo2-dev \
     libffi-dev \
@@ -165,12 +168,11 @@ RUN apt-get install --yes --no-install-recommends \
     libxml2-dev && \
   gem update --system --no-document --no-update-sources && \
   gem install --force --no-document --no-update-sources \
-    mathematical:1.6.14 # https://github.com/asciidoctor/asciidoctor-mathematical/issues/122 && \
-  gem install --force --no-document --no-update-sources \
     asciidoctor \
     asciidoctor-diagram \
     asciidoctor-mathematical \
     jekyll \
+    mathematical \
     pygments.rb \
     travis && \
   gem install --pre --no-document --no-update-sources \
