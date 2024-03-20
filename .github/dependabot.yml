@@ -5,3 +5,18 @@ updates:
     schedule:
       interval: weekly
     target-branch: master
+  - package-ecosystem: docker
+    directory: /src/latest/
+    labels: [latest]
+  - package-ecosystem: docker
+    directory: /src/railsbank/
+    labels: [railsbank]
+  - package-ecosystem: docker
+    directory: /src/secure-agility/
+    labels: [secure-agility]
+  - package-ecosystem: docker
+    directory: /src/singlife/
+    labels: [singlife]
+  - package-ecosystem: docker
+    directory: /src/stanford-cs143/
+    labels: [stanford-cs143]
