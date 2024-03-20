@@ -121,13 +121,13 @@ RUN curl --silent --show-error https://getcomposer.org/installer | \
 # install python 2.7.x
 RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-2.7.18.tar.bz2" | \
-  tar --extract --bzip2 --verbose --directory / --file - opt/
+  tar --extract --bzip2 --verbose --directory / --exclude='*/test/*' --exclude='*/tests/*' --file - opt/
 ENV PATH /opt/python/2.7/bin:$PATH
 
 # install python 3.11.x
 RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-3.11.2.tar.bz2" | \
-  tar --extract --bzip2 --verbose --directory / --file - opt/
+  tar --extract --bzip2 --verbose --directory / --exclude='*/test/*' --exclude='*/tests/*' --file - opt/
 ENV PATH /opt/python/3.11.2/bin:$PATH
 
 # install ruby 3.1.x
