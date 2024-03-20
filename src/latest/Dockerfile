@@ -130,7 +130,6 @@ RUN curl --silent --fail --show-error \
     --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-3.1.2.tar.bz2" | \
   tar --bzip --extract --file - --strip-components 1 --directory /usr/local
 
-
 # install java packages
 RUN mkdir --parents /usr/local/share/java && \
   curl --silent --fail --show-error --location 'https://sourceforge.net/projects/ditaa/files/latest/download' | \
