@@ -148,7 +148,6 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     setuptools \
     wheel && \
   python3 -m pip install --upgrade --no-cache-dir --ignore-installed \
-    awscli \
     black \
     cairosvg \
     blockdiag \
@@ -222,6 +221,13 @@ RUN echo '' | tee --append /etc/ssh/ssh_config && \
   touch /opt/ssh/known_hosts && \
   chown --recursive 0:1000 /opt/ssh && \
   chmod 660 /opt/ssh/known_hosts
+
+# install aws cli
+RUN mkdir --parent /tmp/aws-cli && \
+  curl --silent --fail --show-error --output "/tmp/aws-cli/awscli.zip" "https://awscli.amazonaws.com/awscli-exe-linux-$(uname --machine).zip" && \
+  unzip -d /tmp/aws-cli /tmp/aws-cli/awscli.zip && \
+  /tmp/aws-cli/aws/install --install-dir /opt/aws/cli && \
+  rm --recursive --force /tmp/aws-cli
 
 # configure system
 COPY filesystem /
