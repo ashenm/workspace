@@ -8,15 +8,25 @@ updates:
   - package-ecosystem: docker
     directory: /src/latest/
     labels: [latest]
+    schedule:
+      interval: weekly
   - package-ecosystem: docker
     directory: /src/railsbank/
     labels: [railsbank]
+    schedule:
+      interval: weekly
   - package-ecosystem: docker
     directory: /src/secure-agility/
     labels: [secure-agility]
+    schedule:
+      interval: weekly
   - package-ecosystem: docker
     directory: /src/singlife/
     labels: [singlife]
+    schedule:
+      interval: weekly
   - package-ecosystem: docker
     directory: /src/stanford-cs143/
     labels: [stanford-cs143]
+    schedule:
+      interval: weekly
