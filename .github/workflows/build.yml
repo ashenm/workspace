@@ -52,6 +52,7 @@ jobs:
     strategy:
       matrix:
         platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
+      fail-fast: true
     steps:
       - run: |
           DOCKER_IMAGE_TARGET_PLATFORM=${{ matrix.platform }}
@@ -144,6 +145,7 @@ jobs:
       matrix:
         source: ${{ fromJSON(needs.metadata.outputs.build_forks) }}
         platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
+      fail-fast: false
     steps:
       - run: |
           DOCKER_IMAGE_TARGET_PLATFORM=${{ matrix.platform }}
@@ -193,6 +195,7 @@ jobs:
     strategy:
       matrix:
         source: ${{ fromJSON(needs.metadata.outputs.build_forks) }}
+      fail-fast: false
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -243,6 +246,7 @@ jobs:
       matrix:
         source: ${{ fromJSON(needs.metadata.outputs.build_flavours) }}
         platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
+      fail-fast: false
     steps:
       - run: |
           DOCKER_IMAGE_TARGET_PLATFORM=${{ matrix.platform }}
