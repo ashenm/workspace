@@ -263,7 +263,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - uses: docker/scout-action@v1
         with:
-          command: compare
+          command: compare,cves,recommendations
           image: ${{ env.DOCKER_IMAGE_REFERENCE }}
           to: ${{ github.repository }}:${{ matrix.source }}
           platform: ${{ matrix.platform }}
