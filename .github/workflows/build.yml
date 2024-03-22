@@ -22,17 +22,27 @@ jobs:
           persist-credentials: false
       - id: git
         run: echo "build_commit_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
-      - id: forks
+      - id: flavours
         run: |
-          WORKSPACE_BUILD_FORKS=$(printf '%s\0' src/* | jq \
+          WORKSPACE_BUILD_FLAVOURS=$(printf '%s\0' src/* | jq \
             --raw-input \
             --compact-output \
-            --null-input 'inputs | split("\u0000") | map(select(. != "src/latest") | sub("^src/"; ""))')
+            --null-input 'inputs | split("\u0000") | map(. | sub("^src/"; ""))')
+          WORKSPACE_BUILD_FORKS=$(jq --compact-output 'map(select(. != "latest"))' <<< $WORKSPACE_BUILD_FLAVOURS)
+          jq <<< $WORKSPACE_BUILD_FLAVOURS
+          echo "build_flavours=${WORKSPACE_BUILD_FLAVOURS}" >> "$GITHUB_OUTPUT"
           jq <<< $WORKSPACE_BUILD_FORKS
           echo "build_forks=${WORKSPACE_BUILD_FORKS}" >> "$GITHUB_OUTPUT"
+      - id: platforms
+        run: |
+          WORKSPACE_BUILD_PLATFORMS="[\"linux/amd64\", \"linux/arm64\"]"
+          jq <<< $WORKSPACE_BUILD_PLATFORMS
+          echo "build_platforms=${WORKSPACE_BUILD_PLATFORMS}" >> "$GITHUB_OUTPUT"
     outputs:
       build_commit_sha: ${{ steps.git.outputs.build_commit_sha }}
-      build_forks: ${{ steps.forks.outputs.build_forks }}
+      build_flavours: ${{ steps.flavours.outputs.build_flavours }}
+      build_forks: ${{ steps.flavours.outputs.build_forks }}
+      build_platforms: ${{ steps.platforms.outputs.build_platforms }}
     runs-on: ubuntu-latest
 
   latest:
@@ -41,7 +51,7 @@ jobs:
     if: ${{ !startsWith(github.event.head_commit.message, '[Skip CI]') }}
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64]
+        platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
     steps:
       - run: |
           DOCKER_IMAGE_TARGET_PLATFORM=${{ matrix.platform }}
@@ -133,7 +143,7 @@ jobs:
     strategy:
       matrix:
         source: ${{ fromJSON(needs.metadata.outputs.build_forks) }}
-        platform: [linux/amd64, linux/arm64]
+        platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
     steps:
       - run: |
           DOCKER_IMAGE_TARGET_PLATFORM=${{ matrix.platform }}
@@ -223,10 +233,52 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-22.04
 
+  scout:
+    needs:
+      - metadata
+      - forks
+      - latest
+    if: ${{ github.event_name == 'pull_request' }}
+    strategy:
+      matrix:
+        source: ${{ fromJSON(needs.metadata.outputs.build_flavours) }}
+        platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
+    steps:
+      - run: |
+          DOCKER_IMAGE_TARGET_PLATFORM=${{ matrix.platform }}
+          echo "DOCKER_IMAGE_TARGET_PLATFORM=${DOCKER_IMAGE_TARGET_PLATFORM//\//-}" >> $GITHUB_ENV
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-${{ matrix.source }}-${{ env.DOCKER_IMAGE_TARGET_PLATFORM }}
+          merge-multiple: true
+      - run: |
+          ls --all --format verbose $PWD
+          DOCKER_IMAGE_REFERENCE=$(printf 'ghcr.io/${{ github.repository }}/${{ matrix.source }}@sha256:%s ' *)
+          echo "DOCKER_IMAGE_REFERENCE=${DOCKER_IMAGE_REFERENCE}" >> $GITHUB_ENV
+        working-directory: /tmp/digests
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: docker/scout-action@v1
+        with:
+          command: compare
+          image: ${{ env.DOCKER_IMAGE_REFERENCE }}
+          to: ${{ github.repository }}:${{ matrix.source }}
+          platform: ${{ matrix.platform }}
+          ignore-unchanged: true
+          only-severities: critical,high
+          write-comment: true
+          keep-previous-comments: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-22.04
+
   slack:
     needs:
       - manifest
       - manifests
+      - scout
     if: ${{ always() }}
     steps:
       - uses: Gamesight/slack-workflow-status@master
