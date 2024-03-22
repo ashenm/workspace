@@ -7,6 +7,7 @@ on:
     paths:
       - "src/**"
       - ".github/workflows/build.yml"
+      - ".github/workflows/reusable-*"
   pull_request:
     branches:
       - "**"
