@@ -214,6 +214,26 @@ RUN git clone --depth 1 https://github.com/go-nv/goenv.git /opt/goenv && \
   chown --recursive 0:1000 /opt/goenv && \
   chmod --recursive g=u /opt/goenv
 
+# configure pyenv
+RUN apt-get install --yes --no-install-recommends \
+    build-essential \
+    curl \
+    libbz2-dev \
+    libffi-dev \
+    liblzma-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    tk-dev \
+    xz-utils \
+    zlib1g-dev && \
+  git clone --depth 1 https://github.com/pyenv/pyenv.git /opt/pyenv && \
+  chown --recursive 0:1000 /opt/pyenv && \
+  chmod --recursive g=u /opt/pyenv
+
 # configure ssh client
 RUN echo '' | tee --append /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee --append /etc/ssh/ssh_config && \
