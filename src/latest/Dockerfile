@@ -234,6 +234,14 @@ RUN apt-get install --yes --no-install-recommends \
   chown --recursive 0:1000 /opt/pyenv && \
   chmod --recursive g=u /opt/pyenv
 
+# configure tfenv
+RUN git clone --depth 1 https://github.com/tfutils/tfenv.git /opt/tfenv && \
+  mkdir --parent /opt/tfenv/versions/system && \
+  echo 'system' | tee /opt/tfenv/version && \
+  chown --recursive 0:1000 /opt/tfenv && \
+  chmod --recursive g=u /opt/tfenv && \
+  ln --symbolic /usr/bin/terraform /opt/tfenv/versions/system/terraform
+
 # configure ssh client
 RUN echo '' | tee --append /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee --append /etc/ssh/ssh_config && \
