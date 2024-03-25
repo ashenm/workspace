@@ -1,0 +1,30 @@
+- all:
+    - latest:
+        - any-glob-to-any-file:
+            - "src/latest/*"
+    - base-branch:
+        - master
+- all:
+    - railsbank:
+        - any-glob-to-any-file:
+            - "src/railsbank/*"
+    - base-branch:
+        - master
+- all:
+    - secure-agility:
+        - any-glob-to-any-file:
+            - "src/secure-agility/*"
+    - base-branch:
+        - master
+- all:
+    - singlife:
+        - any-glob-to-any-file:
+            - "src/singlife/*"
+    - base-branch:
+        - master
+- all:
+    - stanford-cs143:
+        - any-glob-to-any-file:
+            - "src/stanford-cs143/*"
+    - base-branch:
+        - master
