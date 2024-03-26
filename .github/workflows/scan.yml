@@ -4,6 +4,7 @@ on:
   workflow_run:
     branches:
       - master
+      - "workflows/*"
     workflows:
       - Build Image
     types:
