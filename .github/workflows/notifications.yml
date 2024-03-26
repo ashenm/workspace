@@ -1,0 +1,23 @@
+name: Notifications
+
+on:
+  workflow_run:
+    branches:
+      - "**"
+    workflows:
+      - Build Image
+      - Scan Image
+    types:
+      - completed
+
+jobs:
+  slack:
+    steps:
+      - uses: ashenm/slack-workflow-status@swfz/feature/follow-workflow-run-trigger
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          channel: "#github"
+          name: "GitHub Workflow"
+          workflow_run: true
+    runs-on: ubuntu-latest
