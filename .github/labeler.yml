@@ -28,3 +28,9 @@
             - "src/stanford-cs143/*"
     - base-branch:
         - master
+- all:
+    - actions:
+        - any-glob-to-any-file:
+            - ".github/workflows/*"
+    - base-branch:
+        - master
