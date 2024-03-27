@@ -141,19 +141,4 @@ jobs:
           keep-previous-comments: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-22.04
-
-  slack:
-    needs:
-      - manifest
-      - manifests
-      - scout
-    if: ${{ always() }}
-    steps:
-      - uses: Gamesight/slack-workflow-status@master
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          channel: "#github"
-          name: "GitHub Workflow"
-    runs-on: ubuntu-22.04
 # vim: set expandtab shiftwidth=2 syntax=yaml:
