@@ -9,6 +9,11 @@ on:
       - Build Image
     types:
       - completed
+  workflow_dispatch:
+    inputs:
+      workflow_run_id:
+        type: number
+        required: true
 
 jobs:
   metadata:
@@ -17,15 +22,52 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            let runId;
+
+            if (context.eventName === 'workflow_run') {
+              console.log(`Using manual trigger workflow run ID ${context.payload.workflow_run.id}`);
+              runId = context.payload.workflow_run.id;
+              console.log(`Using workflow dispatch run ID ${inputs.workflow_run_id}`);
+            } else if (context.eventName === 'workflow_dispatch') {
+              runId = inputs.workflow_run_id;
+            }
+
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                run_id: context.payload.workflow_run.id,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
             });
-            console.log({ artifacts });
-            const digests = artifacts.data.artifacts.filter(artifact => artifact.name.startsWith('digest-'));
-            console.log({ digests });
+
+            const digests = artifacts.data.artifacts.filter(artifact => artifact.name.startsWith('digests-'));
             return JSON.stringify(digests.map(digest => digest.name));
           result-encoding: json
       - run: jq <<< "${{ steps.digests.outputs.result }}"
+    outputs:
+      digests: ${{ steps.digests.outputs.result }}
+    runs-on: ubuntu-latest
+  scount:
+    needs:
+      - metadata
+    strategy:
+      matrix:
+        digest: ${{ fromJSON(needs.metadata.outputs.digests) }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: ${{ matrix.digest }}
+          merge-multiple: true
+      - run: |
+          DOCKER_IMAGE_FLAVOUR=$(echo ${{ matrix.digest }} | cut --delimiter='-' --fields=2)
+          echo "DOCKER_IMAGE_FLAVOUR=${DOCKER_IMAGE_FLAVOUR}" >> $GITHUB_ENV
+          DOCKER_IMAGE_REFERENCE=$(printf 'ghcr.io/${{ github.repository }}/${DOCKER_IMAGE_FLAVOUR}@sha256:%s ' *)
+          echo "DOCKER_IMAGE_REFERENCE=${DOCKER_IMAGE_REFERENCE}" >> $GITHUB_ENV
+        working-directory: /tmp/digests
+      - id: docker-scout-cves
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: ${{ env.DOCKER_IMAGE_REFERENCE }}
+          sarif-file: sarif.output.json
+          summary: true
     runs-on: ubuntu-latest
