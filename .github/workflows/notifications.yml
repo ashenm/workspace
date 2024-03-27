@@ -1,4 +1,4 @@
-name: Notifications
+name: Build Notifications
 
 on:
   workflow_run:
