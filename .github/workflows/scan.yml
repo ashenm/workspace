@@ -18,32 +18,42 @@ on:
 jobs:
   metadata:
     steps:
+      - id: workflow-run-id
+        uses: actions/github-script@v7
+        with:
+          script: |
+            if (context.eventName === 'workflow_run') {
+              console.log('Using manual trigger workflow run ID via context.payload.workflow_run.id');
+              return context.payload.workflow_run.id;
+            }
+
+            if (context.eventName === 'workflow_dispatch') {
+              console.log('Using workflow dispatch run ID via process.env.WORKFLOW_DISPATCH_WORKFLOW_RUN_ID');
+              return process.env.WORKFLOW_DISPATCH_WORKFLOW_RUN_ID;
+            }
+
+            throw new Error(`Unsupported event trigger ${context.eventName}`);
+          result-encoding: string
+        env:
+          WORKFLOW_DISPATCH_WORKFLOW_RUN_ID: ${{ inputs.workflow_run_id }}
       - id: digests
         uses: actions/github-script@v7
         with:
           script: |
-            let runId;
-
-            if (context.eventName === 'workflow_run') {
-              console.log(`Using manual trigger workflow run ID ${context.payload.workflow_run.id}`);
-              runId = context.payload.workflow_run.id;
-              console.log(`Using workflow dispatch run ID ${inputs.workflow_run_id}`);
-            } else if (context.eventName === 'workflow_dispatch') {
-              runId = inputs.workflow_run_id;
-            }
-
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id,
+              run_id: process.env.WORKFLOW_DISPATCH_WORKFLOW_RUN_ID,
             });
 
             const digests = artifacts.data.artifacts.filter(artifact => artifact.name.startsWith('digests-'));
-            return JSON.stringify(digests.map(digest => digest.name));
+            return digests.map(digest => digest.name);
           result-encoding: json
-      - run: jq <<< "${{ steps.digests.outputs.result }}"
+        env:
+          WORKFLOW_DISPATCH_WORKFLOW_RUN_ID: ${{ steps.workflow-run-id.outputs.result }}
     outputs:
       digests: ${{ steps.digests.outputs.result }}
+      workflow-run-id: ${{ steps.workflow-run-id.outputs.result }}
     runs-on: ubuntu-latest
   scount:
     needs:
@@ -52,22 +62,62 @@ jobs:
       matrix:
         digest: ${{ fromJSON(needs.metadata.outputs.digests) }}
     steps:
-      - uses: actions/download-artifact@v4
+      - id: flavour
+        uses: actions/github-script@v7
         with:
-          path: /tmp/digests
-          pattern: ${{ matrix.digest }}
-          merge-multiple: true
+          script: return String(process.env.WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST).split('-').slice(1, -2).join('-')
+          result-encoding: string
+        env:
+          WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST: ${{ matrix.digest }}
+      - id: architecture
+        uses: actions/github-script@v7
+        with:
+          script: return String(process.env.WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST).split('-').slice(-2).join('/')
+          result-encoding: string
+        env:
+          WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST: ${{ matrix.digest }}
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: process.env.WORKFLOW_DISPATCH_WORKFLOW_RUN_ID,
+              name: process.env.WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST,
+            });
+            const [artifact] = artifacts.data.artifacts;
+            const archive = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+              archive_format: 'zip',
+            });
+            fs.writeFileSync(process.env.WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST, Buffer.from(archive.data));
+            console.log(fs.readdirSync('.'));
+        env:
+          WORKFLOW_DISPATCH_WORKFLOW_RUN_ID: ${{ needs.metadata.outputs.workflow-run-id }}
+          WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST: ${{ matrix.digest }}
+      - run: unzip -d /tmp/digests ${{ matrix.digest }}
       - run: |
-          DOCKER_IMAGE_FLAVOUR=$(echo ${{ matrix.digest }} | cut --delimiter='-' --fields=2)
+          DOCKER_IMAGE_FLAVOUR=${{ steps.flavour.outputs.result }}
           echo "DOCKER_IMAGE_FLAVOUR=${DOCKER_IMAGE_FLAVOUR}" >> $GITHUB_ENV
-          DOCKER_IMAGE_REFERENCE=$(printf 'ghcr.io/${{ github.repository }}/${DOCKER_IMAGE_FLAVOUR}@sha256:%s ' *)
+          DOCKER_IMAGE_REFERENCE=$(printf "ghcr.io/${{ github.repository }}/${DOCKER_IMAGE_FLAVOUR}@sha256:%s" *)
           echo "DOCKER_IMAGE_REFERENCE=${DOCKER_IMAGE_REFERENCE}" >> $GITHUB_ENV
         working-directory: /tmp/digests
-      - id: docker-scout-cves
-        uses: docker/scout-action@v1
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: docker/scout-action@v1
         with:
           command: cves
           image: ${{ env.DOCKER_IMAGE_REFERENCE }}
+          platform: ${{ steps.architecture.outputs.result }}
           sarif-file: sarif.output.json
           summary: true
+      - if: ${{ github.ref_name == 'master' }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: sarif.output.json
     runs-on: ubuntu-latest
