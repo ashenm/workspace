@@ -11,6 +11,10 @@ on:
   pull_request:
     branches:
       - "**"
+    paths:
+      - "src/**"
+      - ".github/workflows/build.yml"
+      - ".github/workflows/reusable-*"
   workflow_dispatch:
 
 jobs:
