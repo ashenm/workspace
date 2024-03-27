@@ -129,6 +129,11 @@ do
       shift 2
       ;;
 
+    --dotfile-rw)
+      DOTFILES_RW="$DOTFILES_RW ${2:?Invalid FILEPATH}"
+      shift 2
+      ;;
+
     --hostname)
       DNSNAME="${2:?Invalid HOSTNAME}"
       shift 2
@@ -188,6 +193,16 @@ for DOTFILE in $DOTFILES; do
     continue
 
   ARGUMENTS="$ARGUMENTS --volume $HOME/$DOTFILE:/home/ubuntu/$DOTFILE:ro"
+
+done
+
+# dotfiles read-write
+for DOTFILE in $DOTFILES_RW; do
+
+  test -e "$HOME/$DOTFILE" || \
+    continue
+
+  ARGUMENTS="$ARGUMENTS --volume $HOME/$DOTFILE:/home/ubuntu/$DOTFILE"
 
 done
 
