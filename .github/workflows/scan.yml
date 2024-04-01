@@ -122,6 +122,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: sarif.output.json
-          ref: ${{ github.event.workflow_run.head_ref }}
+          ref: refs/heads/${{ github.event.workflow_run.head_branch }}
           sha: ${{ github.event.workflow_run.head_sha }}
     runs-on: ubuntu-latest
