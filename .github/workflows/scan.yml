@@ -17,6 +17,7 @@ on:
 
 jobs:
   metadata:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     steps:
       - id: workflow-run-id
         uses: actions/github-script@v7
