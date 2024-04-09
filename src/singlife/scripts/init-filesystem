@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-# Initialize Container Filesystem
-
-set -e

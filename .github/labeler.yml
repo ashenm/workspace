@@ -18,11 +18,6 @@ secure-agility:
       - any-glob-to-any-file:
           - "src/secure-agility/*"
 
-singlife:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/singlife/*"
-
 stanford-cs143:
   - changed-files:
       - any-glob-to-any-file:
