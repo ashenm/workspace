@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: ./src/${{ inputs.source }}/scripts/init-filesystem
       - id: build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           build-args: ${{ inputs.build-args }}
           cache-from: type=gha,scope=buildkit-${{ inputs.source }}-${{ inputs.platform }}
