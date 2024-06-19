@@ -77,6 +77,9 @@ then
   alias asciidoctor-pdf='asciidoctor-pdf --require asciidoctor-diagram --require asciidoctor-mathematical \
     --attribute mathematical-format=svg --attribute pdf-theme=workspace --attribute pdf-themesdir=/usr/local/share/asciidoctor-pdf/data/themes'
 
+  # plantuml
+  alias plantuml='java -jar /usr/local/share/java/plantuml.jar'
+
   # node specifics
   alias eslint='eslint --plugin=html'
 
