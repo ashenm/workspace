@@ -258,6 +258,11 @@ RUN mkdir --parent /tmp/aws-cli && \
   /tmp/aws-cli/aws/install --install-dir /opt/aws/cli && \
   rm --recursive --force /tmp/aws-cli
 
+# install k8 utilities
+RUN curl --silent --fail --show-error --location --output "/usr/local/bin/kubectl" \
+    --url "https://dl.k8s.io/release/$(curl --silent --fail --location https://dl.k8s.io/release/stable.txt)/bin/linux/$(dpkg --print-architecture)/kubectl" && \
+  chmod 755 /usr/local/bin/kubectl
+
 # configure system
 COPY filesystem /
 
