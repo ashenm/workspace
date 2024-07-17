@@ -261,7 +261,10 @@ RUN mkdir --parent /tmp/aws-cli && \
 # install k8 utilities
 RUN curl --silent --fail --show-error --location --output "/usr/local/bin/kubectl" \
     --url "https://dl.k8s.io/release/$(curl --silent --fail --location https://dl.k8s.io/release/stable.txt)/bin/linux/$(dpkg --print-architecture)/kubectl" && \
-  chmod 755 /usr/local/bin/kubectl
+  curl --silent --fail --show-error --location --output - \
+    --url "https://get.helm.sh/helm-$(curl --silent --fail --location https://get.helm.sh/helm-latest-version)-linux-$(dpkg --print-architecture).tar.gz" | \
+  tar --extract --gunzip --verbose --wildcards --directory /usr/local/bin --file - --strip-components 1 '**/helm' && \
+  chmod 755 /usr/local/bin/kubectl /usr/local/bin/helm
 
 # configure system
 COPY filesystem /
