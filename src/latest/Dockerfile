@@ -35,15 +35,13 @@ RUN mkdir --parent /etc/apt/keyrings && \
   echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
     tee /etc/apt/sources.list.d/google-cloud.list
 
-# set up node 16.x repo
-# https://github.com/nodesource/distributions#debmanual
+# set up node 22.x repo
+# https://github.com/nodesource/distributions/wiki/Repository-Manual-Installation
 RUN mkdir --parent /etc/apt/keyrings && \
-  curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
+  curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key' | \
     gpg --dearmor --output /etc/apt/keyrings/nodesource.com.gpg && \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
-    tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src [signed-by=/etc/apt/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
-    tee --append /etc/apt/sources.list.d/nodesource.list
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_22.x nodistro main" | \
+    tee /etc/apt/sources.list.d/nodesource.list
 
 # set up terraform repo
 # https://www.terraform.io/docs/cli/install/apt.html
