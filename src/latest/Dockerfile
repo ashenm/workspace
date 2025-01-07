@@ -73,7 +73,6 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
     bc \
     bison \
     cmake \
-    ctags \
     dnsutils \
     dos2unix \
     exiftool \
@@ -91,7 +90,7 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
     jq \
     libarchive-tools \
     mysql-client \
-    netcat \
+    ncat \
     nodejs \
     openjdk-21-jdk \
     openjdk-21-jre \
@@ -100,7 +99,6 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
     perl \
     php \
     php-cli \
-    python2-minimal \
     python3-minimal \
     rename \
     rsync \
@@ -110,6 +108,7 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
     terraform \
     time \
     tree \
+    universal-ctags \
     valgrind \
     wget \
     whois && \
