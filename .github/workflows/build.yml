@@ -22,15 +22,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          sparse-checkout: |
+            src
           persist-credentials: false
       - id: git
         run: echo "build_commit_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
       - id: flavours
         run: |
-          WORKSPACE_BUILD_FLAVOURS=$(printf '%s\0' src/* | jq \
-            --raw-input \
-            --compact-output \
-            --null-input 'inputs | split("\u0000") | map(. | sub("^src/"; ""))')
+          WORKSPACE_BUILD_FLAVOURS=$(find src -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq --raw-input . | jq --slurp --compact-output .)
           WORKSPACE_BUILD_FORKS=$(jq --compact-output 'map(select(. != "latest"))' <<< $WORKSPACE_BUILD_FLAVOURS)
           jq <<< $WORKSPACE_BUILD_FLAVOURS
           echo "build_flavours=${WORKSPACE_BUILD_FLAVOURS}" >> "$GITHUB_OUTPUT"
