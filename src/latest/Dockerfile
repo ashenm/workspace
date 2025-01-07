@@ -19,42 +19,48 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 # set up git-lfs repo
 # https://packagecloud.io/github/git-lfs/install#manual
-RUN curl --silent --fail --show-error --location 'https://packagecloud.io/github/git-lfs/gpgkey' | \
-    apt-key --keyring /usr/share/keyrings/packagecloud.io.gpg add - && \
-  echo "deb [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
+RUN mkdir --parent /etc/apt/keyrings && \
+  curl --silent --fail --show-error --location 'https://packagecloud.io/github/git-lfs/gpgkey' | \
+    gpg --dearmor --output /etc/apt/keyrings/packagecloud.io.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/github-git-lfs.list && \
-  echo "deb-src [signed-by=/usr/share/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
+  echo "deb-src [signed-by=/etc/apt/keyrings/packagecloud.io.gpg] https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/github-git-lfs.list
 
 # set up google cloud repo
 # https://cloud.google.com/sdk/docs/install#deb
-RUN curl --silent --fail --show-error --location 'https://packages.cloud.google.com/apt/doc/apt-key.gpg' | \
-    apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
-  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
+RUN mkdir --parent /etc/apt/keyrings && \
+  curl --silent --fail --show-error --location 'https://packages.cloud.google.com/apt/doc/apt-key.gpg' | \
+    gpg --dearmor --output /etc/apt/keyrings/cloud.google.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
     tee /etc/apt/sources.list.d/google-cloud.list
 
 # set up node 16.x repo
 # https://github.com/nodesource/distributions#debmanual
-RUN curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
-    apt-key --keyring /usr/share/keyrings/nodesource.com.gpg add - && \
-  echo "deb [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
+RUN mkdir --parent /etc/apt/keyrings && \
+  curl --silent --fail --show-error --location 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' | \
+    gpg --dearmor --output /etc/apt/keyrings/nodesource.com.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/nodesource.list && \
-  echo "deb-src [signed-by=/usr/share/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
+  echo "deb-src [signed-by=/etc/apt/keyrings/nodesource.com.gpg] https://deb.nodesource.com/node_18.x $(lsb_release --short --codename) main" | \
     tee --append /etc/apt/sources.list.d/nodesource.list
 
 # set up terraform repo
 # https://www.terraform.io/docs/cli/install/apt.html
-RUN curl --silent --fail --show-error --location 'https://apt.releases.hashicorp.com/gpg' | apt-key add - && \
-  echo "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release --short --codename) main" | \
+RUN mkdir --parent /etc/apt/keyrings && \
+  curl --silent --fail --show-error --location 'https://apt.releases.hashicorp.com/gpg' | \
+    gpg --dearmor --output /etc/apt/keyrings/hashicorp.gpg && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/terraform.list
 
 # set up microsoft repos
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
-RUN curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
-    gpg --dearmor | apt-key --keyring /usr/share/keyrings/microsoft.gpg add - && \
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/$(lsb_release --short --release)/prod $(lsb_release --short --codename) main" | \
+RUN mkdir --parent /etc/apt/keyrings && \
+  curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
+    gpg --dearmor --output /etc/apt/keyrings/microsoft.gpg && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/$(lsb_release --short --release)/prod $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/microsoft.list && \
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release --codename --short) main" | \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release --codename --short) main" | \
     tee /etc/apt/sources.list.d/azure-cli.list
 
 # install packages
