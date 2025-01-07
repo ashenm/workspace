@@ -93,8 +93,8 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
     jq \
     libarchive-tools \
     mysql-client \
-    nodejs \
     netcat \
+    nodejs \
     openjdk-21-jdk \
     openjdk-21-jre \
     openssh-client \
@@ -156,8 +156,8 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     wheel && \
   python3 -m pip install --upgrade --no-cache-dir --ignore-installed \
     black \
-    cairosvg \
     blockdiag \
+    cairosvg \
     icdiff \
     PyYAML \
     requests \
