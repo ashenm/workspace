@@ -131,7 +131,7 @@ ENV PATH /opt/python/3.11.2/bin:$PATH
 # install ruby 3.1.x
 # http://rubies.travis-ci.org/
 RUN curl --silent --fail --show-error \
-    --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-3.1.2.tar.bz2" | \
+    --location "https://s3.amazonaws.com/travis-rubies/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/ruby-3.2.5.tar.bz2" | \
   tar --extract --bzip2 --verbose --directory /usr/local --file - --strip-components 1
 
 # install java packages
