@@ -17,6 +17,9 @@ EXPOSE 8080 8081 8082
 ENV NODE_PATH /usr/lib/node_modules
 ENV PYTHONDONTWRITEBYTECODE 1
 
+# long live bourne again shell
+SHELL ["/bin/bash", "-c"]
+
 # set up git-lfs repo
 # https://packagecloud.io/github/git-lfs/install#manual
 RUN mkdir --parent /etc/apt/keyrings && \
