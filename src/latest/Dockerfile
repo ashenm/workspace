@@ -122,12 +122,6 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
 RUN curl --silent --show-error https://getcomposer.org/installer | \
   sudo -H php -- --install-dir=/usr/local/bin --filename=composer
 
-# install python 3.11.x
-RUN curl --silent --fail --show-error \
-    --location "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/$(lsb_release --short --release)/$(uname --machine)/python-3.13.tar.bz2" | \
-  tar --extract --bzip2 --verbose --directory / --exclude='*/test/*' --exclude='*/tests/*' --file - opt/
-ENV PATH /opt/python/3.11.2/bin:$PATH
-
 # install ruby 3.1.x
 # http://rubies.travis-ci.org/
 RUN curl --silent --fail --show-error \
