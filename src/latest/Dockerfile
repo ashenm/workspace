@@ -106,7 +106,6 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
     python3-minimal \
     rename \
     rsync \
-    ruby-full \
     sqlite3 \
     sudo \
     telnet \
@@ -155,6 +154,31 @@ ENV PATH /opt/python/3.13.2/bin:$PATH
 RUN git clone --depth 1 https://github.com/pyenv/pyenv.git /opt/pyenv && \
   chown --recursive 0:1000 /opt/pyenv && \
   chmod --recursive g=u /opt/pyenv
+
+# install ruby
+RUN mkdir --parent /tmp/ruby /opt/ruby/3.4.2 && \
+  apt-get install --yes --no-install-recommends \
+    libffi-dev \
+    libgmp-dev \
+    libssl-dev \
+    libyaml-dev \
+    rustc \
+    zlib1g-dev && \
+  curl --silent --fail --show-error 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.2.tar.xz' | \
+    tar --extract --verbose --xz --file=- --strip-components=1 --directory=/tmp/ruby && \
+  pushd /tmp/ruby && \
+    ./configure --prefix=/opt/ruby/3.4.2 --enable-shared --with-ext=openssl,psych,+ && \
+    make --jobs 8 && \
+    make install && \
+    popd && \
+  rm --recursive --force /tmp/ruby
+ENV PATH /opt/ruby/3.4.2/bin:$PATH
+
+# configure rbenv
+RUN git clone --depth 1 https://github.com/rbenv/rbenv.git /opt/rbenv && \
+  git clone --depth 1 https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build && \
+  chown --recursive 0:1000 /opt/rbenv && \
+  chmod --recursive g=u /opt/rbenv
 
 # install composer
 RUN curl --silent --show-error https://getcomposer.org/installer | \
@@ -240,12 +264,6 @@ RUN mkdir --parent --mode 0700 /etc/skel/.nvm && \
 RUN git clone --depth 1 https://github.com/go-nv/goenv.git /opt/goenv && \
   chown --recursive 0:1000 /opt/goenv && \
   chmod --recursive g=u /opt/goenv
-
-# configure rbenv
-RUN git clone --depth 1 https://github.com/rbenv/rbenv.git /opt/rbenv && \
-  git clone --depth 1 https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build && \
-  chown --recursive 0:1000 /opt/rbenv && \
-  chmod --recursive g=u /opt/rbenv
 
 # configure tfenv
 RUN git clone --depth 1 https://github.com/tfutils/tfenv.git /opt/tfenv && \
