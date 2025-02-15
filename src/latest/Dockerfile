@@ -224,6 +224,12 @@ RUN apt-get install --yes --no-install-recommends \
   chown --recursive 0:1000 /opt/pyenv && \
   chmod --recursive g=u /opt/pyenv
 
+# configure rbenv
+RUN git clone --depth 1 https://github.com/rbenv/rbenv.git /opt/rbenv && \
+  git clone --depth 1 https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build && \
+  chown --recursive 0:1000 /opt/rbenv && \
+  chmod --recursive g=u /opt/rbenv
+
 # configure tfenv
 RUN git clone --depth 1 https://github.com/tfutils/tfenv.git /opt/tfenv && \
   mkdir --parent /opt/tfenv/versions/system && \
