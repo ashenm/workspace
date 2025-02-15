@@ -53,7 +53,10 @@ RUN mkdir --parent /etc/apt/keyrings && \
 
 # set up microsoft repos
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
-RUN mkdir --parent /etc/apt/keyrings && \
+RUN apt-get update && \
+    apt-get install --yes apt-transport-https ca-certificates && \
+    rm --recursive --force /var/lib/apt/lists/* /var/cache/apt/archives/* && \
+  mkdir --parent /etc/apt/keyrings && \
   curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
     gpg --dearmor --output /etc/apt/keyrings/microsoft.gpg && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/$(lsb_release --short --release)/prod $(lsb_release --short --codename) main" | \
