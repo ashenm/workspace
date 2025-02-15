@@ -300,8 +300,8 @@ RUN curl --silent --fail --show-error --location --output "/usr/local/bin/kubect
 COPY filesystem /
 
 # configure workspace
-RUN groupadd --gid 1000 ubuntu && useradd --create-home --uid 1000 --gid ubuntu --groups sudo ubuntu --shell /bin/bash && \
-  mkdir --mode 700 /home/ubuntu/workspace && chown ubuntu:ubuntu /home/ubuntu/workspace
+RUN mkdir --mode 700 /home/ubuntu/workspace && \
+  chown ubuntu:ubuntu /home/ubuntu/workspace
 
 # change to non-root user
 USER ubuntu
