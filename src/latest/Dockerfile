@@ -119,6 +119,42 @@ RUN add-apt-repository --yes ppa:openjdk-r/ppa && \
   git lfs install --system --skip-repo && \
   apt-get update
 
+# install python
+RUN mkdir --parent /tmp/python /opt/python/3.13.2 && \
+  apt-get install --yes --no-install-recommends \
+    build-essential \
+    curl \
+    libbz2-dev \
+    libffi-dev \
+    libgdbm-dev \
+    liblzma-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    tk-dev \
+    uuid-dev \
+    xz-utils \
+    zlib1g-dev \
+    zlib1g-dev && \
+  curl --silent --fail --show-error --location 'https://www.python.org/ftp/python/3.13.2/Python-3.13.2.tar.xz' | \
+    tar --extract --verbose --xz --file=- --strip-components=1 --directory=/tmp/python && \
+  pushd /tmp/python && \
+    CFLAGS="-march=native -mtune=generic" ./configure --enable-optimizations --with-lto --prefix=/opt/python/3.13.2 && \
+    make --jobs 8 && \
+    make install && \
+    popd && \
+  rm --recursive --force /tmp/python
+ENV PATH /opt/python/3.13.2/bin:$PATH
+
+# configure pyenv
+RUN git clone --depth 1 https://github.com/pyenv/pyenv.git /opt/pyenv && \
+  chown --recursive 0:1000 /opt/pyenv && \
+  chmod --recursive g=u /opt/pyenv
+
 # install composer
 RUN curl --silent --show-error https://getcomposer.org/installer | \
   sudo -H php -- --install-dir=/usr/local/bin --filename=composer
@@ -203,26 +239,6 @@ RUN mkdir --parent --mode 0700 /etc/skel/.nvm && \
 RUN git clone --depth 1 https://github.com/go-nv/goenv.git /opt/goenv && \
   chown --recursive 0:1000 /opt/goenv && \
   chmod --recursive g=u /opt/goenv
-
-# configure pyenv
-RUN apt-get install --yes --no-install-recommends \
-    build-essential \
-    curl \
-    libbz2-dev \
-    libffi-dev \
-    liblzma-dev \
-    libncursesw5-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    libssl-dev \
-    libxml2-dev \
-    libxmlsec1-dev \
-    tk-dev \
-    xz-utils \
-    zlib1g-dev && \
-  git clone --depth 1 https://github.com/pyenv/pyenv.git /opt/pyenv && \
-  chown --recursive 0:1000 /opt/pyenv && \
-  chmod --recursive g=u /opt/pyenv
 
 # configure rbenv
 RUN git clone --depth 1 https://github.com/rbenv/rbenv.git /opt/rbenv && \
