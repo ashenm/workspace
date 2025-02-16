@@ -9,6 +9,9 @@ on:
       platform:
         type: string
         required: true
+      runner:
+        type: string
+        required: true
       source:
         type: string
         required: true
@@ -54,4 +57,4 @@ jobs:
           name: digests-${{ inputs.source }}-${{ env.DOCKER_IMAGE_TARGET_PLATFORM }}
           path: /tmp/digests/*
           if-no-files-found: error
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner }}
