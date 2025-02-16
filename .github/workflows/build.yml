@@ -53,10 +53,16 @@ jobs:
     strategy:
       matrix:
         platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
       fail-fast: true
     uses: ashenm/workspace/.github/workflows/reusable-build.yml@master
     with:
       platform: ${{ matrix.platform }}
+      runner: ${{ matrix.runner }}
       source: latest
 
   manifest:
@@ -79,11 +85,17 @@ jobs:
       matrix:
         source: ${{ fromJSON(needs.metadata.outputs.build_forks) }}
         platform: ${{ fromJSON(needs.metadata.outputs.build_platforms) }}
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
       fail-fast: false
     uses: ashenm/workspace/.github/workflows/reusable-build.yml@master
     with:
       build-args: |
         BASEIMAGE=ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
+      runner: ${{ matrix.runner }}
       platform: ${{ matrix.platform }}
       source: ${{ matrix.source }}
 
