@@ -255,9 +255,9 @@ RUN mkdir --parent --mode 0700 /etc/skel/.nvm && \
     --output "/etc/skel/.nvm/nvm.sh" \
     --location "https://raw.githubusercontent.com/nvm-sh/nvm/master/nvm.sh" && \
   chmod 0700 /etc/skel/.nvm/nvm-exec /etc/skel/.nvm/nvm.sh && \
-  cp --recursive --force /etc/skel/.nvm /root && \
+  cp --recursive --force /etc/skel/.nvm /home/ubuntu /root && \
   printf '\nsource $HOME/.nvm/nvm.sh\n' | \
-    tee --append /etc/skel/.bashrc /root/.bashrc
+    tee --append /etc/skel/.bashrc /home/ubuntu/.bashrc /root/.bashrc
 
 # configure goenv
 RUN git clone --depth 1 https://github.com/go-nv/goenv.git /opt/goenv && \
@@ -300,7 +300,8 @@ COPY filesystem /
 
 # configure workspace
 RUN mkdir --mode 700 /home/ubuntu/workspace && \
-  chown ubuntu:ubuntu /home/ubuntu/workspace
+  chown ubuntu:ubuntu /home/ubuntu/workspace && \
+  rsync --archive --perms --times --chown=ubuntu:ubuntu /etc/skel/ /home/ubuntu/
 
 # change to non-root user
 USER ubuntu
