@@ -56,9 +56,8 @@ RUN mkdir --parent /etc/apt/keyrings && \
 
 # set up microsoft repos
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
-# TEMP bypassing certificate check https://bugs.launchpad.net/ubuntu/+source/curl/+bug/2073448
 RUN mkdir --parent /etc/apt/keyrings && \
-  curl --silent --insecure --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
+  curl --silent --fail --show-error --location 'https://packages.microsoft.com/keys/microsoft.asc' | \
     gpg --dearmor --output /etc/apt/keyrings/microsoft.gpg && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/$(lsb_release --short --release)/prod $(lsb_release --short --codename) main" | \
     tee /etc/apt/sources.list.d/microsoft.list && \
