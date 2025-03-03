@@ -125,6 +125,7 @@ RUN mkdir --parent /tmp/python /opt/python/3.13.2 && \
     curl \
     libbz2-dev \
     libffi-dev \
+    libgdbm-compat-dev \
     libgdbm-dev \
     liblzma-dev \
     libncurses5-dev \
@@ -142,7 +143,7 @@ RUN mkdir --parent /tmp/python /opt/python/3.13.2 && \
   curl --silent --fail --show-error --location 'https://www.python.org/ftp/python/3.13.2/Python-3.13.2.tar.xz' | \
     tar --extract --verbose --xz --file=- --strip-components=1 --directory=/tmp/python && \
   pushd /tmp/python && \
-    CFLAGS="-march=native -mtune=generic" ./configure --enable-optimizations --with-lto --prefix=/opt/python/3.13.2 && \
+    CFLAGS="-march=native -mtune=generic" ./configure --enable-optimizations --with-lto=full --prefix=/opt/python/3.13.2 && \
     make --jobs 8 && \
     make install && \
     popd && \
