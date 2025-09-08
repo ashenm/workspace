@@ -20,7 +20,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     steps:
       - id: workflow-run-id
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             if (context.eventName === 'workflow_run') {
@@ -38,7 +38,7 @@ jobs:
         env:
           WORKFLOW_DISPATCH_WORKFLOW_RUN_ID: ${{ inputs.workflow_run_id }}
       - id: digests
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -65,20 +65,20 @@ jobs:
       fail-fast: false
     steps:
       - id: flavour
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: return String(process.env.WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST).split('-').slice(1, -2).join('-')
           result-encoding: string
         env:
           WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST: ${{ matrix.digest }}
       - id: architecture
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: return String(process.env.WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST).split('-').slice(-2).join('/')
           result-encoding: string
         env:
           WORKFLOW_DISPATCH_WORKFLOW_ARTIFACT_DIGEST: ${{ matrix.digest }}
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
