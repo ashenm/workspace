@@ -59,7 +59,7 @@ jobs:
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
       fail-fast: true
-    uses: ashenm/workspace/.github/workflows/reusable-build.yml@master
+    uses: ./.github/workflows/reusable-build.yml
     with:
       platform: ${{ matrix.platform }}
       runner: ${{ matrix.runner }}
@@ -69,7 +69,7 @@ jobs:
     needs:
       - metadata
       - latest
-    uses: ashenm/workspace/.github/workflows/reusable-manifest.yml@master
+    uses: ./.github/workflows/reusable-manifest.yml
     with:
       build-commit-sha: ${{ needs.metadata.outputs.build_commit_sha }}
       source: latest
@@ -91,7 +91,7 @@ jobs:
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
       fail-fast: false
-    uses: ashenm/workspace/.github/workflows/reusable-build.yml@master
+    uses: ./.github/workflows/reusable-build.yml
     with:
       build-args: |
         BASEIMAGE=ghcr.io/${{ github.repository }}/latest:${{ needs.metadata.outputs.build_commit_sha }}
@@ -107,7 +107,7 @@ jobs:
       matrix:
         source: ${{ fromJSON(needs.metadata.outputs.build_forks) }}
       fail-fast: false
-    uses: ashenm/workspace/.github/workflows/reusable-manifest.yml@master
+    uses: ./.github/workflows/reusable-manifest.yml
     with:
       build-commit-sha: ${{ needs.metadata.outputs.build_commit_sha }}
       source: ${{ matrix.source }}
