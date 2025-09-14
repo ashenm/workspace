@@ -28,7 +28,9 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/${{ inputs.source }}
           tags: |
-            type=sha,prefix=,format=short
+            type=sha,prefix=,enable=true,format=short
+            type=raw,prefix=,enable={{is_default_branch}},value=${{ github.ref_name }}
+          flavor: latest=false
       - if: ${{ github.ref_name == 'master' }}
         uses: docker/login-action@v3
         with:
@@ -46,8 +48,6 @@ jobs:
         working-directory: /tmp/digests
       - if: ${{ github.ref_name == 'master' }}
         run: |
-          docker buildx imagetools create --tag ghcr.io/${{ github.repository }}/${{ inputs.source }}:${{ github.ref_name }} \
-            ghcr.io/${{ github.repository }}/${{ inputs.source }}:${{ inputs.build-commit-sha }}
           docker buildx imagetools create --tag ${{ github.repository }}:${{ inputs.source }} \
             ghcr.io/${{ github.repository }}/${{ inputs.source }}:${{ inputs.build-commit-sha }}
         env:
