@@ -18,7 +18,7 @@ on:
 jobs:
   manifest:
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           path: /tmp/digests
           pattern: digests-${{ inputs.source }}-*
