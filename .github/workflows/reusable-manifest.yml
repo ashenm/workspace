@@ -48,7 +48,7 @@ jobs:
         working-directory: /tmp/digests
       - if: ${{ github.ref_name == 'master' }}
         run: |
-          docker buildx imagetools create --tag ${{ github.repository }}:${{ inputs.source }} \
+          docker buildx imagetools create --prefer-index=false --tag=${{ github.repository }}:${{ inputs.source }} \
             ghcr.io/${{ github.repository }}/${{ inputs.source }}:${{ inputs.build-commit-sha }}
         env:
           DOCKER_USERNAME: ${{ secrets.docker-username }}
