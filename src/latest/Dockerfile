@@ -296,6 +296,14 @@ RUN curl --silent --fail --show-error --location --output "/usr/local/bin/kubect
   tar --extract --gunzip --verbose --wildcards --directory /usr/local/bin --file - --strip-components 1 '**/helm' && \
   chmod 755 /usr/local/bin/kubectl /usr/local/bin/helm
 
+# install terragrunt
+RUN curl --location 'https://github.com/gruntwork-io/terragrunt/releases/latest' | \
+    grep --only-matching --perl-regexp --max-count=1 "(?<=https://github.com/gruntwork-io/terragrunt/releases/tag/)v\d+\.\d+\.\d+" | \
+    xargs -I{} curl --location --output - \
+      --url "https://github.com/gruntwork-io/terragrunt/releases/download/{}/terragrunt_linux_$(dpkg --print-architecture).tar.gz" | \
+    tar --extract --gunzip --verbose --directory /usr/local/bin --transform='s/^terragrunt_linux_[a-z0-9]\+$/terragrunt/' --file - && \
+    chmod 755 /usr/local/bin/terragrunt
+
 # configure system
 COPY filesystem /
 
