@@ -304,6 +304,14 @@ RUN curl --location 'https://github.com/gruntwork-io/terragrunt/releases/latest'
     tar --extract --gunzip --verbose --directory /usr/local/bin --transform='s/^terragrunt_linux_[a-z0-9]\+$/terragrunt/' --file - && \
     chmod 755 /usr/local/bin/terragrunt
 
+# install databricks
+RUN curl --location 'https://github.com/databricks/cli/releases/latest' | \
+    grep --only-matching --perl-regexp --max-count=1 "(?<=https://github.com/databricks/cli/releases/tag/v)\d+\.\d+\.\d+" | \
+    xargs -I{} curl --location --output - \
+      --url "https://github.com/databricks/cli/releases/download/v{}/databricks_cli_{}_linux_$(dpkg --print-architecture).tar.gz" | \
+    tar --extract --gunzip --verbose --directory /usr/local/bin --file - databricks && \
+    chmod 755 /usr/local/bin/databricks
+
 # configure system
 COPY filesystem /
 
