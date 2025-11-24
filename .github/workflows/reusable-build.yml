@@ -22,7 +22,7 @@ jobs:
       - run: |
           DOCKER_IMAGE_TARGET_PLATFORM=${{ inputs.platform }}
           echo "DOCKER_IMAGE_TARGET_PLATFORM=${DOCKER_IMAGE_TARGET_PLATFORM//\//-}" >> $GITHUB_ENV
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: docker/setup-qemu-action@v3
