@@ -48,9 +48,11 @@ jobs:
         working-directory: /tmp/digests
       - if: ${{ github.ref_name == 'master' }}
         run: |
-          docker buildx imagetools create --prefer-index=false --tag=${{ github.repository }}:${{ inputs.source }} \
+          DOCKER_REPOSITORY_SLUG=$(printf '%s/%s' "$DOCKER_USERNAME" "$DOCKER_REPOSITORY" | tr '[:upper:]' '[:lower:]')
+          docker buildx imagetools create --prefer-index=false --tag=${DOCKER_REPOSITORY_SLUG}:${{ inputs.source }} \
             ghcr.io/${{ github.repository }}/${{ inputs.source }}:${{ inputs.build-commit-sha }}
         env:
           DOCKER_USERNAME: ${{ secrets.docker-username }}
           DOCKER_PASSWORD: ${{ secrets.docker-password }}
+          DOCKER_REPOSITORY: ${{ github.event.repository.name }}
     runs-on: ubuntu-22.04
