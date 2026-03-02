@@ -59,7 +59,7 @@ jobs:
           mkdir --parent /tmp/digests
           DOCKER_IMAGE_DIGEST=${{ steps.build.outputs.digest }}
           touch /tmp/digests/${DOCKER_IMAGE_DIGEST#sha256:}
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           name: digests-${{ inputs.source }}-${{ env.DOCKER_IMAGE_TARGET_PLATFORM }}
           path: /tmp/digests/*
