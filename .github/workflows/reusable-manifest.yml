@@ -49,6 +49,6 @@ jobs:
       - if: ${{ github.ref_name == 'master' }}
         run: |
           docker buildx imagetools create --tag="${GITHUB_REPOSITORY,,}:${{ inputs.source }}" \
-            $(printf 'ghcr.io/${{ github.repository }}/${{ inputs.source }}@sha256:%s ' *)
+            ghcr.io/${{ github.repository }}/${{ inputs.source }}:${{ github.ref_name }}
         working-directory: /tmp/digests
     runs-on: ubuntu-22.04
