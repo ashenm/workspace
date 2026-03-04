@@ -48,10 +48,7 @@ jobs:
         working-directory: /tmp/digests
       - if: ${{ github.ref_name == 'master' }}
         run: |
-          docker buildx imagetools create --tag="${DOCKER_USERNAME,,}/${DOCKER_REPOSITORY,,}:${{ inputs.source }}" \
+          docker buildx imagetools create --tag="${GITHUB_REPOSITORY,,}:${{ inputs.source }}" \
             $(printf '${{ github.repository }}/${{ inputs.source }}@sha256:%s ' *)
-        env:
-          DOCKER_USERNAME: ${{ secrets.docker-username }}
-          DOCKER_REPOSITORY: ${{ github.event.repository.name }}
         working-directory: /tmp/digests
     runs-on: ubuntu-22.04
