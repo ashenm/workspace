@@ -37,6 +37,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: ./src/${{ inputs.source }}/scripts/init-filesystem
+      - id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          flavor: latest=false
+      - run: jq <<< "$DOCKER_METADATA_OUTPUT_JSON"
       - id: build
         uses: docker/build-push-action@v6
         with:
@@ -47,6 +52,8 @@ jobs:
           platforms: ${{ inputs.platform }}
           pull: true
           push: true
+          annotations: ${{ steps.metadata.outputs.annotations }}
+          labels: ${{ steps.metadata.outputs.labels }}
           outputs: type=image,name=ghcr.io/${{ github.repository }}/${{ inputs.source }},name-canonical=true,push-by-digest=true,push=true
       - run: |
           mkdir --parent /tmp/digests
