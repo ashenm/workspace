@@ -43,7 +43,7 @@ jobs:
           flavor: latest=false
       - run: jq <<< "$DOCKER_METADATA_OUTPUT_JSON"
       - id: build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           build-args: ${{ inputs.build-args }}
           cache-from: type=gha,scope=buildkit-${{ inputs.source }}-${{ inputs.platform }}
