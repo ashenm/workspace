@@ -24,7 +24,7 @@ jobs:
           pattern: digests-${{ inputs.source }}-*
           merge-multiple: true
       - uses: docker/setup-buildx-action@v3
-      - uses: docker/metadata-action@v5
+      - uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}/${{ inputs.source }}
           tags: |
