@@ -51,7 +51,7 @@ jobs:
           context: src/${{ inputs.source }}
           platforms: ${{ inputs.platform }}
           pull: true
-          push: ${{ !contains(fromJson('["dependabot[bot]"]'), github.event.pull_request.user.login) }}
+          push: ${{ case(contains(fromJson('["dependabot[bot]"]'), github.event.pull_request.user.login), "local", "registry") }}
           annotations: ${{ steps.metadata.outputs.annotations }}
           labels: ${{ steps.metadata.outputs.labels }}
           outputs: type=image,name=ghcr.io/${{ github.repository }}/${{ inputs.source }},name-canonical=true,push-by-digest=true,push=true
