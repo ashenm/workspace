@@ -51,10 +51,10 @@ jobs:
           context: src/${{ inputs.source }}
           platforms: ${{ inputs.platform }}
           pull: true
-          push: ${{ case(contains(fromJson('["dependabot[bot]"]'), github.event.pull_request.user.login), "local", "registry") }}
+          push: true
           annotations: ${{ steps.metadata.outputs.annotations }}
           labels: ${{ steps.metadata.outputs.labels }}
-          outputs: type=image,name=ghcr.io/${{ github.repository }}/${{ inputs.source }},name-canonical=true,push-by-digest=true,push=true
+          outputs: ${{ case(contains(fromJson('["dependabot[bot]"]'), github.event.pull_request.user.login), 'type=local,dest=/dev/null', format('type=image,name=ghcr.io/{0}/{1},name-canonical=true,push-by-digest=true,push=true', github.repository, inputs.source)) }}
       - run: |
           mkdir --parent /tmp/digests
           DOCKER_IMAGE_DIGEST=${{ steps.build.outputs.digest }}
