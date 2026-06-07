@@ -48,9 +48,10 @@ jobs:
           # with "failed to copy: unexpected status from PUT request"
           # Oddly, with the same digests just simply retrying fixes the issue
           #
-          for i in {1..5}; do;
+          for i in {1..5}; do
             docker buildx imagetools create $(jq --compact-output --raw-output '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
               $(printf 'ghcr.io/${{ github.repository }}/${{ inputs.source }}@sha256:%s ' *) && break
+            echo "Retrying Docker Hub manifest creation ${i}/5 after 30s sleep"
             sleep 30
           done
         working-directory: /tmp/digests
