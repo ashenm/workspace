@@ -43,8 +43,16 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: jq <<< "$DOCKER_METADATA_OUTPUT_JSON"
       - run: |
-          docker buildx imagetools create $(jq --compact-output --raw-output '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf 'ghcr.io/${{ github.repository }}/${{ inputs.source }}@sha256:%s ' *)
+          #
+          # A weird quark failure exists where Docker Hub copy fails
+          # with "failed to copy: unexpected status from PUT request"
+          # Oddly, with the same digests just simply retrying fixes the issue
+          #
+          for i in {1..5}; do;
+            docker buildx imagetools create $(jq --compact-output --raw-output '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+              $(printf 'ghcr.io/${{ github.repository }}/${{ inputs.source }}@sha256:%s ' *) && break
+            sleep 30
+          done
         working-directory: /tmp/digests
       - if: ${{ github.ref_name == 'master' }}
         run: |
